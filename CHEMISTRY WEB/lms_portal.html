@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A/L Chemistry - Secure Student Portal</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif;
+      background-image: url('https://i.ibb.co/SwWdh4Cz/japan-artistic-3840x2160-25406.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+      }
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(244, 114, 182, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+  </style>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-slate-950/85 text-rose-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Top Navbar -->
+  <nav class="bg-slate-900/95 backdrop-blur-md border-b border-rose-500/30 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('student')">
+          <div class="bg-rose-600 text-white p-2 rounded-xl shadow-lg shadow-rose-500/40">
+            <i class="fa-solid fa-flask-vial text-xl"></i>
+          </div>
+          <span class="font-bold text-xl text-rose-300">CHEMISTRY <span class="text-white">PORTAL</span></span>
+        </div>
+        
+        <div class="flex gap-2 items-center">
+          <!-- Lessons Page Button -->
+          <button id="lessonsNavBtn" onclick="openLessonsModal()" class="hidden bg-emerald-600 text-white hover:bg-emerald-500 px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-md flex items-center gap-1.5">
+            <i class="fa-solid fa-book-open"></i> Lessons & Tutes
+          </button>
+
+          <span id="userStatusBadge" class="text-xs text-rose-200 font-medium mr-2">Not Logged In</span>
+          
+          <div id="unauthBtns" class="flex gap-2">
+            <button onclick="signInWithGoogle()" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition shadow-md flex items-center gap-1.5">
+              <i class="fa-brands fa-google"></i> Login
+            </button>
+            <button onclick="openRegistrationModalManually()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition shadow-md flex items-center gap-1.5">
+              <i class="fa-solid fa-user-plus"></i> Register
+            </button>
+          </div>
+
+          <button id="logoutBtn" onclick="logout()" class="hidden bg-slate-800 hover:bg-slate-700 text-rose-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
+          <button id="adminNavBtn" onclick="switchView('admin')" class="hidden bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition">
+            <i class="fa-solid fa-user-shield"></i> Admin Panel
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dynamic Global Announcement Banner -->
+  <div id="announcementBanner" class="hidden bg-rose-950/90 border-b border-rose-500/40 py-2.5 px-4 text-center text-xs text-rose-200 shadow-md font-medium">
+    <i class="fa-solid fa-bullhorn mr-2 text-rose-400"></i><span id="announcementText"></span>
+  </div>
+
+  <!-- Main Area -->
+  <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-1">
+
+    <!-- STUDENT VIEW -->
+    <div id="studentView" class="space-y-8">
+      
+      <!-- Registration Details Form Modal/Card -->
+      <div id="registrationModalCard" class="hidden glass-card rounded-2xl p-6 shadow-2xl border border-rose-500/40 max-w-xl mx-auto">
+        <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-id-card text-rose-400"></i> ශිෂ්‍ය තොරතුරු ඇතුළත් කරන්න
+        </h2>
+        <p class="text-xs text-rose-200 mb-6">පංතියට සම්බන්ධ වීම සඳහා ඔබේ නිවැරදි තොරතුරු ලබාදෙන්න.</p>
+        
+        <form id="studentProfileForm" onsubmit="saveStudentProfile(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">සම්පූර්ණ නම</label>
+              <input type="text" id="regFullName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 focus:outline-none focus:border-rose-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">දුරකථන / WhatsApp</label>
+              <input type="tel" id="regPhone" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 focus:outline-none focus:border-rose-500" placeholder="07X XXXXXXX">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">භාරකරුගේ නම</label>
+              <input type="text" id="regGuardian" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 focus:outline-none focus:border-rose-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">කණ්ඩායම (Batch)</label>
+              <select id="regBatch" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 focus:outline-none focus:border-rose-500">
+                <option value="2027 Batch">2027 Batch</option>
+                <option value="2028 Batch">2028 Batch</option>
+                <option value="2029 Batch">2029 Batch</option>
+                <option value="2030 Batch">2030 Batch</option>
+                <option value="2031 Batch">2031 Batch</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">ලිපිනය</label>
+            <textarea id="regAddress" required rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 focus:outline-none focus:border-rose-500"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg shadow-rose-600/30">
+            Save Profile Details
+          </button>
+        </form>
+      </div>
+
+      <!-- Main Portal Dashboard -->
+      <div id="mainStudentPortal" class="space-y-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <div id="studentWelcomeBadge" class="inline-block bg-rose-500/25 text-rose-200 text-xs font-bold px-4 py-1.5 rounded-full border border-rose-500/40 uppercase tracking-widest mb-3 shadow-md">
+            Loading Student Info...
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">Full Paper Discussion Portal</h1>
+          <p class="text-rose-100 text-sm mt-2 drop-shadow-[0_1px_5px_rgba(0,0,0,0.8)] font-medium">රිසිට් පත Upload කිරීමෙන් පසු සර්ගේ අනුමැතිය ලැබුණු පසු ඉහළ ඇති <b class="text-emerald-300 font-bold">Lessons & Tutes</b> බටන් එක ක්ලික් කර පාඩම් නරඹන්න.</p>
+        </div>
+
+        <!-- Receipt Upload Card -->
+        <div class="max-w-lg mx-auto">
+          <div class="glass-card rounded-2xl p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-rose-400"></i> Receipt Upload
+              </h2>
+              <span id="approvalBadge" class="bg-slate-800 text-rose-200 border border-slate-700 text-xs px-3 py-1 rounded-full font-medium">
+                <i class="fa-solid fa-lock mr-1"></i> Payment Required
+              </span>
+            </div>
+            
+            <form id="receiptForm" onsubmit="uploadReceipt(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">කණ්ඩායම (Batch)</label>
+                <select id="receiptBatch" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 font-medium" onchange="checkStudentApprovalStatus()">
+                  <option value="2027 Batch">2027 Batch</option>
+                  <option value="2028 Batch">2028 Batch</option>
+                  <option value="2029 Batch">2029 Batch</option>
+                  <option value="2030 Batch">2030 Batch</option>
+                  <option value="2031 Batch">2031 Batch</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">අදාළ මාසය (Month)</label>
+                <select id="receiptMonth" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-rose-100 font-medium" onchange="checkStudentApprovalStatus()">
+                  <option value="January">January</option>
+                  <option value="February">February</option>
+                  <option value="March">March</option>
+                  <option value="April">April</option>
+                  <option value="May">May</option>
+                  <option value="June">June</option>
+                  <option value="July">July</option>
+                  <option value="August">August</option>
+                  <option value="September">September</option>
+                  <option value="October">October</option>
+                  <option value="November">November</option>
+                  <option value="December">December</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-rose-200 uppercase tracking-wider mb-1">රිසිට් පතේ ඡායාරූපය</label>
+                <div class="border-2 border-dashed border-rose-500/40 hover:border-rose-400 rounded-xl p-4 text-center cursor-pointer transition bg-slate-900/80" onclick="document.getElementById('receiptFile').click()">
+                  <i class="fa-solid fa-file-image text-3xl text-rose-400 mb-1"></i>
+                  <p class="text-xs text-rose-200 font-medium" id="fileNameDisplay">Select Receipt Photo</p>
+                  <input type="file" id="receiptFile" accept="image/*" class="hidden" onchange="displaySelectedFile(event)" required>
+                </div>
+              </div>
+
+              <button type="submit" id="submitBtn" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> Submit Receipt
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TEACHER ADMIN DASHBOARD VIEW -->
+    <div id="adminView" class="hidden space-y-8">
+      <div class="flex justify-between items-center bg-slate-900/95 p-6 rounded-2xl border border-rose-500/30 shadow-2xl backdrop-blur-md">
+        <div>
+          <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-user-shield text-rose-400"></i> Teacher Admin Control Panel
+          </h1>
+          <p class="text-rose-200 text-xs mt-1">ලියාපදිංචි වූ ළමුන්, Receipts, බැජ් අනුව රෙකෝඩින්, ටියුට් සහ Announcements පාලනය කරන්න.</p>
+        </div>
+        <button onclick="switchView('student')" class="bg-slate-800 text-xs px-4 py-2 rounded-lg hover:bg-slate-700 border border-slate-700 text-white font-medium">Student Panel</button>
+      </div>
+
+      <!-- Add Announcement & Batch-wise Links Section -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Global Announcement Form -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-bullhorn text-rose-400"></i> විශේෂ පණිවිඩයක් (Announcement)
+          </h3>
+          <div class="space-y-3">
+            <input type="text" id="adminNoticeInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="උදා: හෙට පංතිය පෙ.ව 8.00 ට ආරම්භ වේ...">
+            <div class="flex gap-2">
+              <button onclick="saveAnnouncement()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs px-4 py-2 rounded-lg font-medium transition flex-1">
+                Publish Notice
+              </button>
+              <button onclick="deleteAnnouncement()" class="bg-rose-900 hover:bg-rose-800 text-rose-200 text-xs px-3 py-2 rounded-lg font-medium transition" title="Delete Announcement">
+                <i class="fa-solid fa-trash mr-1"></i> Clear Notice
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Batch-wise Recording & Tute Updater -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-folder-plus text-rose-400"></i> රෙකෝඩින් සහ Tutes එකතු කිරීම
+          </h3>
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-2">
+              <select id="linkTargetBatch" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100">
+                <option value="2027 Batch">2027 Batch</option>
+                <option value="2028 Batch">2028 Batch</option>
+                <option value="2029 Batch">2029 Batch</option>
+                <option value="2030 Batch">2030 Batch</option>
+                <option value="2031 Batch">2031 Batch</option>
+              </select>
+              <select id="linkTargetMonth" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100">
+                <option value="January">January</option><option value="February">February</option><option value="March">March</option>
+                <option value="April">April</option><option value="May">May</option><option value="June">June</option>
+                <option value="July">July</option><option value="August">August</option><option value="September">September</option>
+                <option value="October">October</option><option value="November">November</option><option value="December">December</option>
+              </select>
+            </div>
+            <input type="text" id="adminLessonTitle" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="පාඩමේ / ටියුට් එකේ නම (උදා: 01 වන කොටස)">
+            <input type="url" id="adminBatchVideo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="YouTube URL (https://www.youtube.com/watch?v=...)">
+            <input type="url" id="adminTuteUrl" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="Tute Drive/PDF Link (නැත්නම් හිස්ව තබන්න)">
+            <button onclick="saveBatchLesson()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2 rounded-lg font-medium transition w-full">
+              Save Recording & Tute
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered Students & Receipts Table -->
+      <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
+        <div class="p-4 bg-slate-900/95 border-b border-slate-800 flex justify-between items-center">
+          <h3 class="font-bold text-sm text-rose-100">ළමුන්ගේ ලියාපදිංචි විස්තර හා Receipt ලැයිස්තුව</h3>
+          <select id="adminBatchFilter" onchange="loadAdminTableData()" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-xs text-rose-200">
+            <option value="ALL">All Batches</option>
+            <option value="2027 Batch">2027 Batch</option>
+            <option value="2028 Batch">2028 Batch</option>
+            <option value="2029 Batch">2029 Batch</option>
+            <option value="2030 Batch">2030 Batch</option>
+            <option value="2031 Batch">2031 Batch</option>
+          </select>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-rose-100 text-xs">
+            <thead class="bg-slate-900/90 text-rose-300 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3">Student Name & Batch</th>
+                <th class="p-3">Month</th>
+                <th class="p-3">Contact Details</th>
+                <th class="p-3">Receipt</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody" class="divide-y divide-slate-800">
+              <!-- Firestore Dynamic Data -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Lessons & Tute Modal -->
+  <div id="lessonsModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 p-6 rounded-2xl max-w-3xl w-full border border-rose-500/30 relative max-h-[85vh] overflow-y-auto">
+      <button onclick="closeLessonsModal()" class="absolute top-4 right-4 text-rose-200 hover:text-white bg-slate-800 p-2 rounded-full">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <h3 class="text-lg font-bold text-emerald-400 mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-video"></i> ඔබේ පන්ති රෙකෝඩින් සහ Tute (Study Materials)
+      </h3>
+      <p id="lessonsModalSubtitle" class="text-xs text-rose-200 mb-4">අනුමත කරන ලද මාසවලට අදාළ පාඩම් මෙහි පෙන්වනු ලැබේ.</p>
+      
+      <!-- Batch and Month Filter inside Modal -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 p-3 bg-slate-950/90 rounded-xl border border-slate-800">
+        <div>
+          <label class="block text-[10px] text-rose-300 uppercase font-bold mb-1">Batch Filter</label>
+          <select id="modalBatchFilter" onchange="renderLessonsList()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-rose-100">
+            <option value="ALL">All Approved Batches</option>
+            <option value="2027 Batch">2027 Batch</option>
+            <option value="2028 Batch">2028 Batch</option>
+            <option value="2029 Batch">2029 Batch</option>
+            <option value="2030 Batch">2030 Batch</option>
+            <option value="2031 Batch">2031 Batch</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[10px] text-rose-300 uppercase font-bold mb-1">Month Filter</label>
+          <select id="modalMonthFilter" onchange="renderLessonsList()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-rose-100">
+            <option value="ALL">All Approved Months</option>
+            <option value="January">January</option><option value="February">February</option><option value="March">March</option>
+            <option value="April">April</option><option value="May">May</option><option value="June">June</option>
+            <option value="July">July</option><option value="August">August</option><option value="September">September</option>
+            <option value="October">October</option><option value="November">November</option><option value="December">December</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Lessons List Container -->
+      <div id="lessonsContainer" class="space-y-3">
+        <!-- Dynamic Lessons -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ImgBB Receipt View Modal -->
+  <div id="receiptModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 p-4 rounded-2xl max-w-lg w-full border border-slate-800 relative">
+      <button onclick="closeReceiptModal()" class="absolute top-3 right-3 text-rose-200 hover:text-white bg-slate-800 p-2 rounded-full">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <h3 class="text-sm font-bold text-rose-100 mb-3">Receipt Photo (ස්ලිප් පත)</h3>
+      <img id="receiptModalImg" src="" class="w-full max-h-[70vh] object-contain rounded-xl bg-slate-950 border border-slate-800 mb-3">
+    </div>
+  </div>
+
+  <footer class="bg-slate-900/90 backdrop-blur-md border-t border-rose-500/30 py-6 text-center text-rose-200 text-xs font-medium">
+    <p>© 2026 Chemistry Academy • Advanced A/L Student Portal</p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNnPdF4xtvZmGF7tsr5bIh1dGJwiaQEZ8",
+      authDomain: "chemistry-m.firebaseapp.com",
+      projectId: "chemistry-m",
+      storageBucket: "chemistry-m.firebasestorage.app",
+      messagingSenderId: "653598394534",
+      appId: "1:653598394534:web:15d7a8ace31e865cf08c67",
+      measurementId: "G-WWCYLELFH2"
+    };
+
+    const IMGBB_API_KEY = "15c27a4aa89228ca7a457984d130dfa0"; 
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    let isAdmin = false;
+    let currentStudentData = null;
+    let cachedLessonsData = []; 
+
+    auth.onAuthStateChanged(async user => {
+      currentUser = user;
+      const statusBadge = document.getElementById('userStatusBadge');
+      const unauthBtns = document.getElementById('unauthBtns');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const adminNavBtn = document.getElementById('adminNavBtn');
+      const lessonsNavBtn = document.getElementById('lessonsNavBtn');
+
+      if (user) {
+        statusBadge.innerText = user.email;
+        statusBadge.className = "text-xs text-emerald-400 font-semibold mr-2";
+        unauthBtns.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        lessonsNavBtn.classList.remove('hidden');
+
+        try {
+          const adminDoc = await db.collection('admins').doc(user.email).get();
+          if (adminDoc.exists && adminDoc.data().isAdmin === true) {
+            isAdmin = true;
+            adminNavBtn.classList.remove('hidden');
+          } else {
+            isAdmin = false;
+            adminNavBtn.classList.add('hidden');
+          }
+        } catch (e) {
+          isAdmin = false;
+          adminNavBtn.classList.add('hidden');
+        }
+
+        checkStudentProfile(user.uid);
+        listenToAnnouncements();
+      } else {
+        statusBadge.innerText = "Not Logged In";
+        statusBadge.className = "text-xs text-rose-200 font-medium mr-2";
+        unauthBtns.classList.remove('hidden');
+        logoutBtn.classList.add('hidden');
+        adminNavBtn.classList.add('hidden');
+        lessonsNavBtn.classList.add('hidden');
+        isAdmin = false;
+        currentStudentData = null;
+        showRegistrationModal(false);
+      }
+    });
+
+    function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(err => alert("Google Sign-In Error: " + err.message));
+    }
+
+    function openRegistrationModalManually() {
+      if (!currentUser) {
+        signInWithGoogle();
+        return;
+      }
+      showRegistrationModal(true);
+    }
+
+    function logout() {
+      auth.signOut();
+      switchView('student');
+    }
+
+    async function checkStudentProfile(uid) {
+      const doc = await db.collection('students').doc(uid).get();
+      if (doc.exists) {
+        currentStudentData = doc.data();
+        showRegistrationModal(false);
+        
+        document.getElementById('studentWelcomeBadge').innerText = `${currentStudentData.fullName} (${currentStudentData.batch})`;
+        document.getElementById('receiptBatch').value = currentStudentData.batch;
+
+        checkStudentApprovalStatus();
+      } else {
+        if (isAdmin) {
+          showRegistrationModal(false);
+          document.getElementById('studentWelcomeBadge').innerText = `Teacher / Admin Mode (${currentUser.email})`;
+        } else {
+          showRegistrationModal(true);
+        }
+      }
+    }
+
+    function showRegistrationModal(show) {
+      const card = document.getElementById('registrationModalCard');
+      const mainPortal = document.getElementById('mainStudentPortal');
+
+      if (show) {
+        card.classList.remove('hidden');
+        mainPortal.classList.add('hidden');
+      } else {
+        card.classList.add('hidden');
+        mainPortal.classList.remove('hidden');
+      }
+    }
+
+    async function saveStudentProfile(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const profileData = {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        fullName: document.getElementById('regFullName').value,
+        phone: document.getElementById('regPhone').value,
+        guardianName: document.getElementById('regGuardian').value,
+        batch: document.getElementById('regBatch').value,
+        address: document.getElementById('regAddress').value,
+        registeredAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      await db.collection('students').doc(currentUser.uid).set(profileData);
+      alert('ඔබගේ ලියාපදිංචිය සාර්ථකයි!');
+      checkStudentProfile(currentUser.uid);
+    }
+
+    function displaySelectedFile(e) {
+      const file = e.target.files[0];
+      if (file) document.getElementById('fileNameDisplay').innerText = file.name;
+    }
+
+    async function uploadReceipt(e) {
+      e.preventDefault();
+      if (!currentUser) {
+        alert('කරුණාකර Google එකෙන් Sign In වන්න!');
+        return;
+      }
+
+      const fileInput = document.getElementById('receiptFile');
+      const submitBtn = document.getElementById('submitBtn');
+      const batch = document.getElementById('receiptBatch').value;
+      const month = document.getElementById('receiptMonth').value;
+
+      if (fileInput.files.length === 0) return;
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Uploading Photo to ImgBB...";
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const imgUrl = data.data.url;
+          const docId = `${currentUser.uid}_${month}`;
+
+          await db.collection('submissions').doc(docId).set({
+            docId: docId,
+            uid: currentUser.uid,
+            studentEmail: currentUser.email,
+            batch: batch,
+            month: month,
+            receiptUrl: imgUrl,
+            status: 'pending',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+          alert('Receipt එක සාර්ථකව Upload විය! සර් Approve කළ පසු Lessons වෙතින් රෙකෝඩින් බලාගත හැක.');
+          document.getElementById('receiptForm').reset();
+          document.getElementById('fileNameDisplay').innerText = "Select Receipt Photo";
+          checkStudentApprovalStatus();
+        } else {
+          alert('ImgBB Upload Error: Image hosting failed.');
+        }
+      } catch (err) {
+        alert('Upload Error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Receipt`;
+      }
+    }
+
+    function checkStudentApprovalStatus() {
+      if (!currentUser) return;
+      const month = document.getElementById('receiptMonth').value;
+      const docId = `${currentUser.uid}_${month}`;
+
+      db.collection('submissions').doc(docId).onSnapshot(doc => {
+        const badge = document.getElementById('approvalBadge');
+        if (doc.exists) {
+          const data = doc.data();
+          if (data.status === 'approved') {
+            badge.className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs px-3 py-1 rounded-full font-bold";
+            badge.innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i> Approved (${month})`;
+          } else if (data.status === 'rejected') {
+            badge.className = "bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs px-3 py-1 rounded-full font-bold";
+            badge.innerHTML = `<i class="fa-solid fa-xmark-circle mr-1"></i> Rejected`;
+          } else {
+            badge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs px-3 py-1 rounded-full font-bold";
+            badge.innerHTML = `<i class="fa-solid fa-clock mr-1"></i> Pending`;
+          }
+        } else {
+          badge.className = "bg-slate-800 text-rose-200 border border-slate-700 text-xs px-3 py-1 rounded-full font-medium";
+          badge.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> Payment Required`;
+        }
+      });
+    }
+
+    async function openLessonsModal() {
+      if (!currentUser) {
+        alert("කරුණාකර පළමුව ලොග් වන්න!");
+        return;
+      }
+
+      const modal = document.getElementById('lessonsModal');
+      const container = document.getElementById('lessonsContainer');
+      const subtitle = document.getElementById('lessonsModalSubtitle');
+      
+      container.innerHTML = `<p class="text-xs text-rose-200 text-center py-4">පාඩම් සහ Tutes එකතු කරමින් පවතී...</p>`;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      try {
+        cachedLessonsData = [];
+        if (isAdmin) {
+          const lessonsSnapshot = await db.collection('batch_lessons').get();
+          lessonsSnapshot.forEach(doc => cachedLessonsData.push(doc.data()));
+          subtitle.innerText = "Teacher Admin Access - සියලුම බැජ් වල පාඩම් හා Tutes";
+        } else {
+          if (!currentStudentData) {
+            alert("කරුණාකර පළමුව ලියාපදිංචි වී ලොග් වන්න!");
+            closeLessonsModal();
+            return;
+          }
+
+          const subSnapshot = await db.collection('submissions')
+            .where('uid', '==', currentUser.uid)
+            .where('status', '==', 'approved')
+            .get();
+
+          const approvedMonths = [];
+          subSnapshot.forEach(doc => approvedMonths.push(doc.data().month));
+
+          if (approvedMonths.length === 0) {
+            container.innerHTML = `
+              <div class="text-center py-8 space-y-2">
+                <i class="fa-solid fa-lock text-3xl text-amber-400"></i>
+                <p class="text-xs text-rose-100 font-bold">තවම කිසිදු මාසයක් සර් විසින් අනුමත (Approve) කර නැත.</p>
+                <p class="text-[11px] text-rose-200">ස්ලිප් පත යොමු කර අනුමැතිය ලැබෙන තෙක් රැඳී සිටින්න.</p>
+              </div>
+            `;
+            subtitle.innerText = `${currentStudentData.batch} - අනුමත කළ පාඩම්`;
+            return;
+          }
+
+          const lessonsSnapshot = await db.collection('batch_lessons')
+            .where('batch', '==', currentStudentData.batch)
+            .where('month', 'in', approvedMonths)
+            .get();
+
+          lessonsSnapshot.forEach(doc => cachedLessonsData.push(doc.data()));
+          subtitle.innerText = `${currentStudentData.batch} • අනුමත කළ මාස: ${approvedMonths.join(', ')}`;
+        }
+
+        renderLessonsList();
+
+      } catch (err) {
+        container.innerHTML = `<p class="text-xs text-red-400 text-center py-4">දෝෂයක් ඇති විය: ${err.message}</p>`;
+      }
+    }
+
+    function renderLessonsList() {
+      const container = document.getElementById('lessonsContainer');
+      const bFilter = document.getElementById('modalBatchFilter').value;
+      const mFilter = document.getElementById('modalMonthFilter').value;
+
+      const filtered = cachedLessonsData.filter(item => {
+        const batchMatch = (bFilter === 'ALL' || item.batch === bFilter);
+        const monthMatch = (mFilter === 'ALL' || item.month === mFilter);
+        return batchMatch && monthMatch;
+      });
+
+      container.innerHTML = "";
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-xs text-rose-200 text-center py-6">තෝරාගත් ෆිල්ටරයට අදාළ රෙකෝඩින් හෝ Tute හමුවූයේ නැත.</p>`;
+        return;
+      }
+
+      filtered.forEach(lesson => {
+        const tuteBtn = lesson.tuteUrl ? `
+          <a href="${lesson.tuteUrl}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center">
+            <i class="fa-solid fa-file-pdf"></i> Download / View Tute
+          </a>
+        ` : '';
+
+        container.innerHTML += `
+          <div class="bg-slate-800/95 p-4 rounded-xl border border-rose-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-emerald-500/60 transition">
+            <div>
+              <div class="flex gap-2 mb-1">
+                <span class="bg-rose-500/20 text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded border border-rose-500/30 uppercase">${lesson.batch}</span>
+                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 uppercase">${lesson.month}</span>
+              </div>
+              <h4 class="text-sm font-bold text-white mt-1">${lesson.title}</h4>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              ${tuteBtn}
+              <a href="${lesson.videoUrl}" target="_blank" class="bg-rose-600 hover:bg-rose-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center">
+                <i class="fa-brands fa-youtube text-base"></i> Watch Recording
+              </a>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function closeLessonsModal() {
+      document.getElementById('lessonsModal').classList.add('hidden');
+      document.getElementById('lessonsModal').classList.remove('flex');
+    }
+
+    function listenToAnnouncements() {
+      db.collection('settings').doc('announcement').onSnapshot(doc => {
+        if (doc.exists && doc.data().text) {
+          document.getElementById('announcementBanner').classList.remove('hidden');
+          document.getElementById('announcementText').innerText = doc.data().text;
+        } else {
+          document.getElementById('announcementBanner').classList.add('hidden');
+        }
+      });
+    }
+
+    async function saveAnnouncement() {
+      if (!isAdmin) {
+        alert("ඔබට මෙම ක්‍රියාව සඳහා අවසර නැත!");
+        return;
+      }
+      const text = document.getElementById('adminNoticeInput').value;
+      if (!text) {
+        alert("කරුණාකර Announcement එකක් ඇතුළත් කරන්න!");
+        return;
+      }
+      await db.collection('settings').doc('announcement').set({ text: text });
+      alert('Announcement එක පළ විය!');
+      document.getElementById('adminNoticeInput').value = "";
+    }
+
+    async function deleteAnnouncement() {
+      if (!isAdmin) {
+        alert("ඔබට මෙම ක්‍රියාව සඳහා අවසර නැත!");
+        return;
+      }
+      if (confirm("පවතින Announcement එක ඉවත් කිරීමට (Delete) ඔබට අවශ්‍යද?")) {
+        await db.collection('settings').doc('announcement').delete();
+        alert('Announcement එක සාර්ථකව ඉවත් කරන ලදී!');
+      }
+    }
+
+    async function saveBatchLesson() {
+      if (!isAdmin) {
+        alert("අවසර නැත!");
+        return;
+      }
+      const batch = document.getElementById('linkTargetBatch').value;
+      const month = document.getElementById('linkTargetMonth').value;
+      const title = document.getElementById('adminLessonTitle').value;
+      const videoUrl = document.getElementById('adminBatchVideo').value;
+      const tuteUrl = document.getElementById('adminTuteUrl').value;
+
+      if (!title || !videoUrl) {
+        alert("කරුණාකර පාඩමේ නම සහ YouTube URL එක ලබා දෙන්න!");
+        return;
+      }
+
+      await db.collection('batch_lessons').add({
+        batch: batch,
+        month: month,
+        title: title,
+        videoUrl: videoUrl,
+        tuteUrl: tuteUrl || "",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert(`${batch} (${month}) සඳහා රෙකෝඩින් සහ Tute සාර්ථකව එකතු විය!`);
+      document.getElementById('adminLessonTitle').value = "";
+      document.getElementById('adminBatchVideo').value = "";
+      document.getElementById('adminTuteUrl').value = "";
+    }
+
+    function loadAdminTableData() {
+      if (!isAdmin) return;
+      const tbody = document.getElementById('adminTableBody');
+      const filterBatch = document.getElementById('adminBatchFilter').value;
+
+      db.collection('submissions').onSnapshot(async snapshot => {
+        tbody.innerHTML = '';
+        
+        for (const doc of snapshot.docs) {
+          const sub = doc.data();
+          if (filterBatch !== "ALL" && sub.batch !== filterBatch) continue;
+
+          const stDoc = await db.collection('students').doc(sub.uid).get();
+          const st = stDoc.exists ? stDoc.data() : {};
+
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-900/60 transition";
+
+          let statusBadge = '';
+          let actionButtons = '';
+
+          if (sub.status === 'approved') {
+            statusBadge = `<span class="bg-emerald-500/20 text-emerald-300 text-xs px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-bold">Approved</span>`;
+            actionButtons = `<span class="text-[11px] text-emerald-400 font-bold">Completed</span>`;
+          } else if (sub.status === 'rejected') {
+            statusBadge = `<span class="bg-rose-500/20 text-rose-300 text-xs px-2.5 py-0.5 rounded-full border border-rose-500/30 font-bold">Rejected</span>`;
+            actionButtons = `<span class="text-[11px] text-rose-400 font-bold">Rejected</span>`;
+          } else {
+            statusBadge = `<span class="bg-amber-500/20 text-amber-300 text-xs px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">Pending</span>`;
+            actionButtons = `
+              <div class="flex justify-center gap-1.5 items-center">
+                <button onclick="updateDocStatus('${sub.docId}', 'approved')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded text-[11px]">Approve</button>
+                <button onclick="updateDocStatus('${sub.docId}', 'rejected')" class="bg-rose-600 hover:bg-rose-500 text-white px-2 py-1 rounded text-[11px]">Reject</button>
+                <button onclick="deleteSubmission('${sub.docId}')" class="bg-slate-800 hover:bg-red-600 text-rose-200 hover:text-white px-2 py-1 rounded text-[11px]" title="Delete Record"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            `;
+          }
+
+          tr.innerHTML = `
+            <td class="p-3">
+              <div class="font-bold text-white">${st.fullName || 'N/A'}</div>
+              <div class="text-[10px] text-rose-300 font-semibold">${sub.batch}</div>
+            </td>
+            <td class="p-3">
+              <span class="text-rose-100 font-semibold">${sub.month}</span>
+            </td>
+            <td class="p-3">
+              <div class="text-rose-200">Phone: ${st.phone || 'N/A'}</div>
+              <div class="text-[10px] text-rose-300/80">Guardian: ${st.guardianName || 'N/A'}</div>
+            </td>
+            <td class="p-3">
+              <button onclick="viewReceiptModal('${sub.receiptUrl}')" class="bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 px-2.5 py-1 rounded text-[11px] flex items-center gap-1 font-medium">
+                <i class="fa-solid fa-image"></i> View Slip
+              </button>
+            </td>
+            <td class="p-3">${statusBadge}</td>
+            <td class="p-3 text-center">
+              ${actionButtons}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+    }
+
+    function viewReceiptModal(url) {
+      document.getElementById('receiptModalImg').src = url;
+      document.getElementById('receiptModal').classList.remove('hidden');
+      document.getElementById('receiptModal').classList.add('flex');
+    }
+
+    function closeReceiptModal() {
+      document.getElementById('receiptModal').classList.add('hidden');
+      document.getElementById('receiptModal').classList.remove('flex');
+    }
+
+    function updateDocStatus(docId, status) {
+      if (!isAdmin) {
+        alert("අවසර නැත!");
+        return;
+      }
+      db.collection('submissions').doc(docId).update({ status: status })
+        .then(() => alert('Status updated to ' + status))
+        .catch(err => alert('Error: ' + err.message));
+    }
+
+    function deleteSubmission(docId) {
+      if (!isAdmin) {
+        alert("අවසර නැත!");
+        return;
+      }
+      if (confirm("මෙම ස්ලිප් වාර්තාව ඉවත් කිරීමට (Delete) ඔබට අවශ්‍යමද?")) {
+        db.collection('submissions').doc(docId).delete()
+          .then(() => alert('සාර්ථකව ඉවත් කරන ලදී!'))
+          .catch(err => alert('Error: ' + err.message));
+      }
+    }
+
+    function switchView(view) {
+      const studentView = document.getElementById('studentView');
+      const adminView = document.getElementById('adminView');
+
+      if (view === 'admin') {
+        if (!isAdmin) {
+          alert('Admin පැනල් එකට පිවිසීමට අවසර නැත!');
+          return;
+        }
+        studentView.classList.add('hidden');
+        adminView.classList.remove('hidden');
+        loadAdminTableData();
+      } else {
+        adminView.classList.add('hidden');
+        studentView.classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
