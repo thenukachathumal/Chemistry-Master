@@ -1,61 +1,46 @@
 <!DOCTYPE html>
-<html lang="si" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chemistry Master | MADHAWA RANATHUNGA - A/L Chemistry</title>
+<title>Chemistry Master | Madhawa Ranathunga - A/L Chemistry</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;600;700;800&family=DM+Serif+Display&family=Fraunces:wght@500;700;800&family=Noto+Sans+Sinhala:wght@300;400;600;700;800&family=Noto+Serif+Sinhala:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=Syne:wght@600;700;800&family=Yaldevi:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Fraunces:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sora:wght@600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-/* ===== Theme tokens (JS swaps these with each background) ===== */
-:root{
-  --rgb:34,211,238; --a:#22d3ee; --b:#818cf8; --soft:#a5f3fc;
-  --fd:'Sora','Noto Sans Sinhala',sans-serif;
-  --fb:'Plus Jakarta Sans','Noto Sans Sinhala',sans-serif;
-  --wd:700; --td:-.025em; --ld:1.25; --fz:15px; --r:18px;
-}
+/* One accent colour per background. JS swaps these tokens. */
+:root{--rgb:34,211,238;--a:#22d3ee;--fd:'Sora',sans-serif;--wd:700;--td:-.03em;--r:18px}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#04070d;color:#f1f5f9;overflow-x:hidden;font-family:var(--fb);font-size:var(--fz);line-height:1.75;font-synthesis:none;transition:font-size .5s}
-.disp{font-family:var(--fd);font-weight:var(--wd);letter-spacing:var(--td);line-height:var(--ld)}
-.acc{color:var(--a)} .soft{color:var(--soft)}
-.shine{background:linear-gradient(100deg,var(--a) 20%,#fff 48%,var(--b) 75%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out infinite alternate}
-@keyframes shine{to{background-position:100% 0}}
-
-/* ===== Backgrounds (two layers for crossfade) ===== */
+body{margin:0;min-height:100vh;background:#04070d;color:#f1f5f9;overflow-x:hidden;font:400 16px/1.7 'Plus Jakarta Sans',sans-serif;font-synthesis:none}
+.disp{font-family:var(--fd);font-weight:var(--wd);letter-spacing:var(--td);line-height:1.08;text-wrap:balance}
+.acc{color:var(--a)}
 .bg{position:fixed;inset:0;background-size:cover;background-position:center;filter:brightness(.7) saturate(1.1);transform:scale(1.04);opacity:0;transition:opacity 1.4s ease;z-index:-3}
 .bg.on{opacity:1}
-.veil{position:fixed;inset:0;z-index:-2;pointer-events:none;transition:background 1s;
-  background:radial-gradient(120% 90% at 20% 10%,rgba(var(--rgb),.16),transparent 55%),linear-gradient(180deg,rgba(4,7,13,.55),rgba(4,7,13,.82))}
-
-/* ===== Glass ===== */
-.glass{background:rgba(10,16,30,.58);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
-  border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14);border-radius:var(--r);transition:border-color .8s}
-.glass.edge{border-top-color:rgba(var(--rgb),.55)}
+.veil{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(110% 80% at 15% 5%,rgba(var(--rgb),.14),transparent 55%),linear-gradient(180deg,rgba(4,7,13,.55),rgba(4,7,13,.84));transition:background 1s}
+.glass{background:rgba(10,16,30,.58);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);border-radius:var(--r);transition:border-color .8s,border-radius .6s}
+.edge{border-top-color:rgba(var(--rgb),.6)}
 .chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);border-radius:999px}
-.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;padding:1rem 2rem;border-radius:14px;font-weight:700;color:#06121a;
-  background:linear-gradient(120deg,var(--a),var(--b));box-shadow:0 12px 40px rgba(var(--rgb),.35);transition:transform .25s,box-shadow .25s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 18px 50px rgba(var(--rgb),.5)}
-.tile{padding:1.1rem 1.25rem;border-left:3px solid var(--a);background:rgba(var(--rgb),.07);border-radius:12px;animation:pulse 5s infinite ease-in-out}
-.tile:nth-child(2){animation-delay:1.2s}.tile:nth-child(3){animation-delay:2.4s}.tile:nth-child(4){animation-delay:3.6s}
-@keyframes pulse{50%{background:rgba(var(--rgb),.16)}}
-.frame{padding:8px;border-radius:1.75rem;background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(var(--rgb),.35),rgba(255,255,255,.06));box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 60px rgba(var(--rgb),.18);transition:box-shadow .8s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.65rem;padding:.95rem 1.9rem;border-radius:14px;font-weight:700;color:#06121a;background:var(--a);box-shadow:0 12px 36px rgba(var(--rgb),.35);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 18px 48px rgba(var(--rgb),.5)}
+.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);box-shadow:none}
+.btn.ghost:hover{border-color:var(--a);color:var(--a)}
+.card{padding:1.4rem;border-radius:var(--r);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:transform .3s,border-color .3s,background .3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(var(--rgb),.6);background:rgba(var(--rgb),.08)}
+.ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(var(--rgb),.16);color:var(--a);font-size:18px;margin-bottom:.9rem}
+.frame{padding:8px;border-radius:1.75rem;background:rgba(var(--rgb),.35);box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 60px rgba(var(--rgb),.2)}
+.logo{width:46px;height:46px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.25)}
 .field{width:100%;background:rgba(2,6,14,.7);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:.8rem 1.1rem;color:#fff;font-family:ui-monospace,monospace}
 .field:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(var(--rgb),.25)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--a);outline-offset:3px}
 a.nl{transition:color .2s}a.nl:hover{color:var(--a)}
-
-/* ===== Style-change moment ===== */
 .swap main,.swap nav,.swap footer{opacity:0;filter:blur(8px);transform:translateY(6px)}
 main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
-
-/* ===== Theme switcher ===== */
-#dots{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:10px;padding:8px 14px}
+#dots{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:999px}
 #dots button{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:transparent;cursor:pointer;transition:all .3s}
 #dots button.on{background:var(--a);border-color:var(--a);width:28px;border-radius:99px}
-#tname{font-size:11px;color:#cbd5e1;min-width:92px}
+#tname{font-size:11px;color:#cbd5e1;min-width:84px}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#04070d}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--a)}
 @media(max-width:640px){#tname{display:none}.pic{object-position:center 16%!important}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
@@ -66,106 +51,101 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
 <nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4">
-  <div class="max-w-7xl mx-auto glass px-6 py-3 flex items-center justify-between">
+  <div class="max-w-7xl mx-auto glass px-5 py-3 flex items-center justify-between">
     <a href="#" class="flex items-center gap-3">
-      <span class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-900" style="background:linear-gradient(135deg,var(--a),var(--b))"><i class="fa-solid fa-atom text-xl"></i></span>
+      <img class="logo" src="https://i.ibb.co/4wFZgr8X/lms-portal-2.jpg" alt="Chemistry Master logo" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-atom text-3xl acc'}))">
       <span>
-        <span class="disp text-xl block leading-tight">chemistry <span class="acc">master</span></span>
-        <span class="block text-[10px] tracking-[.22em] soft font-semibold">MADHAWA RANATHUNGA</span>
+        <span class="disp text-xl block">Chemistry <span class="acc">Master</span></span>
+        <span class="block text-[11px] tracking-[.18em] text-slate-300 font-semibold">MADHAWA RANATHUNGA</span>
       </span>
     </a>
     <div class="hidden lg:flex gap-8 text-sm font-medium text-slate-200">
-      <a href="#about" class="nl">ආචාර්යවරයා</a><a href="#tools" class="nl">Chem Tools</a>
+      <a href="#why" class="nl">Why Us</a><a href="#about" class="nl">About</a><a href="#tools" class="nl">Calculator</a>
     </div>
-    <a href="lms_portal.html" target="_blank" class="hidden lg:inline-flex btn !py-2.5 !px-5 text-xs"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
+    <a href="lms_portal.html" target="_blank" class="hidden lg:inline-flex btn !py-2.5 !px-5 text-sm"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
     <button id="mobileMenuBtn" class="lg:hidden text-2xl text-slate-200" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
   </div>
-  <div id="mobileMenu" class="hidden lg:hidden max-w-7xl mx-auto mt-2 glass p-6 flex-col gap-4">
-    <a href="#about" class="mobile-link block py-2 border-b border-white/10">ආචාර්යවරයා පිළිබඳව</a>
-    <a href="#tools" class="mobile-link block py-2 border-b border-white/10">Chemistry Calculator</a>
+  <div id="mobileMenu" class="hidden max-w-7xl mx-auto mt-2 glass p-6 flex-col gap-3">
+    <a href="#why" class="mobile-link block py-2 border-b border-white/10">Why Us</a>
+    <a href="#about" class="mobile-link block py-2 border-b border-white/10">About</a>
+    <a href="#tools" class="mobile-link block py-2 border-b border-white/10">Calculator</a>
     <a href="lms_portal.html" target="_blank" class="btn w-full mt-2"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
   </div>
 </nav>
 
 <main>
-<!-- Hero -->
 <section class="pt-40 pb-24 px-4 lg:px-8">
   <div class="max-w-7xl mx-auto space-y-8 text-center lg:text-left">
-    <div class="chip inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wide">
-      <span class="w-2.5 h-2.5 rounded-full animate-pulse" style="background:var(--a)"></span> Sri Lanka's Premier A/L Chemistry Academy
+    <div class="chip inline-flex items-center gap-2 px-4 py-2 text-sm font-medium">
+      <span class="w-2.5 h-2.5 rounded-full animate-pulse" style="background:var(--a)"></span> Sri Lanka's premier A/L Chemistry academy
     </div>
-    <h1 class="disp text-5xl sm:text-7xl lg:text-8xl drop-shadow-2xl">
-      A/L Chemistry<br><span class="shine">තර්කානුකූලව ජයගන්න!</span>
-    </h1>
-    <p class="soft text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 font-semibold drop-shadow-md" style="line-height:1.85">
-      පාඩම් නොකර, රසායන විද්‍යාව විද්‍යාත්මකව අවබෝධ කරගනිමින් A/L Chemistry ප්‍රශ්න පත්‍රයට නිවැරදිව මුහුණ දීමට දිවයිනේ විශිෂ්ටතම මගපෙන්වීම.
-    </p>
-    <div class="flex flex-wrap justify-center lg:justify-start gap-3">
-      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-flask acc"></i> General Chemistry</span>
-      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-fire acc"></i> Physical Chemistry</span>
-      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-vial acc"></i> Organic Chemistry</span>
-      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-cubes acc"></i> Inorganic Chemistry</span>
+    <h1 class="disp text-5xl sm:text-7xl lg:text-8xl drop-shadow-2xl">A/L Chemistry,<br><span class="acc">understood with logic.</span></h1>
+    <p class="text-lg sm:text-xl max-w-xl mx-auto lg:mx-0 text-slate-200">No rote learning. Learn the science and answer every paper with confidence.</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+      <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap text-lg"></i> Enter Student Portal</a>
+      <a href="#tools" class="btn ghost"><i class="fa-solid fa-calculator"></i> Try the calculator</a>
     </div>
-    <div class="pt-2"><a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap text-xl"></i> Student Portal වෙත පිවිසෙන්න</a></div>
     <div class="pt-8 grid grid-cols-3 gap-4 border-t border-white/15 max-w-xl mx-auto lg:mx-0">
-      <div><div class="disp text-3xl lg:text-4xl"><span data-counter="10">0</span>+</div><div class="text-xs text-slate-300 mt-1">වසර ගණනක අත්දැකීම්</div></div>
-      <div><div class="disp text-3xl lg:text-4xl acc"><span data-counter="1000">0</span>+</div><div class="text-xs text-slate-300 mt-1">ගෝලීය සිසුන් සංඛ්‍යාව</div></div>
-      <div><div class="disp text-3xl lg:text-4xl"><span data-counter="95">0</span>%+</div><div class="text-xs text-slate-300 mt-1">A / B සාමාර්ථ ප්‍රතිශතය</div></div>
+      <div><div class="disp text-3xl lg:text-5xl"><span data-counter="10">0</span>+</div><div class="text-sm text-slate-300 mt-1">Years of experience</div></div>
+      <div><div class="disp text-3xl lg:text-5xl acc"><span data-counter="1000">0</span>+</div><div class="text-sm text-slate-300 mt-1">Students taught</div></div>
+      <div><div class="disp text-3xl lg:text-5xl"><span data-counter="95">0</span>%+</div><div class="text-sm text-slate-300 mt-1">A / B pass rate</div></div>
     </div>
   </div>
 </section>
 
-<!-- Teacher -->
+<section id="why" class="py-20 px-4 lg:px-8">
+  <div class="max-w-7xl mx-auto space-y-10">
+    <h2 class="disp text-4xl sm:text-6xl text-center">Why students choose us</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="card"><div class="ico"><i class="fa-solid fa-file-pen"></i></div><h3 class="disp text-xl">Past paper mastery</h3><p class="text-slate-300 text-sm mt-2">Ten years of papers, fully explained.</p></div>
+      <div class="card"><div class="ico"><i class="fa-solid fa-user-check"></i></div><h3 class="disp text-xl">Personal attention</h3><p class="text-slate-300 text-sm mt-2">Weak spots found and fixed, student by student.</p></div>
+      <div class="card"><div class="ico"><i class="fa-solid fa-video"></i></div><h3 class="disp text-xl">Online and in class</h3><p class="text-slate-300 text-sm mt-2">Join in person or on Zoom, with recordings.</p></div>
+      <div class="card"><div class="ico"><i class="fa-solid fa-layer-group"></i></div><h3 class="disp text-xl">200+ model papers</h3><p class="text-slate-300 text-sm mt-2">Exam-standard practice before the real thing.</p></div>
+    </div>
+  </div>
+</section>
+
 <section id="about" class="py-20 px-4 lg:px-8">
-  <div class="max-w-7xl mx-auto glass edge p-8 lg:p-14">
+  <div class="max-w-6xl mx-auto glass edge p-8 lg:p-14">
     <div class="grid lg:grid-cols-12 gap-12 items-center">
       <div class="lg:col-span-5">
         <div class="frame mx-auto max-w-sm">
           <div class="relative w-full h-[470px] sm:h-[520px] rounded-[1.25rem] overflow-hidden group bg-slate-950">
-            <img src="https://i.ibb.co/DcpQgkw/Confident-Professional-in-a-Cinematic-Office.png" alt="MADHAWA RANATHUNGA - Chemistry Master" class="pic absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" style="object-position:center 14%" loading="lazy">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/15 to-transparent"></div>
+            <img src="https://i.ibb.co/DcpQgkw/Confident-Professional-in-a-Cinematic-Office.png" alt="Madhawa Ranathunga" class="pic absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" style="object-position:center 14%" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/10 to-transparent"></div>
             <div class="absolute bottom-0 w-full p-6">
-              <span class="text-[11px] tracking-[.2em] acc font-bold"><i class="fa-solid fa-atom"></i> Chemistry Master</span>
-              <h4 class="disp text-2xl mt-1">MADHAWA RANATHUNGA</h4>
-              <p class="text-xs text-slate-300">A/L Chemistry Lecturer</p>
-              <div class="chip mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold"><i class="fa-solid fa-award soft"></i> 10+ Years of Experience</div>
+              <h3 class="disp text-2xl">Madhawa Ranathunga</h3>
+              <p class="text-sm text-slate-300">A/L Chemistry Lecturer</p>
+              <div class="chip mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold"><i class="fa-solid fa-award acc"></i> 10+ years of experience</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="lg:col-span-7 space-y-6">
-        <div class="acc text-sm font-bold tracking-wide"><i class="fa-solid fa-flask"></i> දේශකයාණන් පිළිබඳව</div>
-        <h2 class="disp text-3xl sm:text-5xl">රසායන විද්‍යාව <span class="shine">කටපාඩම් නොකර</span> ඉගෙනගන්න හරියාකාර ක්‍රමය.</h2>
-        <p class="text-slate-300 max-w-xl">A/L Chemistry යනු කටපාඩම් කර විභාගය ලිවිය හැකි විෂයක් නොවේ. සෑම සිද්ධාන්තයක්ම (Theory) මුලසිට ඉතා සරලව හා තර්කානුකූලව සිසුන්ගේ මනසට ධාරණය වන පරිදි ඉගැන්වීම අපගේ විශේෂත්වයයි.</p>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="tile"><h4 class="disp text-base">ප්‍රශ්න පත්‍ර විවරණය</h4><p class="text-xs text-slate-300 mt-1">ගෙවීගිය වසර 10ක පසුගිය විභාග ප්‍රශ්න පත්‍ර සියල්ලම සවිස්තරාත්මකව සාකච්ඡා කිරීම.</p></div>
-          <div class="tile"><h4 class="disp text-base">Individual Attention</h4><p class="text-xs text-slate-300 mt-1">සෑම සිසුවෙකුගේම ලකුණු මට්ටම පරීක්ෂා කර දුර්වලතා හඳුනාගෙන මගපෙන්වීම.</p></div>
-          <div class="tile"><h4 class="disp text-base">Online &amp; Physical Access</h4><p class="text-xs text-slate-300 mt-1">Physical පන්ති මෙන්ම දිවයිනටම Zoom සහ Recording පහසුකම්.</p></div>
-          <div class="tile"><h4 class="disp text-base">Full Model Papers</h4><p class="text-xs text-slate-300 mt-1">විභාගයට පෙර ප්‍රමිතියෙන් යුත් අනුමාන ප්‍රශ්න පත්‍ර 200 කට වැඩි ප්‍රමාණයක්.</p></div>
-        </div>
+      <div class="lg:col-span-7 space-y-5">
+        <h2 class="disp text-4xl sm:text-5xl">Chemistry you <span class="acc">understand</span>, not memorise.</h2>
+        <p class="text-slate-300 text-lg max-w-lg">Every theory is built from the ground up, simply and logically, so it stays with you on exam day.</p>
+        <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap"></i> Join the classes</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Tool -->
-<section id="tools" class="py-20 px-4 lg:px-8 pb-36">
+<section id="tools" class="py-20 px-4 lg:px-8 pb-40">
   <div class="max-w-7xl mx-auto space-y-10">
     <div class="text-center space-y-3">
-      <span class="acc text-sm font-bold"><i class="fa-solid fa-calculator"></i> Interactive Student Toolkit</span>
-      <h2 class="disp text-4xl sm:text-6xl">Smart Chemistry <span class="shine">ගණක යන්ත්‍රය</span></h2>
-      <p class="text-slate-300 max-w-xl mx-auto">ඕනෑම රසායනික සංයෝගයක අණුක භාරය (Molar Mass) ක්ෂණිකව ගණනය කරගන්න. වරහන් සහිත සූත්‍රත් (Ca(OH)2) පිළිගනී.</p>
+      <h2 class="disp text-4xl sm:text-6xl">Molar mass <span class="acc">calculator</span></h2>
+      <p class="text-slate-300 max-w-md mx-auto">Type any formula. Brackets work too, like Ca(OH)2.</p>
     </div>
     <div class="max-w-2xl mx-auto glass edge p-8 space-y-6">
       <div>
-        <label for="formulaInput" class="block text-sm font-semibold text-slate-200 mb-2">රසායනික සූත්‍රය (Chemical Formula)</label>
+        <label for="formulaInput" class="block text-sm font-semibold text-slate-200 mb-2">Chemical formula</label>
         <div class="flex gap-3">
-          <input id="formulaInput" class="field" placeholder="උදා: H2SO4, KMnO4, Ca(OH)2..." onkeydown="if(event.key==='Enter')calculateMolarMass()">
-          <button onclick="calculateMolarMass()" class="btn !py-3 !px-6 shrink-0 text-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> ගණනය කරන්න</button>
+          <input id="formulaInput" class="field" placeholder="e.g. H2SO4, KMnO4, Ca(OH)2" onkeydown="if(event.key==='Enter')calculateMolarMass()">
+          <button onclick="calculateMolarMass()" class="btn !py-3 !px-6 shrink-0 text-sm">Calculate</button>
         </div>
       </div>
-      <div class="flex flex-wrap gap-2 items-center text-xs text-slate-300">
-        <span>නිතර භාවිත වන:</span>
+      <div class="flex flex-wrap gap-2 items-center text-sm text-slate-300">
+        <span>Try:</span>
         <button onclick="setFormula('H2SO4')" class="chip px-3 py-1 hover:text-white">H2SO4</button>
         <button onclick="setFormula('KMnO4')" class="chip px-3 py-1 hover:text-white">KMnO4</button>
         <button onclick="setFormula('C6H12O6')" class="chip px-3 py-1 hover:text-white">C6H12O6</button>
@@ -173,29 +153,32 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
         <button onclick="setFormula('Ca(OH)2')" class="chip px-3 py-1 hover:text-white">Ca(OH)2</button>
       </div>
       <div id="molarResultBox" class="hidden p-6 rounded-2xl space-y-2" style="background:rgba(2,6,14,.75);border:1px solid rgba(var(--rgb),.45)">
-        <span class="text-xs text-slate-400 block">අණුක භාරය (Molar Mass):</span>
+        <span class="text-sm text-slate-400 block">Molar mass</span>
         <div class="disp text-4xl acc" id="molarMassValue">0 g/mol</div>
-        <p class="text-xs text-slate-300" id="molarMassBreakdown"></p>
+        <p class="text-sm text-slate-300" id="molarMassBreakdown"></p>
       </div>
     </div>
   </div>
 </section>
 </main>
 
-<footer class="border-t border-white/10 py-12 px-4 lg:px-8 text-slate-400 text-sm" style="background:rgba(2,5,10,.82);backdrop-filter:blur(14px)">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 mb-8">
-    <div class="space-y-3 md:col-span-2">
-      <div class="flex items-center gap-3"><i class="fa-solid fa-atom text-2xl acc"></i><span class="disp text-xl text-white">chemistry <span class="acc">master</span></span></div>
-      <p class="text-xs max-w-sm">ශ්‍රී ලංකාවේ උසස් පෙළ රසායන විද්‍යා විෂය වෙනුවෙන් විශිෂ්ටතම ප්‍රතිඵල ලබාදෙන තාක්ෂණික පන්ති කාමරය.</p>
+<footer class="border-t border-white/10 py-12 px-4 lg:px-8 text-slate-400 text-sm" style="background:rgba(2,5,10,.85);backdrop-filter:blur(14px)">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 mb-8">
+    <div class="space-y-3">
+      <div class="flex items-center gap-3">
+        <img class="logo" src="https://i.ibb.co/4wFZgr8X/lms-portal-2.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'">
+        <span class="disp text-xl text-white">Chemistry <span class="acc">Master</span></span>
+      </div>
+      <p class="max-w-xs">Logical, exam-focused A/L Chemistry for Sri Lankan students.</p>
     </div>
     <div>
-      <h5 class="text-white font-bold mb-3 text-sm">Quick Links</h5>
-      <ul class="space-y-2 text-xs">
-        <li><a href="#about" class="nl">දේශකයාණන්</a></li><li><a href="#tools" class="nl">Chem Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li>
+      <h4 class="text-white font-semibold mb-3">Quick links</h4>
+      <ul class="space-y-2">
+        <li><a href="#why" class="nl">Why Us</a></li><li><a href="#about" class="nl">About</a></li><li><a href="#tools" class="nl">Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li>
       </ul>
     </div>
     <div>
-      <h5 class="text-white font-bold mb-3 text-sm">සම්බන්ධ වන්න</h5>
+      <h4 class="text-white font-semibold mb-3">Connect</h4>
       <div class="flex gap-4 text-lg">
         <a href="#" aria-label="Facebook" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-facebook"></i></a>
         <a href="#" aria-label="YouTube" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-youtube"></i></a>
@@ -203,69 +186,54 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
       </div>
     </div>
   </div>
-  <div class="max-w-7xl mx-auto pt-6 border-t border-white/10 text-center text-xs text-slate-500">© 2026 Chemistry Master Academy. All Rights Reserved. Designed for Sri Lankan A/L Students.</div>
+  <div class="max-w-7xl mx-auto pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+    <span>© 2026 Chemistry Master Academy. All rights reserved.</span>
+    <span>Created by <strong class="acc font-bold tracking-wide">T-WEB</strong></span>
+  </div>
 </footer>
 
-<div id="dots" class="glass !rounded-full" role="group" aria-label="Theme"><span id="tname"></span></div>
+<div id="dots" class="glass" role="group" aria-label="Theme"><span id="tname"></span></div>
 
 <script>
-/* පසුබිම් රූපයක් වෙනස් වන විට ඒ සමඟම අකුරු ස්ටයිල්, පාට, ප්‍රමාණය සියල්ල වෙනස් වේ */
+// Each background gets ONE accent colour and its own type style.
 const themes = [
-  { name:'Precision', url:"https://i.ibb.co/s9XBzy8R/janne-aspegren-lg-EMAUq-Bx3o-unsplash.jpg",
-    rgb:'34,211,238', a:'#22d3ee', b:'#818cf8', soft:'#a5f3fc',
-    fd:"'Sora','Noto Sans Sinhala',sans-serif", fb:"'Plus Jakarta Sans','Noto Sans Sinhala',sans-serif",
-    wd:700, td:'-.03em', ld:1.28, fz:'15px', r:'18px' },
-  { name:'Botanical', url:"https://i.ibb.co/tM6Ygzz6/jonathan-gallegos-5-FGqf-V6-Ujz-I-unsplash.jpg",
-    rgb:'52,211,153', a:'#34d399', b:'#bef264', soft:'#a7f3d0',
-    fd:"'Fraunces','Noto Serif Sinhala',serif", fb:"'Plus Jakarta Sans','Noto Serif Sinhala',serif",
-    wd:700, td:'-.015em', ld:1.3, fz:'15.5px', r:'28px' },
-  { name:'Golden Hour', url:"https://i.ibb.co/C5Dhqv0j/lucas-calloch-P-yzuy-WFEIk-unsplash.jpg",
-    rgb:'251,191,36', a:'#fbbf24', b:'#fb7185', soft:'#fde68a',
-    fd:"'DM Serif Display','Abhaya Libre',serif", fb:"'Plus Jakarta Sans','Abhaya Libre',serif",
-    wd:400, td:'0em', ld:1.3, fz:'17px', r:'6px' },
-  { name:'Neon Orbit', url:"https://i.ibb.co/gZ0Js2q5/su-san-lee-E-e-Ww-M29wf-U-unsplash.jpg",
-    rgb:'192,132,252', a:'#c084fc', b:'#f472b6', soft:'#e9d5ff',
-    fd:"'Syne','Yaldevi',sans-serif", fb:"'Plus Jakarta Sans','Yaldevi',sans-serif",
-    wd:800, td:'-.04em', ld:1.3, fz:'15px', r:'22px' }
+  {name:'Precision',   url:"https://i.ibb.co/s9XBzy8R/janne-aspegren-lg-EMAUq-Bx3o-unsplash.jpg", rgb:'34,211,238',  a:'#22d3ee', fd:"'Sora',sans-serif",              wd:700, td:'-.03em',  r:'18px'},
+  {name:'Botanical',   url:"https://i.ibb.co/tM6Ygzz6/jonathan-gallegos-5-FGqf-V6-Ujz-I-unsplash.jpg", rgb:'52,211,153',  a:'#34d399', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'28px'},
+  {name:'Golden Hour', url:"https://i.ibb.co/C5Dhqv0j/lucas-calloch-P-yzuy-WFEIk-unsplash.jpg",       rgb:'251,191,36',  a:'#fbbf24', fd:"'DM Serif Display',serif",       wd:400, td:'0em',     r:'6px'},
+  {name:'Neon Orbit',  url:"https://i.ibb.co/gZ0Js2q5/su-san-lee-E-e-Ww-M29wf-U-unsplash.jpg",        rgb:'192,132,252', a:'#c084fc', fd:"'Syne',sans-serif",              wd:800, td:'-.04em',  r:'22px'}
 ];
-
 const root = document.documentElement, layers = [bgA, bgB];
-let cur = -1, front = 0;
+let cur = -1, front = 0, timer;
 
 function applyTheme(i, instant){
   if(i === cur) return;
   const t = themes[i];
   const paint = () => {
     const s = root.style;
-    s.setProperty('--rgb', t.rgb); s.setProperty('--a', t.a); s.setProperty('--b', t.b); s.setProperty('--soft', t.soft);
-    s.setProperty('--fd', t.fd); s.setProperty('--fb', t.fb); s.setProperty('--wd', t.wd);
-    s.setProperty('--td', t.td); s.setProperty('--ld', t.ld); s.setProperty('--fz', t.fz); s.setProperty('--r', t.r);
-    document.getElementById('tname').textContent = t.name;
+    s.setProperty('--rgb', t.rgb); s.setProperty('--a', t.a); s.setProperty('--fd', t.fd);
+    s.setProperty('--wd', t.wd); s.setProperty('--td', t.td); s.setProperty('--r', t.r);
+    tname.textContent = t.name;
     document.querySelectorAll('#dots button').forEach((d, k) => d.classList.toggle('on', k === i));
   };
-  // crossfade background
   const next = layers[1 - front], prev = layers[front];
   next.style.backgroundImage = `url('${t.url}')`;
   next.classList.add('on'); prev.classList.remove('on'); front = 1 - front;
-  // text style swap: blur out → change fonts → blur in
-  if(instant || cur < 0){ paint(); }
+  if(instant || cur < 0) paint();
   else { document.body.classList.add('swap'); setTimeout(() => { paint(); document.body.classList.remove('swap'); }, 450); }
   cur = i;
 }
+function auto(){ clearInterval(timer); timer = setInterval(() => applyTheme((cur + 1) % themes.length), 12000); }
 
-const dots = document.getElementById('dots');
 themes.forEach((t, i) => {
   const b = document.createElement('button');
-  b.setAttribute('aria-label', t.name + ' theme'); b.title = t.name;
-  b.onclick = () => applyTheme(i);
-  dots.insertBefore(b, dots.lastElementChild);
+  b.setAttribute('aria-label', t.name); b.title = t.name;
+  b.onclick = () => { applyTheme(i); auto(); };
+  dots.insertBefore(b, tname);
 });
-// default: දවසින් දවස මාරු වේ
 applyTheme(Math.floor(Date.now() / 864e5) % themes.length, true);
+auto();
 
-/* ===== Molar mass (supports parentheses) ===== */
 const W = {H:1.008,He:4.002,Li:6.94,Be:9.012,B:10.81,C:12.011,N:14.007,O:15.999,F:18.998,Ne:20.18,Na:22.99,Mg:24.305,Al:26.982,Si:28.085,P:30.974,S:32.06,Cl:35.45,K:39.098,Ca:40.078,Mn:54.938,Fe:55.845,Cu:63.546,Zn:65.38,Br:79.904,I:126.90};
-
 function parseFormula(f){
   const st = [{}], re = /([A-Z][a-z]?)(\d*)|(\()|\)(\d*)/g; let m;
   while((m = re.exec(f))){
@@ -280,42 +248,34 @@ function parseFormula(f){
 function setFormula(f){ formulaInput.value = f; calculateMolarMass(); }
 function calculateMolarMass(){
   const f = formulaInput.value.replace(/\s/g, ''); if(!f) return;
-  const c = parseFormula(f), box = molarResultBox;
+  const c = parseFormula(f);
   if(c && Object.keys(c).length){
     let total = 0; const parts = [];
     for(const e in c){ total += W[e] * c[e]; parts.push(`${e} (${c[e]} × ${W[e]})`); }
-    box.classList.remove('hidden');
+    molarResultBox.classList.remove('hidden');
     molarMassValue.innerText = `${total.toFixed(2)} g/mol`;
-    molarMassBreakdown.innerText = 'සංයුතිය: ' + parts.join(' + ');
-    showToast('ගණනය කිරීම සාර්ථකයි!', 'success');
-  } else showToast('කරුණාකර නිවැරදි රසායනික සූත්‍රයක් ඇතුළත් කරන්න.', 'error');
+    molarMassBreakdown.innerText = 'Breakdown: ' + parts.join(' + ');
+    showToast('Calculated successfully.', 'success');
+  } else showToast('Enter a valid chemical formula, e.g. H2SO4.', 'error');
 }
-
-function showToast(msg, type='info'){
-  const col = {success:'#34d399', error:'#f87171', info:'var(--a)'}[type];
-  const icon = {success:'fa-circle-check', error:'fa-circle-xmark', info:'fa-circle-info'}[type];
+function showToast(msg, type){
+  const col = type === 'success' ? '#34d399' : '#f87171';
+  const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
   const t = document.createElement('div');
-  t.className = 'glass p-4 flex items-center gap-3 text-xs pointer-events-auto transition-all duration-300 translate-x-10 opacity-0';
+  t.className = 'glass p-4 flex items-center gap-3 text-sm pointer-events-auto transition-all duration-300 translate-x-10 opacity-0';
   t.style.borderLeft = `3px solid ${col}`;
   t.innerHTML = `<i class="fa-solid ${icon} text-lg" style="color:${col}"></i><span>${msg}</span>`;
   toastContainer.appendChild(t);
   setTimeout(() => t.classList.remove('translate-x-10', 'opacity-0'), 10);
   setTimeout(() => { t.classList.add('opacity-0', 'translate-x-10'); setTimeout(() => t.remove(), 300); }, 3500);
 }
-
 mobileMenuBtn.onclick = () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); };
 document.querySelectorAll('.mobile-link').forEach(l => l.onclick = () => { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); });
 
-/* Counters */
-let counted = false;
-function runCounters(){
-  if(counted) return; counted = true;
-  document.querySelectorAll('[data-counter]').forEach(el => {
-    const target = +el.dataset.counter, step = Math.ceil(target / 40); let n = 0;
-    (function tick(){ n += step; if(n < target){ el.innerText = n; setTimeout(tick, 30); } else el.innerText = target; })();
-  });
-}
-setTimeout(runCounters, 600);
+document.querySelectorAll('[data-counter]').forEach(el => {
+  const target = +el.dataset.counter, step = Math.ceil(target / 40); let n = 0;
+  setTimeout(function tick(){ n += step; if(n < target){ el.innerText = n; setTimeout(tick, 30); } else el.innerText = target; }, 500);
+});
 </script>
 </body>
 </html>
