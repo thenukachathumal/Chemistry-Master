@@ -30,11 +30,15 @@ body{margin:0;min-height:100vh;background:#04070d;color:#f1f5f9;overflow-x:hidde
 .card:hover{transform:translateY(-4px);border-color:rgba(var(--rgb),.6);background:rgba(var(--rgb),.08)}
 .ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(var(--rgb),.16);color:var(--a);font-size:18px;margin-bottom:.9rem}
 .frame{padding:8px;border-radius:1.75rem;background:rgba(var(--rgb),.35);box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 60px rgba(var(--rgb),.2)}
-.lock{display:inline-block;max-width:100%}
-.mc{display:block;width:max-content;margin:0 auto;color:#fff;font-size:clamp(4.2rem,15vw,10.5rem);text-shadow:0 6px 40px rgba(0,0,0,.45)}
-.tl{display:block;width:0;min-width:100%;white-space:nowrap;text-align:left;text-transform:uppercase;font:800 20px/1.3 'Plus Jakarta Sans',sans-serif;color:var(--a);margin-top:.45rem;text-shadow:0 2px 14px rgba(0,0,0,.65)}
-.mc+.tl{margin-top:1.1rem}
-#top{text-shadow:0 2px 16px rgba(0,0,0,.55)}#top .btn{text-shadow:none}
+#top{position:relative;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+#top::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(75% 95% at 28% 52%,rgba(3,6,12,.66),transparent)}
+#top .btn{text-shadow:none}
+.lock{width:fit-content;max-width:100%;text-align:left}
+.mc{display:block;width:max-content;margin:0;color:#fff;font-size:clamp(3rem,12vw,7rem);line-height:.86;text-shadow:0 6px 40px rgba(0,0,0,.5)}
+.tl{display:block;width:0;min-width:100%;white-space:nowrap;text-align:left;text-transform:uppercase;font:800 16px/1.15 'Plus Jakarta Sans',sans-serif;color:var(--a);margin-top:.3rem;text-shadow:0 0 3px rgba(0,0,0,.85),0 2px 16px rgba(0,0,0,.85)}
+.mc+.tl{margin-top:.55rem}
+.cta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.9rem 1.5rem;margin-top:2.25rem}
+@media(max-width:639px){.cta .btn{padding:.85rem 1.1rem;font-size:.9rem}.cb{text-transform:capitalize}}
 .logo{width:46px;height:46px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.25)}
 .field{width:100%;background:rgba(2,6,14,.7);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:.8rem 1.1rem;color:#fff;font-family:ui-monospace,monospace}
 .field:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(var(--rgb),.25)}
@@ -58,7 +62,7 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 <nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4">
   <div class="max-w-7xl mx-auto glass px-5 py-3 flex items-center justify-between">
     <a href="#" class="flex items-center gap-3">
-      <img class="logo" src="https://i.ibb.co/4wFZgr8X/lms-portal-2.jpg" alt="Chemistry Master logo" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-atom text-3xl acc'}))">
+      <img class="logo" src="https://i.ibb.co/q32djW16/Whats-App-Image-2026-10-26-at-14-13-54.jpg" alt="Chemistry Master logo" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-atom text-3xl acc'}))">
       <span>
         <span class="disp text-xl block">Chemistry <span class="acc">Master</span></span>
         <span class="block text-[11px] tracking-[.18em] text-slate-300 font-semibold">MADHAWA RANATHUNGA</span>
@@ -80,20 +84,21 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 
 <main>
 <section id="top" class="pt-40 pb-24 px-4 lg:px-8">
-  <div class="max-w-7xl mx-auto space-y-8 text-center">
-    <div class="chip inline-flex items-center gap-2 px-4 py-2 text-sm font-medium">
-      <span class="w-2.5 h-2.5 rounded-full animate-pulse" style="background:var(--a)"></span> Sri Lanka's premier English Medium A/L Chemistry academy
-    </div>
-    <h1 class="lock"><span id="mc" class="mc disp">M-CHEM</span><span class="tl">Outstanding results</span><span class="tl">of a qualitative transformation</span></h1>
-    <p class="text-lg sm:text-xl max-w-xl mx-auto text-slate-200">No rote learning. Learn the science and answer every paper with confidence.</p>
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap text-lg"></i> Enter Student Portal</a>
-      <a href="#tools" class="btn ghost"><i class="fa-solid fa-calculator"></i> Try the calculator</a>
-    </div>
-    <div class="pt-8 grid grid-cols-3 gap-4 border-t border-white/15 max-w-xl mx-auto">
-      <div><div class="disp text-3xl lg:text-5xl"><span data-counter="10">0</span>+</div><div class="text-sm text-slate-300 mt-1">Years of experience</div></div>
-      <div><div class="disp text-3xl lg:text-5xl acc"><span data-counter="1000">0</span>+</div><div class="text-sm text-slate-300 mt-1">Students taught</div></div>
-      <div><div class="disp text-3xl lg:text-5xl"><span data-counter="95">0</span>%+</div><div class="text-sm text-slate-300 mt-1">A / B pass rate</div></div>
+  <div class="max-w-7xl mx-auto">
+    <div id="lock" class="lock">
+      <div class="chip inline-flex items-center gap-2 px-4 py-2 text-sm font-medium mb-4 max-w-full">
+        <span class="w-2.5 h-2.5 rounded-full animate-pulse shrink-0" style="background:var(--a)"></span> Sri Lanka's premier English Medium A/L Chemistry academy
+      </div>
+      <h1><span id="mc" class="mc disp">M-CHEM</span><span class="tl">Outstanding results</span><span class="tl">of a qualitative transformation</span></h1>
+      <div class="cta">
+        <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap text-lg"></i> <span class="hidden sm:inline">Enter&nbsp;</span>Student Portal</a>
+        <a href="#tools" class="btn ghost"><i class="fa-solid fa-calculator"></i> <span class="hidden sm:inline">Try the&nbsp;</span><span class="cb">calculator</span></a>
+      </div>
+      <div class="mt-10 pt-6 grid grid-cols-3 gap-4 border-t border-white/15">
+        <div><div class="disp text-3xl lg:text-5xl"><span data-counter="10">0</span>+</div><div class="text-sm text-slate-300 mt-1">Years of experience</div></div>
+        <div><div class="disp text-3xl lg:text-5xl acc"><span data-counter="1000">0</span>+</div><div class="text-sm text-slate-300 mt-1">Students taught</div></div>
+        <div><div class="disp text-3xl lg:text-5xl"><span data-counter="95">0</span>%+</div><div class="text-sm text-slate-300 mt-1">A / B pass rate</div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -171,7 +176,7 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
   <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 mb-8">
     <div class="space-y-3">
       <div class="flex items-center gap-3">
-        <img class="logo" src="https://i.ibb.co/4wFZgr8X/lms-portal-2.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'">
+        <img class="logo" src="https://i.ibb.co/q32djW16/Whats-App-Image-2026-10-26-at-14-13-54.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'">
         <span class="disp text-xl text-white">Chemistry <span class="acc">Master</span></span>
       </div>
       <p class="max-w-xs">Logical, exam-focused A/L Chemistry for Sri Lankan students.</p>
@@ -206,7 +211,7 @@ const themes = [
   {name:'Precision',   url:"https://i.ibb.co/s9XBzy8R/janne-aspegren-lg-EMAUq-Bx3o-unsplash.jpg", rgb:'34,211,238',  a:'#22d3ee', fd:"'Sora',sans-serif",              wd:700, td:'-.03em',  r:'18px'},
   {name:'Botanical',   url:"https://i.ibb.co/tM6Ygzz6/jonathan-gallegos-5-FGqf-V6-Ujz-I-unsplash.jpg", rgb:'52,211,153',  a:'#34d399', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'28px'},
   {name:'Golden Hour', url:"https://i.ibb.co/C5Dhqv0j/lucas-calloch-P-yzuy-WFEIk-unsplash.jpg",       rgb:'251,191,36',  a:'#fbbf24', fd:"'DM Serif Display',serif",       wd:400, td:'0em',     r:'6px'},
-  {name:'Neon Orbit',  url:"https://i.ibb.co/gZ0Js2q5/su-san-lee-E-e-Ww-M29wf-U-unsplash.jpg",        rgb:'192,132,252', a:'#c084fc', fd:"'Syne',sans-serif",              wd:800, td:'-.04em',  r:'22px'}
+  {name:'Neon Orbit',  url:"https://i.ibb.co/gZ0Js2q5/su-san-lee-E-e-Ww-M29wf-U-unsplash.jpg",        rgb:'192,132,252', a:'#c084fc', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'22px'}
 ];
 const root = document.documentElement, layers = [bgA, bgB];
 let cur = -1, front = 0, timer;
@@ -229,21 +234,26 @@ function applyTheme(i, instant){
   cur = i;
 }
 function fitLock(){
-  const w = mc.getBoundingClientRect().width, L = [...document.querySelectorAll('.tl')];
-  if(!w) return;
+  const wrap = document.getElementById('lock'), L = [...document.querySelectorAll('.tl')];
+  const avail = wrap.parentElement.clientWidth;
+  mc.style.fontSize = '100px';
+  const nat = mc.getBoundingClientRect().width; if(!nat) return;
+  mc.style.fontSize = Math.min(176, 100 * avail / nat) + 'px';
+  const w = mc.getBoundingClientRect().width;
+  wrap.style.width = w + 'px';
   const tw = l => { const r = document.createRange(); r.selectNodeContents(l); return r.getBoundingClientRect().width; };
-  L.forEach(l => { l.style.fontSize = '20px'; l.style.letterSpacing = '.1em'; });
-  const fs = Math.min(30, 20 * w / Math.max(...L.map(tw)));
+  L.forEach(l => { l.style.fontSize = '20px'; l.style.letterSpacing = '.06em'; });
+  const fs = Math.min(34, 20 * w / Math.max(...L.map(tw)));
   L.forEach(l => {
-    const n = l.textContent.length;
-    l.style.fontSize = fs + 'px'; l.style.letterSpacing = (fs * .1) + 'px';
-    const ls = fs * .1, m = tw(l);
-    l.style.letterSpacing = (ls + (w - m + ls) / (n - 1)) + 'px';
+    const n = l.textContent.length, ls = fs * .06;
+    l.style.fontSize = fs + 'px'; l.style.letterSpacing = ls + 'px';
+    l.style.letterSpacing = (ls + (w - tw(l) + ls) / (n - 1)) + 'px';
   });
 }
 addEventListener('resize', fitLock);
 document.fonts.addEventListener('loadingdone', fitLock);
 document.fonts.ready.then(fitLock);
+addEventListener('load', fitLock);
 function auto(){ clearInterval(timer); timer = setInterval(() => applyTheme((cur + 1) % themes.length), 12000); }
 
 themes.forEach((t, i) => {
