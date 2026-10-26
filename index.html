@@ -1,529 +1,321 @@
 <!DOCTYPE html>
 <html lang="si" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chemistry Master | MADHAWA RANATHUNGA - A/L Chemistry</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Sinhala:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            accent: '#06b6d4',
-                            glow: '#a855f7',
-                            dark: '#030712',
-                            card: 'rgba(15, 23, 42, 0.65)'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Noto Sans Sinhala', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', sans-serif;
-            color: #f1f5f9;
-            overflow-x: hidden;
-            margin: 0;
-            min-height: 100vh;
-            position: relative;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemistry Master | MADHAWA RANATHUNGA - A/L Chemistry</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;600;700;800&family=DM+Serif+Display&family=Fraunces:wght@500;700;800&family=Noto+Sans+Sinhala:wght@300;400;600;700;800&family=Noto+Serif+Sinhala:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=Syne:wght@600;700;800&family=Yaldevi:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Theme tokens (JS swaps these with each background) ===== */
+:root{
+  --rgb:34,211,238; --a:#22d3ee; --b:#818cf8; --soft:#a5f3fc;
+  --fd:'Sora','Noto Sans Sinhala',sans-serif;
+  --fb:'Plus Jakarta Sans','Noto Sans Sinhala',sans-serif;
+  --wd:700; --td:-.025em; --ld:1.25; --fz:15px; --r:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#04070d;color:#f1f5f9;overflow-x:hidden;font-family:var(--fb);font-size:var(--fz);line-height:1.75;font-synthesis:none;transition:font-size .5s}
+.disp{font-family:var(--fd);font-weight:var(--wd);letter-spacing:var(--td);line-height:var(--ld)}
+.acc{color:var(--a)} .soft{color:var(--soft)}
+.shine{background:linear-gradient(100deg,var(--a) 20%,#fff 48%,var(--b) 75%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out infinite alternate}
+@keyframes shine{to{background-position:100% 0}}
 
-        /* පසුබිම් රූපය පෝන් හා කම්පියුටර් වලට ගැළපෙන ලෙස සහ මඳක් බ්ලර් කර ඇත (অකුරු පැහැදිලි වීමට) */
-        #dynamicBg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: blur(4px) brightness(0.6); 
-            transform: scale(1.05);
-            z-index: -2;
-            transition: background-image 1s ease-in-out;
-        }
+/* ===== Backgrounds (two layers for crossfade) ===== */
+.bg{position:fixed;inset:0;background-size:cover;background-position:center;filter:brightness(.7) saturate(1.1);transform:scale(1.04);opacity:0;transition:opacity 1.4s ease;z-index:-3}
+.bg.on{opacity:1}
+.veil{position:fixed;inset:0;z-index:-2;pointer-events:none;transition:background 1s;
+  background:radial-gradient(120% 90% at 20% 10%,rgba(var(--rgb),.16),transparent 55%),linear-gradient(180deg,rgba(4,7,13,.55),rgba(4,7,13,.82))}
 
-        /* අකුරු වඩාත් පැහැදිලි කිරීමට ලා අඳුරු Overlay එක */
-        .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(3, 7, 18, 0.4);
-            z-index: -1;
-            pointer-events: none;
-        }
+/* ===== Glass ===== */
+.glass{background:rgba(10,16,30,.58);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14);border-radius:var(--r);transition:border-color .8s}
+.glass.edge{border-top-color:rgba(var(--rgb),.55)}
+.chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);border-radius:999px}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;padding:1rem 2rem;border-radius:14px;font-weight:700;color:#06121a;
+  background:linear-gradient(120deg,var(--a),var(--b));box-shadow:0 12px 40px rgba(var(--rgb),.35);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 18px 50px rgba(var(--rgb),.5)}
+.tile{padding:1.1rem 1.25rem;border-left:3px solid var(--a);background:rgba(var(--rgb),.07);border-radius:12px;animation:pulse 5s infinite ease-in-out}
+.tile:nth-child(2){animation-delay:1.2s}.tile:nth-child(3){animation-delay:2.4s}.tile:nth-child(4){animation-delay:3.6s}
+@keyframes pulse{50%{background:rgba(var(--rgb),.16)}}
+.frame{padding:8px;border-radius:1.75rem;background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(var(--rgb),.35),rgba(255,255,255,.06));box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 60px rgba(var(--rgb),.18);transition:box-shadow .8s}
+.field{width:100%;background:rgba(2,6,14,.7);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:.8rem 1.1rem;color:#fff;font-family:ui-monospace,monospace}
+.field:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(var(--rgb),.25)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+a.nl{transition:color .2s}a.nl:hover{color:var(--a)}
 
-        /* කොටු 4 සඳහා සුදු සහ රතු පාට මාරු වන Animation එක */
-        @keyframes colorShift {
-            0% {
-                background: rgba(255, 255, 255, 0.1);
-                border-color: rgba(255, 255, 255, 0.3);
-            }
-            50% {
-                background: rgba(239, 68, 68, 0.15);
-                border-color: rgba(239, 68, 68, 0.5);
-            }
-            100% {
-                background: rgba(255, 255, 255, 0.1);
-                border-color: rgba(255, 255, 255, 0.3);
-            }
-        }
+/* ===== Style-change moment ===== */
+.swap main,.swap nav,.swap footer{opacity:0;filter:blur(8px);transform:translateY(6px)}
+main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 
-        .animated-box {
-            animation: colorShift 4s infinite ease-in-out;
-            backdrop-filter: blur(12px);
-        }
-
-        .glass-panel {
-            background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.03) 48%, rgba(34,211,238,.05));
-            backdrop-filter: blur(20px) saturate(155%);
-            -webkit-backdrop-filter: blur(20px) saturate(155%);
-            border: 1px solid rgba(255,255,255,.16);
-            box-shadow: 0 24px 70px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.12);
-        }
-        .glass-card {
-            background: linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.03) 62%, rgba(99,102,241,.06));
-            backdrop-filter: blur(16px) saturate(145%);
-            -webkit-backdrop-filter: blur(16px) saturate(145%);
-            border: 1px solid rgba(255,255,255,.14);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 12px 34px rgba(0,0,0,.15);
-        }
-        .teacher-photo-frame {
-            position: relative;
-            border-radius: 1.5rem;
-            padding: 7px;
-            background: linear-gradient(135deg, rgba(255,255,255,.28), rgba(34,211,238,.22), rgba(139,92,246,.30), rgba(255,255,255,.06));
-            box-shadow: 0 24px 70px rgba(0,0,0,.42), 0 0 42px rgba(34,211,238,.10);
-        }
-        .teacher-photo-frame::before {
-            content: ""; position: absolute; inset: 1px; border-radius: inherit;
-            background: linear-gradient(135deg, rgba(255,255,255,.13), transparent 38%, rgba(34,211,238,.08));
-            pointer-events: none; z-index: 2;
-        }
-        @media (max-width: 640px) {
-            .teacher-photo-image { object-position: center 16% !important; }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #030712;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4f46e5;
-        }
-    </style>
+/* ===== Theme switcher ===== */
+#dots{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:10px;padding:8px 14px}
+#dots button{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:transparent;cursor:pointer;transition:all .3s}
+#dots button.on{background:var(--a);border-color:var(--a);width:28px;border-radius:99px}
+#tname{font-size:11px;color:#cbd5e1;min-width:92px}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#04070d}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--a)}
+@media(max-width:640px){#tname{display:none}.pic{object-position:center 16%!important}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style>
 </head>
-<body class="relative">
+<body>
+<div class="bg" id="bgA"></div><div class="bg" id="bgB"></div><div class="veil"></div>
+<div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
-    <!-- දවසින් දවස මාරු වන පසුබිම් රූපය -->
-    <div id="dynamicBg"></div>
-    <div class="bg-overlay"></div>
+<nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4">
+  <div class="max-w-7xl mx-auto glass px-6 py-3 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3">
+      <span class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-900" style="background:linear-gradient(135deg,var(--a),var(--b))"><i class="fa-solid fa-atom text-xl"></i></span>
+      <span>
+        <span class="disp text-xl block leading-tight">chemistry <span class="acc">master</span></span>
+        <span class="block text-[10px] tracking-[.22em] soft font-semibold">MADHAWA RANATHUNGA</span>
+      </span>
+    </a>
+    <div class="hidden lg:flex gap-8 text-sm font-medium text-slate-200">
+      <a href="#about" class="nl">ආචාර්යවරයා</a><a href="#tools" class="nl">Chem Tools</a>
+    </div>
+    <a href="lms_portal.html" target="_blank" class="hidden lg:inline-flex btn !py-2.5 !px-5 text-xs"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
+    <button id="mobileMenuBtn" class="lg:hidden text-2xl text-slate-200" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden max-w-7xl mx-auto mt-2 glass p-6 flex-col gap-4">
+    <a href="#about" class="mobile-link block py-2 border-b border-white/10">ආචාර්යවරයා පිළිබඳව</a>
+    <a href="#tools" class="mobile-link block py-2 border-b border-white/10">Chemistry Calculator</a>
+    <a href="lms_portal.html" target="_blank" class="btn w-full mt-2"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
+  </div>
+</nav>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
+<main>
+<!-- Hero -->
+<section class="pt-40 pb-24 px-4 lg:px-8">
+  <div class="max-w-7xl mx-auto space-y-8 text-center lg:text-left">
+    <div class="chip inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wide">
+      <span class="w-2.5 h-2.5 rounded-full animate-pulse" style="background:var(--a)"></span> Sri Lanka's Premier A/L Chemistry Academy
+    </div>
+    <h1 class="disp text-5xl sm:text-7xl lg:text-8xl drop-shadow-2xl">
+      A/L Chemistry<br><span class="shine">තර්කානුකූලව ජයගන්න!</span>
+    </h1>
+    <p class="soft text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 font-semibold drop-shadow-md" style="line-height:1.85">
+      පාඩම් නොකර, රසායන විද්‍යාව විද්‍යාත්මකව අවබෝධ කරගනිමින් A/L Chemistry ප්‍රශ්න පත්‍රයට නිවැරදිව මුහුණ දීමට දිවයිනේ විශිෂ්ටතම මගපෙන්වීම.
+    </p>
+    <div class="flex flex-wrap justify-center lg:justify-start gap-3">
+      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-flask acc"></i> General Chemistry</span>
+      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-fire acc"></i> Physical Chemistry</span>
+      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-vial acc"></i> Organic Chemistry</span>
+      <span class="chip px-4 py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-cubes acc"></i> Inorganic Chemistry</span>
+    </div>
+    <div class="pt-2"><a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap text-xl"></i> Student Portal වෙත පිවිසෙන්න</a></div>
+    <div class="pt-8 grid grid-cols-3 gap-4 border-t border-white/15 max-w-xl mx-auto lg:mx-0">
+      <div><div class="disp text-3xl lg:text-4xl"><span data-counter="10">0</span>+</div><div class="text-xs text-slate-300 mt-1">වසර ගණනක අත්දැකීම්</div></div>
+      <div><div class="disp text-3xl lg:text-4xl acc"><span data-counter="1000">0</span>+</div><div class="text-xs text-slate-300 mt-1">ගෝලීය සිසුන් සංඛ්‍යාව</div></div>
+      <div><div class="disp text-3xl lg:text-4xl"><span data-counter="95">0</span>%+</div><div class="text-xs text-slate-300 mt-1">A / B සාමාර්ථ ප්‍රතිශතය</div></div>
+    </div>
+  </div>
+</section>
 
-    <!-- Navigation Header -->
-    <nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4 transition-all duration-300" id="mainNav">
-        <div class="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-3 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-3 group">
-                <div class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-atom text-xl"></i>
-                </div>
-                <div>
-                    <span class="text-xl font-extrabold tracking-wider text-white">chemistry <span class="text-cyan-400">master</span></span>
-                    <span class="block text-[10px] text-cyan-400 font-semibold tracking-widest uppercase">MADHAWA RANATHUNGA</span>
-                </div>
-            </a>
-
-            <!-- Desktop Menu -->
-            <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
-                <a href="#about" class="hover:text-cyan-400 transition-colors">ආචාර්යවරයා</a>
-                <a href="#tools" class="hover:text-cyan-400 transition-colors">Chem Tools</a>
+<!-- Teacher -->
+<section id="about" class="py-20 px-4 lg:px-8">
+  <div class="max-w-7xl mx-auto glass edge p-8 lg:p-14">
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-5">
+        <div class="frame mx-auto max-w-sm">
+          <div class="relative w-full h-[470px] sm:h-[520px] rounded-[1.25rem] overflow-hidden group bg-slate-950">
+            <img src="https://i.ibb.co/DcpQgkw/Confident-Professional-in-a-Cinematic-Office.png" alt="MADHAWA RANATHUNGA - Chemistry Master" class="pic absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" style="object-position:center 14%" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/15 to-transparent"></div>
+            <div class="absolute bottom-0 w-full p-6">
+              <span class="text-[11px] tracking-[.2em] acc font-bold"><i class="fa-solid fa-atom"></i> Chemistry Master</span>
+              <h4 class="disp text-2xl mt-1">MADHAWA RANATHUNGA</h4>
+              <p class="text-xs text-slate-300">A/L Chemistry Lecturer</p>
+              <div class="chip mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold"><i class="fa-solid fa-award soft"></i> 10+ Years of Experience</div>
             </div>
-
-            <div class="hidden lg:flex items-center gap-4">
-                <a href="lms_portal.html" target="_blank" class="relative group overflow-hidden rounded-xl p-[1px] font-semibold text-xs uppercase tracking-wider">
-                    <span class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 rounded-xl"></span>
-                    <span class="relative px-5 py-2.5 bg-slate-950 rounded-[11px] block text-white group-hover:bg-transparent transition-all">
-                        <i class="fa-solid fa-graduation-cap mr-1 text-cyan-400"></i> Student Portal
-                    </span>
-                </a>
-            </div>
-
-            <!-- Mobile Hamburger Button -->
-            <button id="mobileMenuBtn" class="lg:hidden text-slate-300 hover:text-white text-2xl focus:outline-none">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+          </div>
         </div>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="hidden lg:hidden max-w-7xl mx-auto mt-2 glass-panel rounded-2xl p-6 flex flex-col gap-4 text-slate-200">
-            <a href="#about" class="mobile-link py-2 border-b border-slate-800">ආචාර්යවරයා පිළිබඳව</a>
-            <a href="#tools" class="mobile-link py-2 border-b border-slate-800">Chemistry Calculator</a>
-            <a href="lms_portal.html" target="_blank" class="w-full text-center py-3 bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold rounded-xl mt-2">
-                <i class="fa-solid fa-graduation-cap mr-1"></i> Student Portal
-            </a>
+      </div>
+      <div class="lg:col-span-7 space-y-6">
+        <div class="acc text-sm font-bold tracking-wide"><i class="fa-solid fa-flask"></i> දේශකයාණන් පිළිබඳව</div>
+        <h2 class="disp text-3xl sm:text-5xl">රසායන විද්‍යාව <span class="shine">කටපාඩම් නොකර</span> ඉගෙනගන්න හරියාකාර ක්‍රමය.</h2>
+        <p class="text-slate-300 max-w-xl">A/L Chemistry යනු කටපාඩම් කර විභාගය ලිවිය හැකි විෂයක් නොවේ. සෑම සිද්ධාන්තයක්ම (Theory) මුලසිට ඉතා සරලව හා තර්කානුකූලව සිසුන්ගේ මනසට ධාරණය වන පරිදි ඉගැන්වීම අපගේ විශේෂත්වයයි.</p>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="tile"><h4 class="disp text-base">ප්‍රශ්න පත්‍ර විවරණය</h4><p class="text-xs text-slate-300 mt-1">ගෙවීගිය වසර 10ක පසුගිය විභාග ප්‍රශ්න පත්‍ර සියල්ලම සවිස්තරාත්මකව සාකච්ඡා කිරීම.</p></div>
+          <div class="tile"><h4 class="disp text-base">Individual Attention</h4><p class="text-xs text-slate-300 mt-1">සෑම සිසුවෙකුගේම ලකුණු මට්ටම පරීක්ෂා කර දුර්වලතා හඳුනාගෙන මගපෙන්වීම.</p></div>
+          <div class="tile"><h4 class="disp text-base">Online &amp; Physical Access</h4><p class="text-xs text-slate-300 mt-1">Physical පන්ති මෙන්ම දිවයිනටම Zoom සහ Recording පහසුකම්.</p></div>
+          <div class="tile"><h4 class="disp text-base">Full Model Papers</h4><p class="text-xs text-slate-300 mt-1">විභාගයට පෙර ප්‍රමිතියෙන් යුත් අනුමාන ප්‍රශ්න පත්‍ර 200 කට වැඩි ප්‍රමාණයක්.</p></div>
         </div>
-    </nav>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 px-4 lg:px-8 overflow-hidden">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
-            
-            <div class="lg:col-span-8 space-y-8 text-center lg:text-left">
-                <!-- Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-widest shadow-inner">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    Sri Lanka's Premier A/L Chemistry Academy
-                </div>
-
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                    A/L Chemistry <br>
-                    <span class="text-cyan-400">තර්කානුකූලව</span> ජයගන්න!
-                </h1>
-
-                <!-- ඉල්ලූ පරිදි කහ පාටින් ලබා දුන් වැකිය -->
-                <p class="text-amber-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed font-semibold drop-shadow">
-                    පාඩම් නොකර, රසායන විද්‍යාව විද්‍යාත්මකව අවබෝධ කරගනිමින් A/L Chemistry ප්‍රශ්න පත්‍රයට නිවැරදිව මුහුණ දීමට දිවයිනේ විශිෂ්ටතම මගපෙන්වීම. 
-                </p>
-
-                <!-- Chemistry Category Pills -->
-                <div class="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
-                    <span class="glass-card px-4 py-2 rounded-xl text-xs font-medium text-slate-300 flex items-center gap-2 border border-slate-700/50">
-                        <i class="fa-solid fa-flask text-indigo-400"></i> General Chemistry
-                    </span>
-                    <span class="glass-card px-4 py-2 rounded-xl text-xs font-medium text-slate-300 flex items-center gap-2 border border-slate-700/50">
-                        <i class="fa-solid fa-fire text-cyan-400"></i> Physical Chemistry
-                    </span>
-                    <span class="glass-card px-4 py-2 rounded-xl text-xs font-medium text-slate-300 flex items-center gap-2 border border-slate-700/50">
-                        <i class="fa-solid fa-vial text-purple-400"></i> Organic Chemistry
-                    </span>
-                    <span class="glass-card px-4 py-2 rounded-xl text-xs font-medium text-slate-300 flex items-center gap-2 border border-slate-700/50">
-                        <i class="fa-solid fa-cubes text-emerald-400"></i> Inorganic Chemistry
-                    </span>
-                </div>
-
-                <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                    <a href="lms_portal.html" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold rounded-2xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 text-center flex items-center justify-center gap-3">
-                        <i class="fa-solid fa-graduation-cap text-xl"></i> Student Portal වෙත පිවිසෙන්න
-                    </a>
-                </div>
-
-                <!-- Quick Stats Badge Row -->
-                <div class="pt-8 grid grid-cols-3 gap-4 border-t border-slate-800/80 max-w-lg mx-auto lg:mx-0">
-                    <div>
-                        <div class="text-2xl lg:text-3xl font-extrabold text-white font-mono"><span data-counter="10">0</span>+</div>
-                        <div class="text-xs text-slate-400 mt-1">වසර ගණනක අත්දැකීම්</div>
-                    </div>
-                    <div>
-                        <div class="text-2xl lg:text-3xl font-extrabold text-cyan-400 font-mono"><span data-counter="1000">0</span>+</div>
-                        <div class="text-xs text-slate-400 mt-1">ගෝලීය සිසුන් සංඛ්‍යාව</div>
-                    </div>
-                    <div>
-                        <div class="text-2xl lg:text-3xl font-extrabold text-purple-400 font-mono"><span data-counter="95">0</span>%+</div>
-                        <div class="text-xs text-slate-400 mt-1">A / B සාමාර්ථ ප්‍රතිශතය</div>
-                    </div>
-                </div>
-
-            </div>
-
+<!-- Tool -->
+<section id="tools" class="py-20 px-4 lg:px-8 pb-36">
+  <div class="max-w-7xl mx-auto space-y-10">
+    <div class="text-center space-y-3">
+      <span class="acc text-sm font-bold"><i class="fa-solid fa-calculator"></i> Interactive Student Toolkit</span>
+      <h2 class="disp text-4xl sm:text-6xl">Smart Chemistry <span class="shine">ගණක යන්ත්‍රය</span></h2>
+      <p class="text-slate-300 max-w-xl mx-auto">ඕනෑම රසායනික සංයෝගයක අණුක භාරය (Molar Mass) ක්ෂණිකව ගණනය කරගන්න. වරහන් සහිත සූත්‍රත් (Ca(OH)2) පිළිගනී.</p>
+    </div>
+    <div class="max-w-2xl mx-auto glass edge p-8 space-y-6">
+      <div>
+        <label for="formulaInput" class="block text-sm font-semibold text-slate-200 mb-2">රසායනික සූත්‍රය (Chemical Formula)</label>
+        <div class="flex gap-3">
+          <input id="formulaInput" class="field" placeholder="උදා: H2SO4, KMnO4, Ca(OH)2..." onkeydown="if(event.key==='Enter')calculateMolarMass()">
+          <button onclick="calculateMolarMass()" class="btn !py-3 !px-6 shrink-0 text-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> ගණනය කරන්න</button>
         </div>
-    </section>
+      </div>
+      <div class="flex flex-wrap gap-2 items-center text-xs text-slate-300">
+        <span>නිතර භාවිත වන:</span>
+        <button onclick="setFormula('H2SO4')" class="chip px-3 py-1 hover:text-white">H2SO4</button>
+        <button onclick="setFormula('KMnO4')" class="chip px-3 py-1 hover:text-white">KMnO4</button>
+        <button onclick="setFormula('C6H12O6')" class="chip px-3 py-1 hover:text-white">C6H12O6</button>
+        <button onclick="setFormula('CaCO3')" class="chip px-3 py-1 hover:text-white">CaCO3</button>
+        <button onclick="setFormula('Ca(OH)2')" class="chip px-3 py-1 hover:text-white">Ca(OH)2</button>
+      </div>
+      <div id="molarResultBox" class="hidden p-6 rounded-2xl space-y-2" style="background:rgba(2,6,14,.75);border:1px solid rgba(var(--rgb),.45)">
+        <span class="text-xs text-slate-400 block">අණුක භාරය (Molar Mass):</span>
+        <div class="disp text-4xl acc" id="molarMassValue">0 g/mol</div>
+        <p class="text-xs text-slate-300" id="molarMassBreakdown"></p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
 
-    <!-- Teacher Bio Section -->
-    <section id="about" class="py-24 px-4 lg:px-8 relative">
-        <div class="max-w-7xl mx-auto glass-panel rounded-3xl p-8 lg:p-12 border border-cyan-500/15 shadow-2xl shadow-indigo-950/30">
-            <div class="grid lg:grid-cols-12 gap-12 items-center">
-                
-                <div class="lg:col-span-5 relative">
-                    <div class="teacher-photo-frame mx-auto max-w-sm overflow-hidden">
-                        <div class="w-full h-[470px] sm:h-[520px] rounded-[1.15rem] relative overflow-hidden group bg-slate-950">
-                            <img src="https://i.ibb.co/DcpQgkw/Confident-Professional-in-a-Cinematic-Office.png"
-                                 alt="MADHAWA RANATHUNGA - Chemistry Master"
-                                 class="teacher-photo-image absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.025]" style="object-position:center 14%;"
-                                 loading="lazy">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/10 to-transparent pointer-events-none"></div>
-                             <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/[0.08] to-transparent pointer-events-none"></div>
-                            <div class="absolute bottom-0 w-full p-5 text-left">
-                                <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-cyan-300 mb-2">
-                                    <i class="fa-solid fa-atom"></i> Chemistry Master
-                                </span>
-                                <h4 class="text-xl font-extrabold text-white">MADHAWA RANATHUNGA</h4>
-                                <p class="text-xs text-slate-300 mt-1">A/L Chemistry Lecturer</p>
-                                <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-3 py-1.5 backdrop-blur-md">
-                                    <i class="fa-solid fa-award text-amber-300"></i>
-                                    <span class="text-xs text-white font-semibold">10+ Years of Experience</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<footer class="border-t border-white/10 py-12 px-4 lg:px-8 text-slate-400 text-sm" style="background:rgba(2,5,10,.82);backdrop-filter:blur(14px)">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 mb-8">
+    <div class="space-y-3 md:col-span-2">
+      <div class="flex items-center gap-3"><i class="fa-solid fa-atom text-2xl acc"></i><span class="disp text-xl text-white">chemistry <span class="acc">master</span></span></div>
+      <p class="text-xs max-w-sm">ශ්‍රී ලංකාවේ උසස් පෙළ රසායන විද්‍යා විෂය වෙනුවෙන් විශිෂ්ටතම ප්‍රතිඵල ලබාදෙන තාක්ෂණික පන්ති කාමරය.</p>
+    </div>
+    <div>
+      <h5 class="text-white font-bold mb-3 text-sm">Quick Links</h5>
+      <ul class="space-y-2 text-xs">
+        <li><a href="#about" class="nl">දේශකයාණන්</a></li><li><a href="#tools" class="nl">Chem Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-bold mb-3 text-sm">සම්බන්ධ වන්න</h5>
+      <div class="flex gap-4 text-lg">
+        <a href="#" aria-label="Facebook" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="YouTube" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#" aria-label="WhatsApp" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto pt-6 border-t border-white/10 text-center text-xs text-slate-500">© 2026 Chemistry Master Academy. All Rights Reserved. Designed for Sri Lankan A/L Students.</div>
+</footer>
 
-                <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-widest">
-                        <i class="fa-solid fa-flask"></i> දේශකයාණන් පිළිබඳව
-                    </div>
-                    
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
-                        රසායන විද්‍යාව <span class="text-cyan-400">කටපාඩම් නොකර</span> ඉගෙනගන්න හරියාකාර ක්‍රමය.
-                    </h2>
+<div id="dots" class="glass !rounded-full" role="group" aria-label="Theme"><span id="tname"></span></div>
 
-                    <p class="text-slate-300 leading-relaxed font-light text-sm sm:text-base">
-                        A/L Chemistry යනු කටපාඩම් කර විභාගය ලිවිය හැකි විෂයක් නොවේ. සෑම සිද්ධාන්තයක්ම (Theory) මුලසිට ඉතා සරලව හා තර්කානුකූලව සිසුන්ගේ මනසට ධාරණය වන පරිදි ඉගැන්වීම අපගේ විශේෂත්වයයි. 
-                    </p>
+<script>
+/* පසුබිම් රූපයක් වෙනස් වන විට ඒ සමඟම අකුරු ස්ටයිල්, පාට, ප්‍රමාණය සියල්ල වෙනස් වේ */
+const themes = [
+  { name:'Precision', url:"https://i.ibb.co/s9XBzy8R/janne-aspegren-lg-EMAUq-Bx3o-unsplash.jpg",
+    rgb:'34,211,238', a:'#22d3ee', b:'#818cf8', soft:'#a5f3fc',
+    fd:"'Sora','Noto Sans Sinhala',sans-serif", fb:"'Plus Jakarta Sans','Noto Sans Sinhala',sans-serif",
+    wd:700, td:'-.03em', ld:1.28, fz:'15px', r:'18px' },
+  { name:'Botanical', url:"https://i.ibb.co/tM6Ygzz6/jonathan-gallegos-5-FGqf-V6-Ujz-I-unsplash.jpg",
+    rgb:'52,211,153', a:'#34d399', b:'#bef264', soft:'#a7f3d0',
+    fd:"'Fraunces','Noto Serif Sinhala',serif", fb:"'Plus Jakarta Sans','Noto Serif Sinhala',serif",
+    wd:700, td:'-.015em', ld:1.3, fz:'15.5px', r:'28px' },
+  { name:'Golden Hour', url:"https://i.ibb.co/C5Dhqv0j/lucas-calloch-P-yzuy-WFEIk-unsplash.jpg",
+    rgb:'251,191,36', a:'#fbbf24', b:'#fb7185', soft:'#fde68a',
+    fd:"'DM Serif Display','Abhaya Libre',serif", fb:"'Plus Jakarta Sans','Abhaya Libre',serif",
+    wd:400, td:'0em', ld:1.3, fz:'17px', r:'6px' },
+  { name:'Neon Orbit', url:"https://i.ibb.co/gZ0Js2q5/su-san-lee-E-e-Ww-M29wf-U-unsplash.jpg",
+    rgb:'192,132,252', a:'#c084fc', b:'#f472b6', soft:'#e9d5ff',
+    fd:"'Syne','Yaldevi',sans-serif", fb:"'Plus Jakarta Sans','Yaldevi',sans-serif",
+    wd:800, td:'-.04em', ld:1.3, fz:'15px', r:'22px' }
+];
 
-                    <!-- පාට විටින් විට වෙනස් වන කොටු 4 (animated-box පන්තිය යොදා ඇත) -->
-                    <div class="grid sm:grid-cols-2 gap-4 pt-2">
-                        <div class="animated-box p-4 rounded-xl border-l-4 border-indigo-500 transition-all duration-1000">
-                            <h4 class="font-bold text-white text-sm">ප්‍රශ්න පත්‍ර විවරණය</h4>
-                            <p class="text-xs text-slate-300 mt-1">ගෙවීගිය වසර 10ක පසුගිය විභාග ප්‍රශ්න පත්‍ර සියල්ලම සවිස්තරාත්මකව සාකච්ඡා කිරීම.</p>
-                        </div>
-                        <div class="animated-box p-4 rounded-xl border-l-4 border-cyan-500 transition-all duration-1000" style="animation-delay: 1s;">
-                            <h4 class="font-bold text-white text-sm">Individual Attention</h4>
-                            <p class="text-xs text-slate-300 mt-1">සෑම සිසුවෙකුගේම ලකුණු මට්ටම පරීක්ෂා කර දුර්වලතා හඳුනාගෙන මගපෙන්වීම.</p>
-                        </div>
-                        <div class="animated-box p-4 rounded-xl border-l-4 border-purple-500 transition-all duration-1000" style="animation-delay: 2s;">
-                            <h4 class="font-bold text-white text-sm">Online & Physical Access</h4>
-                            <p class="text-xs text-slate-300 mt-1">Physical පන්ති මෙන්ම දිවයිනටම Zoom සහ Recording පහසුකම්.</p>
-                        </div>
-                        <div class="animated-box p-4 rounded-xl border-l-4 border-emerald-500 transition-all duration-1000" style="animation-delay: 3s;">
-                            <h4 class="font-bold text-white text-sm">Full Model Papers</h4>
-                            <p class="text-xs text-slate-300 mt-1">විභාගයට පෙර ප්‍රමිතියෙන් යුත් අනුමාන ප්‍රශ්න පත්‍ර 200 කට වැඩි ප්‍රමාණයක්.</p>
-                        </div>
-                    </div>
+const root = document.documentElement, layers = [bgA, bgB];
+let cur = -1, front = 0;
 
-                </div>
+function applyTheme(i, instant){
+  if(i === cur) return;
+  const t = themes[i];
+  const paint = () => {
+    const s = root.style;
+    s.setProperty('--rgb', t.rgb); s.setProperty('--a', t.a); s.setProperty('--b', t.b); s.setProperty('--soft', t.soft);
+    s.setProperty('--fd', t.fd); s.setProperty('--fb', t.fb); s.setProperty('--wd', t.wd);
+    s.setProperty('--td', t.td); s.setProperty('--ld', t.ld); s.setProperty('--fz', t.fz); s.setProperty('--r', t.r);
+    document.getElementById('tname').textContent = t.name;
+    document.querySelectorAll('#dots button').forEach((d, k) => d.classList.toggle('on', k === i));
+  };
+  // crossfade background
+  const next = layers[1 - front], prev = layers[front];
+  next.style.backgroundImage = `url('${t.url}')`;
+  next.classList.add('on'); prev.classList.remove('on'); front = 1 - front;
+  // text style swap: blur out → change fonts → blur in
+  if(instant || cur < 0){ paint(); }
+  else { document.body.classList.add('swap'); setTimeout(() => { paint(); document.body.classList.remove('swap'); }, 450); }
+  cur = i;
+}
 
-            </div>
-        </div>
-    </section>
+const dots = document.getElementById('dots');
+themes.forEach((t, i) => {
+  const b = document.createElement('button');
+  b.setAttribute('aria-label', t.name + ' theme'); b.title = t.name;
+  b.onclick = () => applyTheme(i);
+  dots.insertBefore(b, dots.lastElementChild);
+});
+// default: දවසින් දවස මාරු වේ
+applyTheme(Math.floor(Date.now() / 864e5) % themes.length, true);
 
-    <!-- Interactive Chemistry Tool Widget -->
-    <section id="tools" class="py-20 px-4 lg:px-8">
-        <div class="max-w-7xl mx-auto space-y-10">
-            <div class="text-center space-y-3">
-                <span class="text-purple-400 text-xs font-bold uppercase tracking-widest"><i class="fa-solid fa-calculator"></i> Interactive Student Toolkit</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Smart Chemistry <span class="text-cyan-400">ගණක යන්ත්‍රය</span></h2>
-                <p class="text-slate-400 text-sm max-w-xl mx-auto">ඕනෑම රසායනික සංයෝගයක අණුක භාරය (Molar Mass) ක්ෂණිකව ගණනය කරගන්න.</p>
-            </div>
+/* ===== Molar mass (supports parentheses) ===== */
+const W = {H:1.008,He:4.002,Li:6.94,Be:9.012,B:10.81,C:12.011,N:14.007,O:15.999,F:18.998,Ne:20.18,Na:22.99,Mg:24.305,Al:26.982,Si:28.085,P:30.974,S:32.06,Cl:35.45,K:39.098,Ca:40.078,Mn:54.938,Fe:55.845,Cu:63.546,Zn:65.38,Br:79.904,I:126.90};
 
-            <div class="max-w-2xl mx-auto glass-panel p-8 rounded-3xl border border-slate-800 space-y-6">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">රසායනික සූත්‍රය (Chemical Formula)</label>
-                    <div class="flex gap-3">
-                        <input type="text" id="formulaInput" placeholder="උදා: H2SO4, KMnO4, C6H12O6, NaCl..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-5 py-3 text-white focus:outline-none focus:border-indigo-500 font-mono tracking-wide">
-                        <button onclick="calculateMolarMass()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition flex items-center gap-2 shrink-0">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> ගණනය කරන්න
-                        </button>
-                    </div>
-                </div>
+function parseFormula(f){
+  const st = [{}], re = /([A-Z][a-z]?)(\d*)|(\()|\)(\d*)/g; let m;
+  while((m = re.exec(f))){
+    const top = st[st.length - 1];
+    if(m[1]){ if(!W[m[1]]) return null; top[m[1]] = (top[m[1]] || 0) + (+m[2] || 1); }
+    else if(m[3]) st.push({});
+    else { const t = st.pop(); if(!st.length) return null; const k = +m[4] || 1, p = st[st.length - 1];
+           for(const e in t) p[e] = (p[e] || 0) + t[e] * k; }
+  }
+  return st.length === 1 ? st[0] : null;
+}
+function setFormula(f){ formulaInput.value = f; calculateMolarMass(); }
+function calculateMolarMass(){
+  const f = formulaInput.value.replace(/\s/g, ''); if(!f) return;
+  const c = parseFormula(f), box = molarResultBox;
+  if(c && Object.keys(c).length){
+    let total = 0; const parts = [];
+    for(const e in c){ total += W[e] * c[e]; parts.push(`${e} (${c[e]} × ${W[e]})`); }
+    box.classList.remove('hidden');
+    molarMassValue.innerText = `${total.toFixed(2)} g/mol`;
+    molarMassBreakdown.innerText = 'සංයුතිය: ' + parts.join(' + ');
+    showToast('ගණනය කිරීම සාර්ථකයි!', 'success');
+  } else showToast('කරුණාකර නිවැරදි රසායනික සූත්‍රයක් ඇතුළත් කරන්න.', 'error');
+}
 
-                <!-- Quick Examples -->
-                <div class="flex flex-wrap gap-2 items-center text-xs text-slate-400">
-                    <span>නිතර භාවිත වන:</span>
-                    <button onclick="setFormula('H2SO4')" class="px-2.5 py-1 glass-card rounded-lg hover:text-cyan-300">H2SO4</button>
-                    <button onclick="setFormula('KMnO4')" class="px-2.5 py-1 glass-card rounded-lg hover:text-cyan-300">KMnO4</button>
-                    <button onclick="setFormula('C6H12O6')" class="px-2.5 py-1 glass-card rounded-lg hover:text-cyan-300">C6H12O6</button>
-                    <button onclick="setFormula('CaCO3')" class="px-2.5 py-1 glass-card rounded-lg hover:text-cyan-300">CaCO3</button>
-                    <button onclick="setFormula('NH3')" class="px-2.5 py-1 glass-card rounded-lg hover:text-cyan-300">NH3</button>
-                </div>
+function showToast(msg, type='info'){
+  const col = {success:'#34d399', error:'#f87171', info:'var(--a)'}[type];
+  const icon = {success:'fa-circle-check', error:'fa-circle-xmark', info:'fa-circle-info'}[type];
+  const t = document.createElement('div');
+  t.className = 'glass p-4 flex items-center gap-3 text-xs pointer-events-auto transition-all duration-300 translate-x-10 opacity-0';
+  t.style.borderLeft = `3px solid ${col}`;
+  t.innerHTML = `<i class="fa-solid ${icon} text-lg" style="color:${col}"></i><span>${msg}</span>`;
+  toastContainer.appendChild(t);
+  setTimeout(() => t.classList.remove('translate-x-10', 'opacity-0'), 10);
+  setTimeout(() => { t.classList.add('opacity-0', 'translate-x-10'); setTimeout(() => t.remove(), 300); }, 3500);
+}
 
-                <!-- Result Box -->
-                <div id="molarResultBox" class="hidden p-6 rounded-2xl bg-slate-900/90 border border-indigo-500/40 space-y-2">
-                    <span class="text-xs text-slate-400 block uppercase">අණුක භාරය (Molar Mass):</span>
-                    <div class="text-3xl font-extrabold text-cyan-400 font-mono" id="molarMassValue">0 g/mol</div>
-                    <p class="text-xs text-slate-400" id="molarMassBreakdown"></p>
-                </div>
-            </div>
-        </div>
-    </section>
+mobileMenuBtn.onclick = () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); };
+document.querySelectorAll('.mobile-link').forEach(l => l.onclick = () => { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); });
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-950 py-12 px-4 lg:px-8 text-slate-400 text-sm">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 mb-8">
-            <div class="space-y-3 md:col-span-2">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-atom text-2xl text-cyan-400"></i>
-                    <span class="text-xl font-bold text-white tracking-wider">chemistry <span class="text-cyan-400">master</span></span>
-                </div>
-                <p class="text-xs text-slate-400 max-w-sm">
-                    ශ්‍රී ලංකාවේ උසස් පෙළ රසායන විද්‍යා විෂය වෙනුවෙන් විශිෂ්ටතම ප්‍රතිඵල ලබාදෙන තාක්ෂණික පන්ති කාමරය.
-                </p>
-            </div>
-            <div>
-                <h5 class="text-white font-bold mb-3 text-xs uppercase tracking-wider">Quick Links</h5>
-                <ul class="space-y-2 text-xs">
-                    <li><a href="#about" class="hover:text-cyan-400 transition">දේශකයාණන්[cite: 6]</a></li>
-                    <li><a href="#tools" class="hover:text-cyan-400 transition">Chem Calculator</a></li>
-                    <li><a href="lms_portal.html" target="_blank" class="hover:text-cyan-400 transition">Student Portal</a></li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="text-white font-bold mb-3 text-xs uppercase tracking-wider">සම්බන්ධ වන්න</h5>
-                <div class="flex gap-4 text-lg">
-                    <a href="#" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:text-cyan-400 transition"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:text-red-400 transition"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:text-emerald-400 transition"><i class="fa-brands fa-whatsapp"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto pt-6 border-t border-slate-900 text-center text-xs text-slate-500">
-            © 2026 Chemistry Master Academy. All Rights Reserved. Designed for Sri Lankan A/L Students.
-        </div>
-    </footer>
-
-    <!-- JavaScript Logic -->
-    <script>
-        const wallpapers = [
-            "https://i.ibb.co/PsFSQ0bq/wp8254181-gtr-4k-pc-wallpapers.jpg",
-            "https://i.ibb.co/jvcHDNWC/pexels-nicola-narracci-157460431-38032287.jpg",
-            "https://i.ibb.co/DgSQnCv8/pexels-suzyhazelwood-1629236.jpg",
-            "https://i.ibb.co/0pcFnDDS/pexels-pixabay-220118.jpg"
-        ];
-
-        function setDailyBackground() {
-            const bgElement = document.getElementById('dynamicBg');
-            const todayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24)) % wallpapers.length;
-            bgElement.style.backgroundImage = `url('${wallpapers[todayIndex]}')`;
-        }
-        setDailyBackground();
-
-        const atomicWeights = {
-            'H': 1.008, 'He': 4.002, 'Li': 6.94, 'Be': 9.012, 'B': 10.81, 'C': 12.011, 'N': 14.007, 'O': 15.999,
-            'F': 18.998, 'Ne': 20.18, 'Na': 22.99, 'Mg': 24.305, 'Al': 26.982, 'Si': 28.085, 'P': 30.974,
-            'S': 32.06, 'Cl': 35.45, 'K': 39.098, 'Ca': 40.078, 'Mn': 54.938, 'Fe': 55.845, 'Cu': 63.546,
-            'Zn': 65.38, 'Br': 79.904, 'I': 126.90
-        };
-
-        function setFormula(f) {
-            document.getElementById('formulaInput').value = f;
-            calculateMolarMass();
-        }
-
-        function calculateMolarMass() {
-            const formula = document.getElementById('formulaInput').value.trim();
-            if (!formula) return;
-
-            const regex = /([A-Z][a-z]*)(\d*)/g;
-            let match;
-            let totalMass = 0;
-            let breakdown = [];
-
-            while ((match = regex.exec(formula)) !== null) {
-                if (match[0] === '') break;
-                const elem = match[1];
-                const count = match[2] ? parseInt(match[2]) : 1;
-
-                if (atomicWeights[elem]) {
-                    const mass = atomicWeights[elem] * count;
-                    totalMass += mass;
-                    breakdown.push(`${elem} (${count} × ${atomicWeights[elem]})`);
-                }
-            }
-
-            const resultBox = document.getElementById('molarResultBox');
-            if (totalMass > 0) {
-                resultBox.classList.remove('hidden');
-                document.getElementById('molarMassValue').innerText = `${totalMass.toFixed(2)} g/mol`;
-                document.getElementById('molarMassBreakdown').innerText = "සංයුතිය: " + breakdown.join(' + ');
-                showToast("ගණනය කිරීම සාර්ථකයි!", "success");
-            } else {
-                showToast("කරුණාකර නිවැරදි රසායනික සූත්‍රයක් ඇතුළත් කරන්න.", "error");
-            }
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            let bg = "bg-slate-900 border-indigo-500 text-white";
-            let icon = "fa-circle-info text-indigo-400";
-            if (type === 'success') {
-                bg = "bg-slate-900 border-emerald-500 text-white";
-                icon = "fa-circle-check text-emerald-400";
-            } else if (type === 'error') {
-                bg = "bg-slate-900 border-red-500 text-white";
-                icon = "fa-circle-xmark text-red-400";
-            }
-
-            toast.className = `glass-panel ${bg} border p-4 rounded-xl shadow-xl flex items-center gap-3 text-xs pointer-events-auto transition-all duration-300 transform translate-x-10 opacity-0`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-
-            setTimeout(() => { toast.classList.remove('translate-x-10', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-x-10');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        });
-
-        document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => {
-                document.getElementById('mobileMenu').classList.add('hidden');
-            });
-        });
-
-        const counters = document.querySelectorAll('[data-counter]');
-        let animated = false;
-
-        window.addEventListener('scroll', () => {
-            if (animated) return;
-            const scrollPos = window.scrollY + window.innerHeight;
-            
-            if (scrollPos > 300) {
-                animated = true;
-                counters.forEach(counter => {
-                    const target = +counter.getAttribute('data-counter');
-                    let count = 0;
-                    const step = Math.ceil(target / 15); 
-                    const updateCount = () => {
-                        count += step;
-                        if (count < target) {
-                            counter.innerText = count;
-                            setTimeout(updateCount, 20);
-                        } else {
-                            counter.innerText = target;
-                        }
-                    };
-                    updateCount();
-                });
-            }
-        });
-    </script>
+/* Counters */
+let counted = false;
+function runCounters(){
+  if(counted) return; counted = true;
+  document.querySelectorAll('[data-counter]').forEach(el => {
+    const target = +el.dataset.counter, step = Math.ceil(target / 40); let n = 0;
+    (function tick(){ n += step; if(n < target){ el.innerText = n; setTimeout(tick, 30); } else el.innerText = target; })();
+  });
+}
+setTimeout(runCounters, 600);
+</script>
 </body>
 </html>
