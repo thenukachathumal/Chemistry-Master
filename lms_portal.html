@@ -295,6 +295,31 @@
             <button onclick="saveBatchLesson()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2 rounded-lg font-medium transition w-full">
               Save Recording & Tute
             </button>
+            <p class="text-[11px] text-rose-200/80 leading-relaxed">Tute link එක පසුව එකතු කරන්නේ නම්, පහත "දැනට ඇති පාඩම්" ලැයිස්තුවෙන් අදාළ පාඩම සොයා එහි Tute link එක දාන්න.</p>
+          </div>
+        </div>
+
+        <!-- Manage existing lessons -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800">
+          <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-pen-to-square text-rose-400"></i> දැනට ඇති පාඩම්
+          </h3>
+          <p class="text-[11px] text-rose-200/80 mb-3">නම වෙනස් කරන්න, Tute එකතු කරන්න, නැත්නම් Recording / Tute මකන්න.</p>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <select id="manageBatch" onchange="renderAdminLessons()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100">
+              <option value="ALL">All Batches</option><option value="2027 Batch">2027 Batch</option><option value="2028 Batch">2028 Batch</option>
+              <option value="2029 Batch">2029 Batch</option><option value="2030 Batch">2030 Batch</option><option value="2031 Batch">2031 Batch</option>
+            </select>
+            <select id="manageMonth" onchange="renderAdminLessons()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100">
+              <option value="ALL">All Months</option>
+              <option value="January">January</option><option value="February">February</option><option value="March">March</option>
+              <option value="April">April</option><option value="May">May</option><option value="June">June</option>
+              <option value="July">July</option><option value="August">August</option><option value="September">September</option>
+              <option value="October">October</option><option value="November">November</option><option value="December">December</option>
+            </select>
+          </div>
+          <div id="adminLessonsList" class="space-y-3 max-h-[30rem] overflow-y-auto pr-1">
+            <p class="text-xs text-rose-200 text-center py-4">පාඩම් ලබා ගනිමින් පවතී...</p>
           </div>
         </div>
       </div>
@@ -458,6 +483,7 @@
         adminNavBtn.classList.add('hidden');
         lessonsNavBtn.classList.add('hidden');
         isAdmin = false;
+        if (lessonsUnsub) { lessonsUnsub(); lessonsUnsub = null; }
         currentStudentData = null;
         showRegistrationModal(false);
       }
@@ -658,7 +684,12 @@
             .get();
 
           const approvedMonths = [];
-          subSnapshot.forEach(doc => approvedMonths.push(doc.data().month));
+          const approvedPairs = [];
+          subSnapshot.forEach(doc => {
+            const d = doc.data();
+            approvedMonths.push(d.month);
+            approvedPairs.push({ batch: d.batch, month: d.month });
+          });
 
           if (approvedMonths.length === 0) {
             container.innerHTML = `
@@ -672,12 +703,16 @@
             return;
           }
 
-          const lessonsSnapshot = await db.collection('batch_lessons')
-            .where('batch', '==', currentStudentData.batch)
-            .where('month', 'in', approvedMonths)
-            .get();
-
-          lessonsSnapshot.forEach(doc => cachedLessonsData.push(doc.data()));
+          // One query per approved (batch, month). The Firestore rules only release lessons
+          // for a batch + month that has an approved receipt, so each query is checked server-side.
+          const results = await Promise.allSettled(approvedPairs.map(p =>
+            db.collection('batch_lessons').where('batch', '==', p.batch).where('month', '==', p.month).get()
+          ));
+          results.forEach(r => {
+            if (r.status === 'fulfilled') r.value.forEach(doc => cachedLessonsData.push(doc.data()));
+          });
+          const failed = results.find(r => r.status === 'rejected');
+          if (failed && cachedLessonsData.length === 0) throw failed.reason;
           subtitle.innerText = `${currentStudentData.batch} • අනුමත කළ මාස: ${approvedMonths.join(', ')}`;
         }
 
@@ -712,6 +747,12 @@
           </a>
         ` : '';
 
+        const videoBtn = lesson.videoUrl ? `
+          <a href="${lesson.videoUrl}" target="_blank" class="bg-rose-600 hover:bg-rose-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center">
+            <i class="fa-brands fa-youtube text-base"></i> Watch Recording
+          </a>
+        ` : '';
+
         container.innerHTML += `
           <div class="bg-slate-800/95 p-4 rounded-xl border border-rose-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-emerald-500/60 transition">
             <div>
@@ -723,9 +764,7 @@
             </div>
             <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               ${tuteBtn}
-              <a href="${lesson.videoUrl}" target="_blank" class="bg-rose-600 hover:bg-rose-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center">
-                <i class="fa-brands fa-youtube text-base"></i> Watch Recording
-              </a>
+              ${videoBtn}
             </div>
           </div>
         `;
@@ -786,7 +825,7 @@
       const tuteUrl = document.getElementById('adminTuteUrl').value;
 
       if (!title || !videoUrl) {
-        alert("කරුණාකර පාඩමේ නම සහ YouTube URL එක ලබා දෙන්න!");
+        alert("කරුණාකර පාඩමේ නම සහ YouTube URL එක ලබා දෙන්න!\n(Tute එක පමණක් පසුව එකතු කරන්නේ නම්, \"දැනට ඇති පාඩම්\" ලැයිස්තුවෙන් අදාළ පාඩමට එකතු කරන්න.)");
         return;
       }
 
@@ -802,6 +841,112 @@
       document.getElementById('adminLessonTitle').value = "";
       document.getElementById('adminBatchVideo').value = "";
       document.getElementById('adminTuteUrl').value = "";
+    }
+
+
+    /* ===== Admin: manage existing lessons (rename, add/replace/delete recording and tute) ===== */
+    let adminLessons = [], lessonsUnsub = null;
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const isUrl = u => /^https?:\/\/\S+$/i.test(u);
+
+    function listenAdminLessons() {
+      if (!isAdmin || lessonsUnsub) return;
+      lessonsUnsub = db.collection('batch_lessons').onSnapshot(snap => {
+        adminLessons = snap.docs.map(d => ({ id: d.id, _p: d.metadata.hasPendingWrites, ...d.data() }));
+        adminLessons.sort((a, b) => (b._p ? 9e9 : (b.createdAt ? b.createdAt.seconds : 0)) - (a._p ? 9e9 : (a.createdAt ? a.createdAt.seconds : 0)));
+        renderAdminLessons();
+      }, err => {
+        document.getElementById('adminLessonsList').innerHTML = `<p class="text-xs text-red-400 text-center py-4">දෝෂයක්: ${esc(err.message)}</p>`;
+      });
+    }
+
+    function renderAdminLessons() {
+      const box = document.getElementById('adminLessonsList');
+      if (!box) return;
+      const b = document.getElementById('manageBatch').value, m = document.getElementById('manageMonth').value;
+      const list = adminLessons.filter(l => (b === 'ALL' || l.batch === b) && (m === 'ALL' || l.month === m));
+      if (!list.length) {
+        box.innerHTML = '<p class="text-xs text-rose-200 text-center py-4">තෝරාගත් ෆිල්ටරයට අදාළ පාඩම් නැත.</p>';
+        return;
+      }
+      const fld = (id, k, label, val, ph, save, del) => `
+        <div>
+          <label class="text-[10px] text-rose-200 font-semibold">${label}</label>
+          <div class="flex gap-2 mt-0.5">
+            <input id="${k}-${id}" type="text" value="${esc(val)}" placeholder="${ph}" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-rose-100">
+            <button onclick="${save}('${id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] px-3 rounded-lg font-semibold transition">Save</button>
+            ${del && val ? `<button onclick="${del}('${id}')" title="මකන්න" class="bg-rose-700 hover:bg-rose-600 text-white text-[11px] px-3 rounded-lg font-semibold transition"><i class="fa-solid fa-trash"></i></button>` : ''}
+          </div>
+        </div>`;
+      box.innerHTML = list.map(l => `
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3 space-y-2">
+          <div class="flex gap-2 text-[10px] font-bold uppercase">
+            <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">${esc(l.batch)}</span>
+            <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">${esc(l.month)}</span>
+          </div>
+          ${fld(l.id, 't', 'පාඩමේ / Tute එකේ නම', l.title, 'නම', 'renameLesson', '')}
+          ${fld(l.id, 'v', 'YouTube Recording link', l.videoUrl, 'https://www.youtube.com/watch?v=...', 'saveLessonVideo', 'deleteLessonVideo')}
+          ${fld(l.id, 'u', 'Tute link (Drive / PDF)', l.tuteUrl, 'Tute link එක මෙහි දාන්න', 'saveLessonTute', 'deleteLessonTute')}
+        </div>`).join('');
+    }
+
+    async function updateLesson(id, data, okMsg) {
+      if (!isAdmin) { alert("අවසර නැත!"); return; }
+      try {
+        await db.collection('batch_lessons').doc(id).update(data);
+        alert(okMsg);
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    function renameLesson(id) {
+      const v = document.getElementById('t-' + id).value.trim();
+      if (!v) { alert('පාඩමේ නම හිස් විය නොහැක!'); return; }
+      updateLesson(id, { title: v }, 'නම සාර්ථකව වෙනස් විය!');
+    }
+
+    function saveLessonVideo(id) {
+      const v = document.getElementById('v-' + id).value.trim();
+      if (!isUrl(v)) { alert('වලංගු YouTube URL එකක් ඇතුළත් කරන්න! (https:// සමඟ)'); return; }
+      updateLesson(id, { videoUrl: v }, 'Recording link එක සුරැකිණි!');
+    }
+
+    function saveLessonTute(id) {
+      const v = document.getElementById('u-' + id).value.trim();
+      if (!isUrl(v)) { alert('වලංගු Tute link එකක් ඇතුළත් කරන්න! (https:// සමඟ)'); return; }
+      updateLesson(id, { tuteUrl: v }, 'Tute link එක පාඩමට එකතු විය!');
+    }
+
+    async function removeLesson(id) {
+      try {
+        await db.collection('batch_lessons').doc(id).delete();
+        alert('පාඩම මකා දමන ලදී!');
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    async function deleteLessonVideo(id) {
+      if (!isAdmin) { alert("අවසර නැත!"); return; }
+      const l = adminLessons.find(x => x.id === id);
+      if (!l) return;
+      if (l.tuteUrl) {
+        if (confirm('Recording එක පමණක් මකනවා. (Tute එක පාඩමේ තබා ගැනේ.) ඉදිරියට යන්නද?')) updateLesson(id, { videoUrl: '' }, 'Recording එක මකා දමන ලදී!');
+      } else if (confirm('මෙම පාඩමේ Tute එකක් නැත, ඒ නිසා පාඩම සම්පූර්ණයෙන්ම මැකේ. ඉදිරියට යන්නද?')) {
+        removeLesson(id);
+      }
+    }
+
+    async function deleteLessonTute(id) {
+      if (!isAdmin) { alert("අවසර නැත!"); return; }
+      const l = adminLessons.find(x => x.id === id);
+      if (!l) return;
+      if (l.videoUrl) {
+        if (confirm('Tute link එක මකනවා. (Recording එක පාඩමේ තබා ගැනේ.) ඉදිරියට යන්නද?')) updateLesson(id, { tuteUrl: '' }, 'Tute එක මකා දමන ලදී!');
+      } else if (confirm('මෙම පාඩමේ Recording එකක් නැත, ඒ නිසා පාඩම සම්පූර්ණයෙන්ම මැකේ. ඉදිරියට යන්නද?')) {
+        removeLesson(id);
+      }
     }
 
     function loadAdminTableData() {
@@ -914,6 +1059,7 @@
         studentView.classList.add('hidden');
         adminView.classList.remove('hidden');
         loadAdminTableData();
+        listenAdminLessons();
       } else {
         adminView.classList.add('hidden');
         studentView.classList.remove('hidden');
