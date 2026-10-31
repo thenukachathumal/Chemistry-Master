@@ -40,6 +40,19 @@ body{margin:0;min-height:100vh;background:#04070d;color:#f1f5f9;overflow-x:hidde
 .cta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.9rem 1.5rem;margin-top:2.25rem}
 @media(max-width:639px){.cta .btn{padding:.85rem 1.1rem;font-size:.9rem}.cb{text-transform:capitalize}}
 .logo{width:46px;height:46px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.25)}
+.gnode{min-width:130px;padding:.75rem 1rem;border-radius:14px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);transition:all .4s}
+.gnode.tgt{border-color:rgba(var(--rgb),.7)}.gnode.q{opacity:.5;border-style:dashed}
+.garrow{display:flex;flex-direction:column;align-items:center;max-width:150px;text-align:center;font-size:.75rem;color:#cbd5e1;line-height:1.3}
+.gpill{padding:.45rem 1rem;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:#fff;cursor:pointer}
+.gon{background:var(--a)!important;color:#06121a!important;border-color:var(--a)!important}
+.gopt{display:block;width:100%;text-align:left;padding:.9rem 1.1rem;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:all .25s}
+.gopt:hover:not(:disabled){border-color:var(--a);background:rgba(var(--rgb),.1)}
+.gopt.ok{border-color:#34d399;background:rgba(52,211,153,.16)}.gopt.no{border-color:#f87171;background:rgba(248,113,113,.12);opacity:.6}
+.soc{position:relative;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);animation:socIn .8s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:var(--d);transition:background .3s,color .3s,transform .3s,box-shadow .3s}
+.soc::after{content:"";position:absolute;inset:-1px;border-radius:inherit;border:2px solid var(--a);opacity:0;animation:socRing 3.4s ease-out infinite;animation-delay:calc(var(--d) + 1.4s)}
+.soc:hover{background:var(--a);color:#06121a;transform:translateY(-4px) scale(1.12) rotate(-6deg);box-shadow:0 10px 28px rgba(var(--rgb),.55)}
+@keyframes socIn{from{opacity:0;transform:translateY(-18px) scale(.4) rotate(-30deg)}}
+@keyframes socRing{0%{opacity:.7;transform:scale(1)}70%,100%{opacity:0;transform:scale(1.7)}}
 .field{width:100%;background:rgba(2,6,14,.7);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:.8rem 1.1rem;color:#fff;font-family:ui-monospace,monospace}
 .field:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(var(--rgb),.25)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--a);outline-offset:3px}
@@ -62,22 +75,25 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 <nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4">
   <div class="max-w-7xl mx-auto glass px-5 py-3 flex items-center justify-between">
     <a href="#" class="flex items-center gap-3">
-      <img class="logo" src="https://i.ibb.co/q32djW16/Whats-App-Image-2026-10-26-at-14-13-54.jpg" alt="Chemistry Master logo" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-atom text-3xl acc'}))">
+      <img class="logo" src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428441/WhatsApp_Image_2026-10-26_at_14.13.54.jpg" alt="Chemistry Master logo" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-atom text-3xl acc'}))">
       <span>
         <span class="disp text-xl block">Chemistry <span class="acc">Master</span></span>
         <span class="block text-[11px] tracking-[.18em] text-slate-300 font-semibold">MADHAWA RANATHUNGA</span>
       </span>
     </a>
     <div class="hidden lg:flex gap-8 text-sm font-medium text-slate-200">
-      <a href="#why" class="nl">Why Us</a><a href="#about" class="nl">About</a><a href="#tools" class="nl">Calculator</a>
+      <a href="#why" class="nl">Why Us</a><a href="#about" class="nl">About</a><a href="#game" class="nl">Game</a><a href="#tools" class="nl">Calculator</a>
     </div>
+    <div class="hidden sm:flex items-center gap-2.5"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc" style="--d:0.15s"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc" style="--d:0.3s"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc" style="--d:0.45s"><i class="fa-brands fa-facebook-f"></i></a></div>
     <a href="lms_portal.html" target="_blank" class="hidden lg:inline-flex btn !py-2.5 !px-5 text-sm"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
     <button id="mobileMenuBtn" class="lg:hidden text-2xl text-slate-200" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
   </div>
   <div id="mobileMenu" class="hidden max-w-7xl mx-auto mt-2 glass p-6 flex-col gap-3">
     <a href="#why" class="mobile-link block py-2 border-b border-white/10">Why Us</a>
     <a href="#about" class="mobile-link block py-2 border-b border-white/10">About</a>
+    <a href="#game" class="mobile-link block py-2 border-b border-white/10">Game</a>
     <a href="#tools" class="mobile-link block py-2 border-b border-white/10">Calculator</a>
+    <div class="flex sm:hidden justify-center gap-3 pt-3"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc" style="--d:0.15s"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc" style="--d:0.3s"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc" style="--d:0.45s"><i class="fa-brands fa-facebook-f"></i></a></div>
     <a href="lms_portal.html" target="_blank" class="btn w-full mt-2"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
   </div>
 </nav>
@@ -120,10 +136,9 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
     <div class="grid lg:grid-cols-12 gap-12 items-center">
       <div class="lg:col-span-5">
         <div class="frame mx-auto max-w-sm">
-          <div class="relative w-full h-[470px] sm:h-[520px] rounded-[1.25rem] overflow-hidden group bg-slate-950">
-            <img src="https://i.ibb.co/DcpQgkw/Confident-Professional-in-a-Cinematic-Office.png" alt="Madhawa Ranathunga" class="pic absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" style="object-position:center 14%" loading="lazy">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/10 to-transparent"></div>
-            <div class="absolute bottom-0 w-full p-6">
+          <div class="rounded-[1.25rem] overflow-hidden bg-slate-950">
+            <img src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428663/lms_portal_1.png" alt="Madhawa Ranathunga" class="block w-full h-auto" loading="lazy">
+            <div class="p-5">
               <h3 class="disp text-2xl">Madhawa Ranathunga</h3>
               <p class="text-sm text-slate-300">A/L Chemistry Lecturer</p>
               <div class="chip mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold"><i class="fa-solid fa-award acc"></i> 10+ years of experience</div>
@@ -137,6 +152,16 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
         <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap"></i> Join the classes</a>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="game" class="py-20 px-4 lg:px-8">
+  <div class="max-w-4xl mx-auto space-y-10">
+    <div class="text-center space-y-3">
+      <h2 class="disp text-4xl sm:text-6xl">Reaction path <span class="acc">challenge</span></h2>
+      <p class="text-slate-300 max-w-lg mx-auto">Choose the right reagent and conditions at every step to take the starting compound to the target.</p>
+    </div>
+    <div class="glass edge p-6 sm:p-10"><div id="gameBox"></div></div>
   </div>
 </section>
 
@@ -176,7 +201,7 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
   <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 mb-8">
     <div class="space-y-3">
       <div class="flex items-center gap-3">
-        <img class="logo" src="https://i.ibb.co/q32djW16/Whats-App-Image-2026-10-26-at-14-13-54.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'">
+        <img class="logo" src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428441/WhatsApp_Image_2026-10-26_at_14.13.54.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'">
         <span class="disp text-xl text-white">Chemistry <span class="acc">Master</span></span>
       </div>
       <p class="max-w-xs">Logical, exam-focused A/L Chemistry for Sri Lankan students.</p>
@@ -184,7 +209,7 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
     <div>
       <h4 class="text-white font-semibold mb-3">Quick links</h4>
       <ul class="space-y-2">
-        <li><a href="#why" class="nl">Why Us</a></li><li><a href="#about" class="nl">About</a></li><li><a href="#tools" class="nl">Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li>
+        <li><a href="#why" class="nl">Why Us</a></li><li><a href="#about" class="nl">About</a></li><li><a href="#game" class="nl">Reaction Game</a></li><li><a href="#tools" class="nl">Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li>
       </ul>
     </div>
     <div>
@@ -208,10 +233,10 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 <script>
 // Each background gets ONE accent colour and its own type style.
 const themes = [
-  {name:'Precision',   url:"https://i.ibb.co/s9XBzy8R/janne-aspegren-lg-EMAUq-Bx3o-unsplash.jpg", rgb:'34,211,238',  a:'#22d3ee', fd:"'Sora',sans-serif",              wd:700, td:'-.03em',  r:'18px'},
-  {name:'Botanical',   url:"https://i.ibb.co/tM6Ygzz6/jonathan-gallegos-5-FGqf-V6-Ujz-I-unsplash.jpg", rgb:'52,211,153',  a:'#34d399', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'28px'},
-  {name:'Golden Hour', url:"https://i.ibb.co/C5Dhqv0j/lucas-calloch-P-yzuy-WFEIk-unsplash.jpg",       rgb:'251,191,36',  a:'#fbbf24', fd:"'DM Serif Display',serif",       wd:400, td:'0em',     r:'6px'},
-  {name:'Neon Orbit',  url:"https://i.ibb.co/gZ0Js2q5/su-san-lee-E-e-Ww-M29wf-U-unsplash.jpg",        rgb:'192,132,252', a:'#c084fc', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'22px'}
+  {name:'Precision',   url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428452/janne-aspegren-lgEMAUqBx3o-unsplash.jpg", rgb:'34,211,238',  a:'#22d3ee', fd:"'Sora',sans-serif",              wd:700, td:'-.03em',  r:'18px'},
+  {name:'Botanical',   url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428451/jonathan-gallegos-5FGqfV6UjzI-unsplash.jpg", rgb:'52,211,153',  a:'#34d399', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'28px'},
+  {name:'Golden Hour', url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428460/lucas-calloch-P-yzuyWFEIk-unsplash.jpg",       rgb:'251,191,36',  a:'#fbbf24', fd:"'DM Serif Display',serif",       wd:400, td:'0em',     r:'6px'},
+  {name:'Neon Orbit',  url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428566/su-san-lee-E_eWwM29wfU-unsplash.jpg",        rgb:'192,132,252', a:'#c084fc', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'22px'}
 ];
 const root = document.documentElement, layers = [bgA, bgB];
 let cur = -1, front = 0, timer;
@@ -254,16 +279,79 @@ addEventListener('resize', fitLock);
 document.fonts.addEventListener('loadingdone', fitLock);
 document.fonts.ready.then(fitLock);
 addEventListener('load', fitLock);
-function auto(){ clearInterval(timer); timer = setInterval(() => applyTheme((cur + 1) % themes.length), 12000); }
 
 themes.forEach((t, i) => {
   const b = document.createElement('button');
   b.setAttribute('aria-label', t.name); b.title = t.name;
-  b.onclick = () => { applyTheme(i); auto(); };
+  b.onclick = () => applyTheme(i);
   dots.insertBefore(b, tname);
 });
-applyTheme(Math.floor(Date.now() / 864e5) % themes.length, true);
-auto();
+// One background per day (local midnight), cycling through all four
+applyTheme(Math.floor((Date.now() - new Date().getTimezoneOffset() * 6e4) / 864e5) % themes.length, true);
+
+/* ===== Reaction path game ===== */
+const LV = {
+ Organic:[
+  {n:[['Ethene','CH_2=CH_2'],['Bromoethane','CH_3CH_2Br'],['Ethanol','CH_3CH_2OH']], s:[
+   {o:['HBr(g), room temperature','Br_2 in CCl_4','NaOH(aq), warm','Acidified K_2Cr_2O_7, heat'],h:'Add H and Br across the C=C bond.',x:'Electrophilic addition: H-Br adds across the C=C double bond.'},
+   {o:['NaOH(aq), warm','NaOH in ethanol, heat','Conc. H_2SO_4, 170 \u00b0C','HBr(g)'],h:'You need substitution (Br replaced by OH), not elimination. Which solvent?',x:'Nucleophilic substitution: OH^(-) replaces Br. Aqueous alkali favours substitution.'}]},
+  {n:[['Ethanol','CH_3CH_2OH'],['Ethanal','CH_3CHO'],['Ethanoic acid','CH_3COOH']], s:[
+   {o:['Acidified K_2Cr_2O_7, warm, distil off the product','Acidified K_2Cr_2O_7, heat under reflux','Conc. H_2SO_4, 170 \u00b0C','NaOH(aq), warm'],h:'Stop at the aldehyde: remove it before it oxidises further.',x:'Primary alcohol to aldehyde: gentle oxidation, distilling the ethanal out as it forms.'},
+   {o:['Acidified K_2Cr_2O_7, heat under reflux','NaOH(aq), warm','HBr(g)','Conc. H_2SO_4, 170 \u00b0C'],h:'Oxidise fully: keep the aldehyde in the flask.',x:'Refluxing with excess oxidant keeps the ethanal in the flask until it is fully oxidised to the acid.'}]},
+  {n:[['Ethene','CH_2=CH_2'],['1,2-Dibromoethane','BrCH_2CH_2Br'],['Ethane-1,2-diol','HOCH_2CH_2OH']], s:[
+   {o:['Br_2 in CCl_4, room temperature','HBr(g)','NaOH(aq), warm','H_2O(g), H_3PO_4, 300 \u00b0C'],h:'Put one bromine on each carbon.',x:'Bromine adds across C=C (the orange colour disappears).'},
+   {o:['NaOH(aq), heat','Br_2 in CCl_4','HBr(g)','Acidified K_2Cr_2O_7'],h:'Replace both Br atoms with OH.',x:'Both Br atoms are replaced by OH in nucleophilic substitution with aqueous alkali.'}]}
+ ],
+ Inorganic:[
+  {n:[['Copper(II) nitrate','Cu(NO_3)_2(aq)'],['Copper(II) hydroxide','Cu(OH)_2(s)'],['Copper(II) oxide','CuO(s)']], s:[
+   {o:['NaOH(aq)','Dilute HCl','Excess NH_3(aq)','Heat strongly'],h:'Look for a pale blue precipitate.',x:'Cu^(2+) + 2OH^(-) gives Cu(OH)_2, a pale blue precipitate.'},
+   {o:['Heat the solid','Add dilute H_2SO_4','Add excess NH_3(aq)','Add water'],h:'Thermal decomposition: the blue solid turns black.',x:'Cu(OH)_2 gives CuO + H_2O on heating; the solid turns black.'}]},
+  {n:[['Copper(II) oxide','CuO(s)'],['Copper(II) sulfate','CuSO_4(aq)'],['Tetraamminecopper(II) ion','[Cu(NH_3)_4]^(2+)']], s:[
+   {o:['Warm dilute H_2SO_4','NaOH(aq)','Heat strongly','Excess NH_3(aq)'],h:'Basic oxide + acid gives salt + water.',x:'CuO + H_2SO_4 gives CuSO_4 + H_2O, a blue solution.'},
+   {o:['Excess NH_3(aq)','A few drops of NaOH(aq)','Warm dilute HCl','Excess NaOH(aq)'],h:'Look for a deep blue solution (a complex ion).',x:'A pale blue precipitate forms first, then dissolves in excess NH_3 to give deep blue [Cu(NH_3)_4]^(2+).'}]},
+  {n:[['Aluminium ion','Al^(3+)(aq)'],['Aluminium hydroxide','Al(OH)_3(s)'],['Tetrahydroxoaluminate','[Al(OH)_4]^(-)(aq)']], s:[
+   {o:['A few drops of NaOH(aq)','Excess NaOH(aq)','Dilute HCl','Heat'],h:'A white precipitate first; do not add too much.',x:'A white precipitate of Al(OH)_3 forms.'},
+   {o:['Excess NaOH(aq)','Excess NH_3(aq)','Dilute HCl','Add water'],h:'Amphoteric hydroxide: which reagent dissolves it? (Ammonia is too weak a base.)',x:'Al(OH)_3 is amphoteric: it dissolves in excess NaOH to give colourless [Al(OH)_4]^(-).'}]}
+ ]};
+const G = {top:'Organic',lv:0,step:0,hearts:3,score:0,streak:0,miss:false,opts:[],bad:[],fb:'',state:'play',done:{}};
+const fm = s => s.replace(/_(\d)/g,'<sub>$1</sub>').replace(/\^\(([^)]+)\)/g,'<sup>$1</sup>');
+function gOpts(){ G.opts = [...LV[G.top][G.lv].s[G.step].o].sort(() => Math.random() - .5); G.bad = []; G.fb = ''; }
+function gGo(top, lv){ Object.assign(G,{top,lv,step:0,hearts:3,miss:false,state:'play'}); gOpts(); gDraw(); }
+function gPick(i){
+  const s = LV[G.top][G.lv].s[G.step];
+  if(G.state !== 'play' || G.bad.includes(i)) return;
+  if(G.opts[i] === s.o[0]){ G.score += (G.miss ? 50 : 100) + G.streak * 10; G.streak++; G.miss = false; G.state = 'ok'; G.fb = s.x; }
+  else { G.bad.push(i); G.hearts--; G.streak = 0; G.miss = true; G.fb = 'Not quite. Hint: ' + s.h; if(G.hearts <= 0) G.state = 'lose'; }
+  gDraw();
+}
+function gNext(){
+  G.step++;
+  if(G.step >= LV[G.top][G.lv].s.length){ G.state = 'win'; G.done[G.top + G.lv] = 1; } else { G.state = 'play'; gOpts(); }
+  gDraw();
+}
+function gAdvance(){ const n = LV[G.top].length; if(G.lv < n - 1) gGo(G.top, G.lv + 1); else gGo(G.top === 'Organic' ? 'Inorganic' : 'Organic', 0); }
+function gDraw(){
+  const L = LV[G.top][G.lv], m = L.s.length, vis = Math.min(m + 1, G.step + 1 + (G.state === 'ok' ? 1 : 0));
+  let h = '<div class="flex flex-wrap gap-2 justify-center mb-4">' + Object.keys(LV).map(t => `<button class="gpill ${t === G.top ? 'gon' : ''}" onclick="gGo('${t}',0)">${t}</button>`).join('') + '</div>';
+  h += '<div class="flex flex-wrap gap-2 justify-center mb-6">' + LV[G.top].map((l, i) => `<button class="gpill ${i === G.lv ? 'gon' : ''}" onclick="gGo('${G.top}',${i})">${G.done[G.top + i] ? '<i class="fa-solid fa-check"></i> ' : ''}Level ${i + 1}</button>`).join('') + '</div>';
+  h += `<div class="flex items-center justify-between text-sm mb-6"><span>${'<i class="fa-solid fa-heart" style="color:#f87171"></i> '.repeat(G.hearts)}${'<i class="fa-regular fa-heart opacity-40"></i> '.repeat(3 - G.hearts)}</span><span>Streak <b class="acc">${G.streak}</b> &nbsp; Score <b class="acc">${G.score}</b></span></div>`;
+  h += '<div class="flex flex-wrap items-center justify-center gap-3 mb-8">' + L.n.map((n, i) => {
+    const on = i < vis, solved = i < G.step || (i === G.step && G.state === 'ok');
+    return `<div class="gnode ${i === m ? 'tgt' : ''} ${on ? '' : 'q'}"><div class="disp text-lg">${on ? n[0] : '?'}</div><div class="text-sm text-slate-300">${on ? fm(n[1]) : '&nbsp;'}</div></div>` +
+      (i < m ? `<div class="garrow"><i class="fa-solid fa-arrow-right acc"></i><span>${solved ? fm(L.s[i].o[0]) : '?'}</span></div>` : '');
+  }).join('') + '</div>';
+  if(G.state === 'win'){
+    h += `<div class="text-center space-y-4"><div class="disp text-3xl acc">Path complete!</div><p class="text-slate-300">Total score: ${G.score}</p><button class="btn" onclick="gAdvance()">Next level</button> <button class="btn ghost" onclick="gGo(G.top,G.lv)">Replay</button></div>`;
+  } else {
+    h += `<p class="mb-4 text-slate-200">Step ${G.step + 1} of ${m}: choose the reagent and conditions to convert <b>${L.n[G.step][0]}</b> into <b>${L.n[G.step + 1][0]}</b>.</p><div class="grid gap-3">` +
+      G.opts.map((o, i) => `<button class="gopt ${G.state === 'ok' && o === L.s[G.step].o[0] ? 'ok' : ''} ${G.bad.includes(i) ? 'no' : ''}" ${G.state !== 'play' ? 'disabled' : ''} onclick="gPick(${i})">${fm(o)}</button>`).join('') + '</div>';
+    if(G.fb) h += `<p class="mt-4 text-sm" style="color:${G.state === 'ok' ? '#34d399' : '#fca5a5'}">${fm(G.fb)}</p>`;
+    if(G.state === 'ok') h += '<div class="mt-5"><button class="btn" onclick="gNext()">Continue</button></div>';
+    if(G.state === 'lose') h += '<div class="mt-5 space-y-3"><div class="disp text-2xl">Out of lives</div><button class="btn" onclick="gGo(G.top,G.lv)">Try again</button></div>';
+  }
+  gameBox.innerHTML = h;
+}
+gGo('Organic', 0);
 
 const W = {H:1.008,He:4.002,Li:6.94,Be:9.012,B:10.81,C:12.011,N:14.007,O:15.999,F:18.998,Ne:20.18,Na:22.99,Mg:24.305,Al:26.982,Si:28.085,P:30.974,S:32.06,Cl:35.45,K:39.098,Ca:40.078,Mn:54.938,Fe:55.845,Cu:63.546,Zn:65.38,Br:79.904,I:126.90};
 function parseFormula(f){
