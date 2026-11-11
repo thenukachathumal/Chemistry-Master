@@ -66,10 +66,54 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#04070d}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--a)}
 @media(max-width:640px){#tname{display:none}.pic{object-position:center 16%!important}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+
+/* ===== 3D layer ===== */
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.92}
+#top .mc{text-shadow:1px 1px 0 rgba(var(--rgb),.9),2px 2px 0 rgba(var(--rgb),.8),3px 3px 0 rgba(var(--rgb),.7),4px 4px 0 rgba(var(--rgb),.6),5px 5px 0 rgba(var(--rgb),.5),6px 6px 0 rgba(var(--rgb),.4),8px 16px 34px rgba(0,0,0,.65)}
+#lock{transform-origin:20% 50%;transition:transform .25s ease-out;will-change:transform}
+.card,.frame{will-change:transform}
+/* ===== Welcome intro ===== */
+#intro{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;cursor:pointer;background:radial-gradient(75% 65% at 50% 45%,#0c1d33,#02050a 75%);clip-path:circle(150% at 50% 50%);transition:clip-path 1s cubic-bezier(.7,0,.2,1)}
+#intro.go{clip-path:circle(0% at 50% 50%)}
+#intro .stage{position:relative;text-align:center;perspective:900px;padding:0 1rem}
+.atom3d{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;animation:ay 9s linear infinite}
+.ring{position:absolute;width:var(--s);height:var(--s);left:calc(var(--s)/-2);top:calc(var(--s)/-2);border:1.5px solid rgba(var(--rgb),.6);border-radius:50%;box-shadow:0 0 22px rgba(var(--rgb),.35),inset 0 0 22px rgba(var(--rgb),.2)}
+.ring::after{content:"";position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--a);box-shadow:0 0 18px 4px rgba(var(--rgb),.8)}
+.r1{--s:min(78vw,380px);animation:o1 2.6s linear infinite}
+.r2{--s:min(64vw,310px);animation:o2 3.4s linear infinite}
+.r3{--s:min(90vw,450px);animation:o3 4.4s linear infinite}
+.nuc{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;background:var(--a);box-shadow:0 0 50px 14px rgba(var(--rgb),.7)}
+@keyframes ay{to{transform:rotateY(360deg)}}
+@keyframes o1{from{transform:rotateX(72deg) rotateZ(0)}to{transform:rotateX(72deg) rotateZ(360deg)}}
+@keyframes o2{from{transform:rotateY(72deg) rotateZ(0)}to{transform:rotateY(72deg) rotateZ(360deg)}}
+@keyframes o3{from{transform:rotateX(40deg) rotateY(50deg) rotateZ(0)}to{transform:rotateX(40deg) rotateY(50deg) rotateZ(360deg)}}
+.wt{position:relative;z-index:2;font:600 clamp(1.1rem,4vw,1.8rem)/1 'Plus Jakarta Sans',sans-serif;color:var(--a);opacity:0;animation:wf 1s .3s ease forwards;text-shadow:0 0 24px rgba(var(--rgb),.8)}
+@keyframes wf{from{opacity:0;filter:blur(12px);letter-spacing:.6em}to{opacity:1;filter:blur(0);letter-spacing:.12em}}
+.wm{position:relative;z-index:2;margin:.5rem 0 0;font:800 clamp(3.8rem,17vw,9.5rem)/1 var(--fd);letter-spacing:-.02em;color:#fff;transform-style:preserve-3d;white-space:nowrap}
+.w{display:inline-block;opacity:0;transform-origin:50% 100%;transform:rotateX(-110deg) translateY(50px) translateZ(-260px);animation:wi .95s cubic-bezier(.2,.9,.2,1.15) forwards;animation-delay:calc(.75s + var(--i)*.12s);text-shadow:1px 1px 0 rgba(var(--rgb),.9),2px 2px 0 rgba(var(--rgb),.75),3px 3px 0 rgba(var(--rgb),.6),4px 4px 0 rgba(var(--rgb),.45),0 0 60px rgba(var(--rgb),.55)}
+@keyframes wi{to{opacity:1;transform:none}}
+.ws{position:relative;z-index:2;margin-top:1.1rem;font:500 clamp(.8rem,2.6vw,1.05rem)/1.4 'Plus Jakarta Sans',sans-serif;color:#cbd5e1;opacity:0;animation:wf2 1s 2s ease forwards}
+@keyframes wf2{to{opacity:1}}
+.wbar{position:relative;z-index:2;width:min(260px,60vw);height:3px;margin:1.4rem auto 0;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.wbar i{display:block;height:100%;background:var(--a);box-shadow:0 0 14px var(--a);transform-origin:left;transform:scaleX(0);animation:wb 3s .2s cubic-bezier(.5,0,.2,1) forwards}
+@keyframes wb{to{transform:scaleX(1)}}
+.skip{position:absolute;right:20px;bottom:20px;z-index:3;font-size:.8rem;color:#94a3b8;padding:.4rem .9rem;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:transparent;cursor:pointer}
+.skip:hover{color:var(--a);border-color:var(--a)}
 </style>
 </head>
 <body>
 <div class="bg" id="bgA"></div><div class="bg" id="bgB"></div><div class="veil"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="intro" role="presentation">
+  <div class="stage">
+    <div class="atom3d"><div class="nuc"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div></div>
+    <div class="wt">Welcome to</div>
+    <h2 class="wm" aria-label="M-CHEM"><span class="w" style="--i:0">M</span><span class="w" style="--i:1">-</span><span class="w" style="--i:2">C</span><span class="w" style="--i:3">H</span><span class="w" style="--i:4">E</span><span class="w" style="--i:5">M</span></h2>
+    <div class="ws">A/L Chemistry with Madhawa Ranathunga</div>
+    <div class="wbar"><i></i></div>
+  </div>
+  <button class="skip" type="button">Skip</button>
+</div>
 <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
 <nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4">
@@ -396,6 +440,126 @@ document.querySelectorAll('[data-counter]').forEach(el => {
   const target = +el.dataset.counter, step = Math.ceil(target / 40); let n = 0;
   setTimeout(function tick(){ n += step; if(n < target){ el.innerText = n; setTimeout(tick, 30); } else el.innerText = target; }, 500);
 });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const I = document.getElementById('intro');
+let revealed = false;
+document.body.style.overflow = 'hidden';
+function reveal(){
+  if(revealed) return; revealed = true;
+  I.classList.add('go'); document.body.style.overflow = '';
+  setTimeout(() => I.remove(), 1100);
+}
+I.addEventListener('click', reveal);
+if(reduce) reveal(); else setTimeout(reveal, 3600);
+
+/* ---------- 3D tilt on cards and the lecturer frame ---------- */
+document.querySelectorAll('.card,.frame').forEach(el => {
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    el.style.transition = 'transform .1s';
+    el.style.transform = `perspective(800px) rotateY(${x * 16}deg) rotateX(${-y * 16}deg) translateZ(16px)`;
+  });
+  el.addEventListener('pointerleave', () => { el.style.transition = 'transform .5s'; el.style.transform = ''; });
+});
+
+/* ---------- Three.js molecule world ---------- */
+if(!window.THREE) return;
+const cv = document.getElementById('gl');
+const R = new THREE.WebGLRenderer({canvas: cv, alpha: true, antialias: true});
+R.setPixelRatio(Math.min(devicePixelRatio, 2));
+const S = new THREE.Scene(), C = new THREE.PerspectiveCamera(55, 1, .1,200);
+S.add(new THREE.AmbientLight(0xffffff, .6));
+const L1 = new THREE.PointLight(0xffffff, 1.3, 0); L1.position.set(8, 8, 12); S.add(L1);
+const L2 = new THREE.PointLight(0xffffff, .6, 0); L2.position.set(-10, -6, 6); S.add(L2);
+
+const acc = new THREE.Color('#22d3ee'), target = new THREE.Color('#22d3ee');
+const mAcc = new THREE.MeshStandardMaterial({color: acc, emissive: acc, emissiveIntensity: .45, metalness: .3, roughness: .25});
+const mH = new THREE.MeshStandardMaterial({color: 0xe2e8f0, roughness: .35, metalness: .2});
+const mB = new THREE.MeshStandardMaterial({color: 0x94a3b8, metalness: .6, roughness: .3});
+
+const M = new THREE.Group(); S.add(M);
+const sph = (p, r, m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 28, 28), m); s.position.copy(p); M.add(s); };
+const bond = (a, b) => {
+  const d = b.clone().sub(a), len = d.length();
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(.09, .09, len, 12), mB);
+  c.position.copy(a).add(b).multiplyScalar(.5);
+  c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); M.add(c);
+};
+// benzene ring with hydrogens and an OH group (phenol)
+const Cs = [];
+for(let i = 0; i < 6; i++){
+  const a = i * Math.PI / 3, c = new THREE.Vector3(2 * Math.cos(a), 2 * Math.sin(a), 0);
+  Cs.push(c); sph(c, .5, mAcc);
+  if(i === 0){ const o = new THREE.Vector3(3.5, 0, 0); sph(o, .42, mAcc); bond(c, o); const h = new THREE.Vector3(4.3, .6, .3); sph(h, .26, mH); bond(o, h); }
+  else { const h = new THREE.Vector3(3.2 * Math.cos(a), 3.2 * Math.sin(a), 0); sph(h, .27, mH); bond(c, h); }
+}
+for(let i = 0; i < 6; i++) bond(Cs[i], Cs[(i + 1) % 6]);
+
+// electron orbits
+const orbits = [], els = [];
+[[5.6, 1.1, 0], [6.4, 0, 1.2], [7.2, .6, .6]].forEach(([r, rx, ry], i) => {
+  const g = new THREE.Group(); g.rotation.set(rx, ry, i);
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(r, .02, 8, 140), new THREE.MeshBasicMaterial({color: acc, transparent: true, opacity: .55})));
+  const e = new THREE.Mesh(new THREE.SphereGeometry(.2, 16, 16), mAcc); g.add(e);
+  orbits.push(g); els.push({e, r, a: i * 2}); M.add(g);
+});
+
+// atom dust
+const N = 520, pos = new Float32Array(N * 3);
+for(let i = 0; i < N * 3; i++) pos[i] = (Math.random() - .5) * 70;
+const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const pm = new THREE.PointsMaterial({color: acc, size: .14, transparent: true, opacity: .8, sizeAttenuation: true});
+const P = new THREE.Points(pg, pm); S.add(P);
+
+// drifting mini atoms
+const floats = [];
+for(let i = 0; i < 14; i++){
+  const m = new THREE.Mesh(new THREE.SphereGeometry(.25 + Math.random() * .45, 20, 20), i % 3 ? mH : mAcc);
+  m.position.set((Math.random() - .5) * 34, (Math.random() - .5) * 20, -12 + Math.random() * 14);
+  floats.push({m, s: Math.random() * 6, k: .3 + Math.random() * .7}); S.add(m);
+}
+
+let tx = 0, ty = 0, mx = 0, my = 0, sp = 0, fly = 0, f = 0;
+addEventListener('pointermove', e => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; });
+const lk = document.getElementById('lock');
+addEventListener('pointermove', e => {
+  if(innerWidth < 900) { lk.style.transform = ''; return; }
+  lk.style.transform = `perspective(1300px) rotateY(${tx * 7}deg) rotateX(${-ty * 5}deg)`;
+});
+function size(){ const w = innerWidth, h = innerHeight; R.setSize(w, h, false); C.aspect = w / h; C.updateProjectionMatrix(); }
+addEventListener('resize', size); size();
+
+const clock = new THREE.Clock();
+(function loop(){
+  requestAnimationFrame(loop);
+  const t = clock.getElapsedTime(), narrow = innerWidth < 900;
+  mx += (tx - mx) * .05; my += (ty - my) * .05;
+  const maxY = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+  sp += (scrollY / maxY - sp) * .06;
+  if(revealed && fly < 1) fly = Math.min(1, fly + (reduce ? 1 : .011));
+  if(!revealed && !reduce) fly = 0;
+  const e = 1 - Math.pow(1 - fly, 3);
+  C.position.set(mx * 1.4, -my * .9, 46 - 31 * e); C.lookAt(0, 0, 0);
+  M.position.x = narrow ? 0 : 5.4 * Math.cos(sp * Math.PI * 3);
+  M.position.y = narrow ? 4 - sp * 6 : Math.sin(sp * Math.PI * 2) * 1.6;
+  M.scale.setScalar(narrow ? .5 : .95);
+  M.rotation.y = t * .3 + mx * .8 + sp * 9;
+  M.rotation.x = my * .5 + Math.sin(t * .35) * .25 + sp * 3;
+  orbits.forEach((g, i) => { g.rotation.z += .004 * (i + 1); });
+  els.forEach((o, i) => { o.a += .02 * (i + 1); o.e.position.set(Math.cos(o.a) * o.r, Math.sin(o.a) * o.r, 0); });
+  P.rotation.y = t * .02 + sp * 1.5; P.rotation.x = sp * .7;
+  floats.forEach(o => { o.m.position.y += Math.sin(t * o.k + o.s) * .004; o.m.position.x += Math.cos(t * o.k * .7 + o.s) * .003; });
+  if(++f % 10 === 0){ const v = getComputedStyle(document.documentElement).getPropertyValue('--a').trim(); if(v) target.set(v); }
+  acc.lerp(target, .08); mAcc.emissive.copy(acc); pm.color.copy(acc);
+  orbits.forEach(g => g.children[0].material.color.copy(acc));
+  R.render(S, C);
+})();
+})();
 </script>
 </body>
 </html>
