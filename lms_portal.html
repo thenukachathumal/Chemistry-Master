@@ -324,6 +324,32 @@
         </div>
       </div>
 
+      <!-- Registered Students (all, even without a receipt) -->
+      <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
+        <div class="p-4 bg-slate-900/95 border-b border-slate-800 space-y-3">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <h3 class="font-bold text-sm text-rose-100"><i class="fa-solid fa-users text-rose-400"></i> ලියාපදිංචි වූ සියලුම ළමුන් (Registered Students)</h3>
+            <span id="stCount" class="bg-rose-500/20 text-rose-200 text-xs px-3 py-1 rounded-full border border-rose-500/30 font-bold">0</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <input id="stSearch" oninput="renderStudents()" placeholder="නම / ෆෝන් / Guardian හොයන්න" class="flex-1 min-w-[10rem] bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-rose-100">
+            <select id="stBatch" onchange="renderStudents()" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-rose-200">
+              <option value="ALL">All Batches</option><option value="2027 Batch">2027 Batch</option><option value="2028 Batch">2028 Batch</option><option value="2029 Batch">2029 Batch</option><option value="2030 Batch">2030 Batch</option><option value="2031 Batch">2031 Batch</option>
+            </select>
+            <select id="stMonth" onchange="renderStudents()" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-rose-200"></select>
+          </div>
+          <div id="stStats" class="flex flex-wrap gap-2 text-[11px]"></div>
+        </div>
+        <div class="overflow-x-auto max-h-[32rem] overflow-y-auto">
+          <table class="w-full text-left text-rose-100 text-xs">
+            <thead class="bg-slate-900/90 text-rose-300 uppercase tracking-wider border-b border-slate-800 sticky top-0">
+              <tr><th class="p-3">Student & Batch</th><th class="p-3">Contact</th><th class="p-3">Address</th><th class="p-3">Registered</th><th class="p-3">Receipt (selected month)</th></tr>
+            </thead>
+            <tbody id="stBody" class="divide-y divide-slate-800"><tr><td colspan="5" class="p-4 text-rose-300">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Registered Students & Receipts Table -->
       <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
         <div class="p-4 bg-slate-900/95 border-b border-slate-800 flex justify-between items-center">
@@ -1047,6 +1073,63 @@
       }
     }
 
+    /* ===== Admin: ALL registered students (from the "students" collection) ===== */
+    let stAll = [], subMap = {}, stUnsub = null, subUnsub = null;
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function listenStudents() {
+      if (!isAdmin || stUnsub) return;
+      const m = document.getElementById('stMonth');
+      m.innerHTML = MONTHS.map(x => `<option value="${x}">${x}</option>`).join('');
+      m.value = new Date().toLocaleString('en-US', { month: 'long' });
+      const fail = err => {
+        document.getElementById('stBody').innerHTML = `<tr><td colspan="5" class="p-4 text-red-400">දෝෂයක්: ${esc(err.message)} — Firebase rules පරීක්ෂා කරන්න.</td></tr>`;
+      };
+      stUnsub = db.collection('students').onSnapshot(snap => {
+        stAll = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderStudents();
+      }, fail);
+      subUnsub = db.collection('submissions').onSnapshot(snap => {
+        subMap = {};
+        snap.forEach(d => { const x = d.data(); subMap[x.uid + '_' + x.month] = x.status; });
+        renderStudents();
+      }, fail);
+    }
+
+    function renderStudents() {
+      if (!isAdmin) return;
+      const b = document.getElementById('stBatch').value;
+      const q = document.getElementById('stSearch').value.trim().toLowerCase();
+      const mo = document.getElementById('stMonth').value;
+      const rows = stAll
+        .filter(s => (b === 'ALL' || s.batch === b) &&
+          (!q || [s.fullName, s.phone, s.guardianName, s.email].join(' ').toLowerCase().includes(q)))
+        .sort((x, y) => (y.registeredAt ? y.registeredAt.seconds : 9e9) - (x.registeredAt ? x.registeredAt.seconds : 9e9));
+      const stat = s => subMap[s.id + '_' + mo] || 'none';
+      const n = k => rows.filter(s => stat(s) === k).length;
+      document.getElementById('stCount').innerText = rows.length + ' students';
+      document.getElementById('stStats').innerHTML =
+        `<span class="bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">Approved: ${n('approved')}</span>` +
+        `<span class="bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">Pending: ${n('pending')}</span>` +
+        `<span class="bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-500/30">Rejected: ${n('rejected')}</span>` +
+        `<span class="bg-slate-700/50 text-slate-200 px-2.5 py-0.5 rounded-full border border-slate-600">Receipt නැත: ${n('none')}</span>`;
+      const badge = {
+        approved: '<span class="bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-bold">Approved</span>',
+        pending: '<span class="bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">Pending</span>',
+        rejected: '<span class="bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-500/30 font-bold">Rejected</span>',
+        none: '<span class="bg-slate-700/50 text-slate-300 px-2.5 py-0.5 rounded-full border border-slate-600">Receipt නැත</span>'
+      };
+      document.getElementById('stBody').innerHTML = rows.length ? rows.map(s => `
+        <tr class="hover:bg-slate-900/60">
+          <td class="p-3"><div class="font-bold text-white">${esc(s.fullName || 'N/A')}</div><div class="text-[10px] text-rose-300 font-semibold">${esc(s.batch || '')}</div></td>
+          <td class="p-3"><div>Phone: ${esc(s.phone || 'N/A')}</div><div class="text-[10px] text-rose-300/80">Guardian: ${esc(s.guardianName || 'N/A')}</div><div class="text-[10px] text-rose-300/60">${esc(s.email || '')}</div></td>
+          <td class="p-3 max-w-[14rem]">${esc(s.address || 'N/A')}</td>
+          <td class="p-3 whitespace-nowrap">${s.registeredAt ? s.registeredAt.toDate().toLocaleDateString() : '-'}</td>
+          <td class="p-3">${badge[stat(s)]}</td>
+        </tr>`).join('')
+        : '<tr><td colspan="5" class="p-4 text-rose-300 text-center">ළමුන් නැත.</td></tr>';
+    }
+
     function switchView(view) {
       const studentView = document.getElementById('studentView');
       const adminView = document.getElementById('adminView');
@@ -1059,6 +1142,7 @@
         studentView.classList.add('hidden');
         adminView.classList.remove('hidden');
         loadAdminTableData();
+        listenStudents();
         listenAdminLessons();
       } else {
         adminView.classList.add('hidden');
