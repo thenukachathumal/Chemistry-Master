@@ -330,6 +330,7 @@
           <div class="flex flex-wrap justify-between items-center gap-2">
             <h3 class="font-bold text-sm text-rose-100"><i class="fa-solid fa-users text-rose-400"></i> ලියාපදිංචි වූ සියලුම ළමුන් (Registered Students)</h3>
             <span id="stCount" class="bg-rose-500/20 text-rose-200 text-xs px-3 py-1 rounded-full border border-rose-500/30 font-bold">0</span>
+            <button onclick="migrateMonths()" class="text-[10px] text-rose-300 underline">පරණ මාස (නම) අලුත් ක්‍රමයට මාරු කරන්න</button>
           </div>
           <div class="flex flex-wrap gap-2">
             <input id="stSearch" oninput="renderStudents()" placeholder="නම / ෆෝන් / Guardian හොයන්න" class="flex-1 min-w-[10rem] bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-rose-100">
@@ -662,7 +663,7 @@
           const data = doc.data();
           if (data.status === 'approved') {
             badge.className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs px-3 py-1 rounded-full font-bold";
-            badge.innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i> Approved (${month})`;
+            badge.innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i> Approved (${mLabel(month)})`;
           } else if (data.status === 'rejected') {
             badge.className = "bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs px-3 py-1 rounded-full font-bold";
             badge.innerHTML = `<i class="fa-solid fa-xmark-circle mr-1"></i> Rejected`;
@@ -717,6 +718,18 @@
             approvedPairs.push({ batch: d.batch, month: d.month });
           });
 
+          // Grace period: in the first GRACE_DAYS days of a month, a student whose previous month
+          // is approved can also open the current month's lessons (enforced again by the rules).
+          let gracePair = null;
+          if (inGrace()) {
+            const cur = curKey(), prev = prevKey(cur);
+            const pp = approvedPairs.find(p => p.month === prev);
+            if (pp && !approvedPairs.some(p => p.month === cur)) {
+              gracePair = { batch: pp.batch, month: cur };
+              approvedPairs.push(gracePair);
+            }
+          }
+
           if (approvedMonths.length === 0) {
             container.innerHTML = `
               <div class="text-center py-8 space-y-2">
@@ -739,7 +752,7 @@
           });
           const failed = results.find(r => r.status === 'rejected');
           if (failed && cachedLessonsData.length === 0) throw failed.reason;
-          subtitle.innerText = `${currentStudentData.batch} • අනුමත කළ මාස: ${approvedMonths.join(', ')}`;
+          subtitle.innerText = `${currentStudentData.batch} • අනුමත කළ මාස: ${approvedMonths.map(mLabel).join(', ')}${gracePair ? ' • සහන කාලය: ' + mLabel(gracePair.month) : ''}`;
         }
 
         renderLessonsList();
@@ -784,7 +797,7 @@
             <div>
               <div class="flex gap-2 mb-1">
                 <span class="bg-rose-500/20 text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded border border-rose-500/30 uppercase">${lesson.batch}</span>
-                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 uppercase">${lesson.month}</span>
+                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 uppercase">${mLabel(lesson.month)}</span>
               </div>
               <h4 class="text-sm font-bold text-white mt-1">${lesson.title}</h4>
             </div>
@@ -863,7 +876,7 @@
         tuteUrl: tuteUrl || "",
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      alert(`${batch} (${month}) සඳහා රෙකෝඩින් සහ Tute සාර්ථකව එකතු විය!`);
+      alert(`${batch} (${mLabel(month)}) සඳහා රෙකෝඩින් සහ Tute සාර්ථකව එකතු විය!`);
       document.getElementById('adminLessonTitle').value = "";
       document.getElementById('adminBatchVideo').value = "";
       document.getElementById('adminTuteUrl').value = "";
@@ -908,7 +921,7 @@
         <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3 space-y-2">
           <div class="flex gap-2 text-[10px] font-bold uppercase">
             <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">${esc(l.batch)}</span>
-            <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">${esc(l.month)}</span>
+            <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">${esc(mLabel(l.month))}</span>
           </div>
           ${fld(l.id, 't', 'පාඩමේ / Tute එකේ නම', l.title, 'නම', 'renameLesson', '')}
           ${fld(l.id, 'v', 'YouTube Recording link', l.videoUrl, 'https://www.youtube.com/watch?v=...', 'saveLessonVideo', 'deleteLessonVideo')}
@@ -1019,7 +1032,7 @@
               <div class="text-[10px] text-rose-300 font-semibold">${sub.batch}</div>
             </td>
             <td class="p-3">
-              <span class="text-rose-100 font-semibold">${sub.month}</span>
+              <span class="text-rose-100 font-semibold">${mLabel(sub.month)}</span>
             </td>
             <td class="p-3">
               <div class="text-rose-200">Phone: ${st.phone || 'N/A'}</div>
@@ -1077,11 +1090,65 @@
     let stAll = [], subMap = {}, stUnsub = null, subUnsub = null;
     const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
+    // ----- Months are stored as "YYYY-MM" (e.g. 2026-11) so each year is separate -----
+    const GRACE_DAYS = 10; // keep equal to graceDays() in firestore.rules
+    const slNow = () => new Date(Date.now() + 330 * 60000); // Sri Lanka time (read with getUTC*)
+    const keyOf = (y, m) => y + '-' + String(m).padStart(2, '0');
+    const curKey = () => { const d = slNow(); return keyOf(d.getUTCFullYear(), d.getUTCMonth() + 1); };
+    const prevKey = k => { let [y, m] = k.split('-').map(Number); m--; if (!m) { m = 12; y--; } return keyOf(y, m); };
+    const inGrace = () => slNow().getUTCDate() <= GRACE_DAYS;
+    const mLabel = k => /^\d{4}-\d{2}$/.test(k) ? MONTHS[+k.slice(5) - 1] + ' ' + k.slice(0, 4) : k;
+    function monthOptions() {
+      const d = slNow(), o = [];
+      for (let i = -12; i <= 12; i++) {
+        const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + i, 1));
+        const k = keyOf(t.getUTCFullYear(), t.getUTCMonth() + 1);
+        o.push(`<option value="${k}">${mLabel(k)}</option>`);
+      }
+      return o.join('');
+    }
+    function initMonthSelects() {
+      [['receiptMonth', 0], ['linkTargetMonth', 0], ['manageMonth', 1], ['modalMonthFilter', 1]].forEach(([id, all]) => {
+        const el = document.getElementById(id); if (!el) return;
+        el.innerHTML = (all ? el.options[0].outerHTML : '') + monthOptions();
+        el.value = all ? 'ALL' : curKey();
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMonthSelects); else initMonthSelects();
+
+    // One-time: convert old records (month = "November") to "YYYY-MM".
+    async function migrateMonths() {
+      if (!isAdmin) return;
+      const y = prompt('පරණ මාස වලට අදාළ අවුරුද්ද (උදා: 2026)', String(slNow().getUTCFullYear()));
+      if (!/^\d{4}$/.test(y || '')) return;
+      if (!confirm('නම් වලින් තියෙන සියලුම පරණ receipts සහ පාඩම් ' + y + ' අවුරුද්දට මාරු කරන්නද?')) return;
+      const idx = n => String(MONTHS.indexOf(n) + 1).padStart(2, '0');
+      let n = 0;
+      try {
+        const subs = await db.collection('submissions').get();
+        for (const d of subs.docs) {
+          const x = d.data();
+          if (MONTHS.includes(x.month)) {
+            const k = y + '-' + idx(x.month);
+            await db.collection('submissions').doc(x.uid + '_' + k).set({ ...x, month: k });
+            await d.ref.delete(); n++;
+          }
+        }
+        const ls = await db.collection('batch_lessons').get();
+        for (const d of ls.docs) {
+          const x = d.data();
+          if (MONTHS.includes(x.month)) { await d.ref.update({ month: y + '-' + idx(x.month) }); n++; }
+        }
+        alert(n + ' records මාරු කළා.');
+      } catch (err) { alert('දෝෂයක්: ' + err.message + ' (මාරු කළ ගාන: ' + n + ')'); }
+    }
+
+
     function listenStudents() {
       if (!isAdmin || stUnsub) return;
       const m = document.getElementById('stMonth');
-      m.innerHTML = MONTHS.map(x => `<option value="${x}">${x}</option>`).join('');
-      m.value = new Date().toLocaleString('en-US', { month: 'long' });
+      m.innerHTML = monthOptions();
+      m.value = curKey();
       const fail = err => {
         document.getElementById('stBody').innerHTML = `<tr><td colspan="5" class="p-4 text-red-400">දෝෂයක්: ${esc(err.message)} — Firebase rules පරීක්ෂා කරන්න.</td></tr>`;
       };
@@ -1105,18 +1172,20 @@
         .filter(s => (b === 'ALL' || s.batch === b) &&
           (!q || [s.fullName, s.phone, s.guardianName, s.email].join(' ').toLowerCase().includes(q)))
         .sort((x, y) => (y.registeredAt ? y.registeredAt.seconds : 9e9) - (x.registeredAt ? x.registeredAt.seconds : 9e9));
-      const stat = s => subMap[s.id + '_' + mo] || 'none';
+      const stat = s => subMap[s.id + '_' + mo] || ((mo === curKey() && inGrace() && subMap[s.id + '_' + prevKey(mo)] === 'approved') ? 'grace' : 'none');
       const n = k => rows.filter(s => stat(s) === k).length;
       document.getElementById('stCount').innerText = rows.length + ' students';
       document.getElementById('stStats').innerHTML =
         `<span class="bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">Approved: ${n('approved')}</span>` +
         `<span class="bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">Pending: ${n('pending')}</span>` +
         `<span class="bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-500/30">Rejected: ${n('rejected')}</span>` +
+        `<span class="bg-sky-500/20 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-500/30">සහන කාලයේ: ${n('grace')}</span>` +
         `<span class="bg-slate-700/50 text-slate-200 px-2.5 py-0.5 rounded-full border border-slate-600">Receipt නැත: ${n('none')}</span>`;
       const badge = {
         approved: '<span class="bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-bold">Approved</span>',
         pending: '<span class="bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">Pending</span>',
         rejected: '<span class="bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-500/30 font-bold">Rejected</span>',
+        grace: '<span class="bg-sky-500/20 text-sky-300 px-2.5 py-0.5 rounded-full border border-sky-500/30 font-bold">සහන කාලයේ</span>',
         none: '<span class="bg-slate-700/50 text-slate-300 px-2.5 py-0.5 rounded-full border border-slate-600">Receipt නැත</span>'
       };
       document.getElementById('stBody').innerHTML = rows.length ? rows.map(s => `
