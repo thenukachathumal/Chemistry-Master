@@ -997,7 +997,7 @@
         tbody.innerHTML = '';
         
         for (const doc of snapshot.docs) {
-          const sub = doc.data();
+          const sub = { ...doc.data(), docId: doc.id }; // always use the real document id
           if (filterBatch !== "ALL" && sub.batch !== filterBatch) continue;
 
           const stDoc = await db.collection('students').doc(sub.uid).get();
@@ -1130,7 +1130,7 @@
           const x = d.data();
           if (MONTHS.includes(x.month)) {
             const k = y + '-' + idx(x.month);
-            await db.collection('submissions').doc(x.uid + '_' + k).set({ ...x, month: k });
+            await db.collection('submissions').doc(x.uid + '_' + k).set({ ...x, month: k, docId: x.uid + '_' + k });
             await d.ref.delete(); n++;
           }
         }
