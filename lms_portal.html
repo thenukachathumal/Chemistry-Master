@@ -329,12 +329,12 @@
               </select>
             </div>
             <input type="text" id="adminLessonTitle" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="පාඩමේ / ටියුට් එකේ නම (උදා: 01 වන කොටස)">
-            <input type="url" id="adminBatchVideo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="YouTube URL (https://www.youtube.com/watch?v=...)">
+            <input type="url" id="adminBatchVideo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="YouTube URL (Tute එක පමණක් නම් හිස්ව තබන්න)">
             <input type="url" id="adminTuteUrl" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="Tute Drive/PDF Link (නැත්නම් හිස්ව තබන්න)">
             <button onclick="saveBatchLesson()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2 rounded-lg font-medium transition w-full">
               Save Recording & Tute
             </button>
-            <p class="text-[11px] text-rose-200/80 leading-relaxed">Tute link එක පසුව එකතු කරන්නේ නම්, පහත "දැනට ඇති පාඩම්" ලැයිස්තුවෙන් අදාළ පාඩම සොයා එහි Tute link එක දාන්න.</p>
+            <p class="text-[11px] text-rose-200/80 leading-relaxed">YouTube link එක හෝ Tute link එක පමණක් වුවත් දාන්න පුළුවන්. අලුතෙන් එකතු කරන හැම එකක්ම වෙනම පාඩමක් විදිහට එකතු වෙනවා, කලින් ඒවා මැකෙන්නේ නෑ. ළමයාට පෙනෙන්නේ ඒ සියල්ලම.</p>
           </div>
         </div>
 
@@ -343,7 +343,7 @@
           <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
             <i class="fa-solid fa-pen-to-square text-rose-400"></i> දැනට ඇති පාඩම්
           </h3>
-          <p class="text-[11px] text-rose-200/80 mb-3">නම වෙනස් කරන්න, Tute එකතු කරන්න, නැත්නම් Recording / Tute මකන්න.</p>
+          <p class="text-[11px] text-rose-200/80 mb-3">නම හෝ link වෙනස් කරන්න, නැත්නම් පාඩම මකන්න. අලුත් Tute / Recording එකක් එකතු කිරීමට ඉහත form එක භාවිතා කරන්න.</p>
           <div class="grid grid-cols-2 gap-2 mb-3">
             <select id="manageBatch" onchange="renderAdminLessons()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100">
               <option value="ALL">All Batches</option><option value="2027 Batch">2027 Batch</option><option value="2028 Batch">2028 Batch</option>
@@ -923,27 +923,32 @@
       }
       const batch = document.getElementById('linkTargetBatch').value;
       const month = document.getElementById('linkTargetMonth').value;
-      const title = document.getElementById('adminLessonTitle').value;
-      const videoUrl = document.getElementById('adminBatchVideo').value;
-      const tuteUrl = document.getElementById('adminTuteUrl').value;
+      const title = document.getElementById('adminLessonTitle').value.trim();
+      const videoUrl = document.getElementById('adminBatchVideo').value.trim();
+      const tuteUrl = document.getElementById('adminTuteUrl').value.trim();
 
-      if (!title || !videoUrl) {
-        alert("කරුණාකර පාඩමේ නම සහ YouTube URL එක ලබා දෙන්න!\n(Tute එක පමණක් පසුව එකතු කරන්නේ නම්, \"දැනට ඇති පාඩම්\" ලැයිස්තුවෙන් අදාළ පාඩමට එකතු කරන්න.)");
-        return;
-      }
+      if (!title) { alert('පාඩමේ / Tute එකේ නම ඇතුළත් කරන්න!'); return; }
+      if (!videoUrl && !tuteUrl) { alert('YouTube link එක හෝ Tute link එක (හෝ දෙකම) ඇතුළත් කරන්න!'); return; }
+      if ((videoUrl && !isUrl(videoUrl)) || (tuteUrl && !isUrl(tuteUrl))) { alert('Link එක https:// සමඟ ආරම්භ විය යුතුයි!'); return; }
 
-      await db.collection('batch_lessons').add({
-        batch: batch,
-        month: month,
-        title: title,
-        videoUrl: videoUrl,
-        tuteUrl: tuteUrl || "",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      alert(`${batch} (${mLabel(month)}) සඳහා රෙකෝඩින් සහ Tute සාර්ථකව එකතු විය!`);
+      try {
+        // Every save creates a NEW item, so earlier recordings / tutes are never replaced.
+        await db.collection('batch_lessons').add({
+          batch: batch,
+          month: month,
+          title: title,
+          videoUrl: videoUrl,
+          tuteUrl: tuteUrl,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (e) { alert('Error: ' + e.message); return; }
+      alert(`${batch} (${mLabel(month)}) සඳහා එකතු විය! කලින් ඇති ඒවා ඒ විදිහටම තිබේ.`);
       document.getElementById('adminLessonTitle').value = "";
       document.getElementById('adminBatchVideo').value = "";
       document.getElementById('adminTuteUrl').value = "";
+      document.getElementById('manageBatch').value = batch;
+      document.getElementById('manageMonth').value = month;
+      renderAdminLessons();
     }
 
 
@@ -963,13 +968,17 @@
       });
     }
 
+    const isMonthKey = k => /^\d{4}-\d{2}$/.test(k || '');
     function renderAdminLessons() {
       const box = document.getElementById('adminLessonsList');
       if (!box) return;
       const b = document.getElementById('manageBatch').value, m = document.getElementById('manageMonth').value;
-      const list = adminLessons.filter(l => (b === 'ALL' || l.batch === b) && (m === 'ALL' || l.month === m));
+      const legacyName = isMonthKey(m) ? MONTHS[+m.slice(5) - 1] : null;
+      const list = adminLessons.filter(l => (b === 'ALL' || l.batch === b) && (m === 'ALL' || l.month === m || (legacyName && l.month === legacyName)));
+      const legacyN = adminLessons.filter(l => !isMonthKey(l.month)).length;
+      const banner = legacyN ? `<div class="bg-amber-500/10 border border-amber-500/40 rounded-xl p-3 text-[11px] text-amber-200 space-y-2"><p>පරණ ක්‍රමයේ (මාසයේ නම පමණක් ඇති) පාඩම් ${legacyN}ක් තිබේ. මේවා ළමයින්ට තවම නොපෙනේ.</p><button onclick="migrateMonths()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-semibold">අවුරුද්දට මාරු කරන්න</button></div>` : '';
       if (!list.length) {
-        box.innerHTML = '<p class="text-xs text-rose-200 text-center py-4">තෝරාගත් ෆිල්ටරයට අදාළ පාඩම් නැත.</p>';
+        box.innerHTML = banner + '<p class="text-xs text-rose-200 text-center py-4">තෝරාගත් batch සහ මාසයට පාඩම් නැත. ඉහත form එකෙන් එකතු කරන්න.</p>';
         return;
       }
       const fld = (id, k, label, val, ph, save, del) => `
@@ -981,16 +990,25 @@
             ${del && val ? `<button onclick="${del}('${id}')" title="මකන්න" class="bg-rose-700 hover:bg-rose-600 text-white text-[11px] px-3 rounded-lg font-semibold transition"><i class="fa-solid fa-trash"></i></button>` : ''}
           </div>
         </div>`;
-      box.innerHTML = list.map(l => `
+      box.innerHTML = banner + `<p class="text-[11px] text-rose-300">පාඩම් ${list.length}ක් (අලුත්ම මුලින්)</p>` + list.map(l => `
         <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3 space-y-2">
-          <div class="flex gap-2 text-[10px] font-bold uppercase">
+          <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase">
             <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">${esc(l.batch)}</span>
             <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">${esc(mLabel(l.month))}</span>
+            ${l.videoUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Recording</span>' : ''}${l.tuteUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Tute</span>' : ''}${isMonthKey(l.month) ? '' : '<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">පරණ</span>'}
           </div>
           ${fld(l.id, 't', 'පාඩමේ / Tute එකේ නම', l.title, 'නම', 'renameLesson', '')}
-          ${fld(l.id, 'v', 'YouTube Recording link', l.videoUrl, 'https://www.youtube.com/watch?v=...', 'saveLessonVideo', 'deleteLessonVideo')}
-          ${fld(l.id, 'u', 'Tute link (Drive / PDF)', l.tuteUrl, 'Tute link එක මෙහි දාන්න', 'saveLessonTute', 'deleteLessonTute')}
+          ${fld(l.id, 'v', 'YouTube Recording link (නැත්නම් හිස්)', l.videoUrl, 'https://www.youtube.com/watch?v=...', 'saveLessonVideo', 'deleteLessonVideo')}
+          ${fld(l.id, 'u', 'Tute link (Drive / PDF) (නැත්නම් හිස්)', l.tuteUrl, 'Tute link එක මෙහි දාන්න', 'saveLessonTute', 'deleteLessonTute')}
+          <div class="flex justify-end"><button onclick="deleteWholeLesson('${l.id}')" class="text-[11px] text-red-300 underline"><i class="fa-solid fa-trash"></i> මුළු පාඩම මකන්න</button></div>
         </div>`).join('');
+    }
+
+    function deleteWholeLesson(id) {
+      if (!isAdmin) { alert("අවසර නැත!"); return; }
+      const l = adminLessons.find(x => x.id === id);
+      if (!l) return;
+      if (confirm(`"${l.title}" පාඩම සම්පූර්ණයෙන්ම (Recording සහ Tute සහිතව) මකනවා. ඉදිරියට යන්නද?`)) removeLesson(id);
     }
 
     async function updateLesson(id, data, okMsg) {
