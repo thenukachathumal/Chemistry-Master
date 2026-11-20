@@ -66,6 +66,7 @@
 #studentView .bg-rose-600:active{transform:translateY(4px);box-shadow:0 1px 0 #9f1239}
 #atom3d{filter:drop-shadow(0 12px 22px rgba(244,63,94,.45))}
 </style>
+<style>@keyframes flwv{to{transform:translateX(64px)}}@keyframes flbub{0%{transform:translateY(0);opacity:0}25%{opacity:.85}100%{transform:translateY(-34px);opacity:0}}.fl-wave{animation:flwv 2.4s linear infinite}.fl-bub{animation:flbub 2.4s ease-in infinite}@media (prefers-reduced-motion:reduce){.fl-wave,.fl-bub{animation:none}}</style>
 </head>
 <body class="bg-slate-950/85 text-rose-100 min-h-screen flex flex-col justify-between">
 
@@ -826,52 +827,54 @@
       }
     }
 
+    /* ===== Student: lessons grouped into one "pack" per month, tutes in number order ===== */
+    let openPackKey = null;
+    const natTitle = (a, b) => String(a.title || '').localeCompare(String(b.title || ''), undefined, { numeric: true, sensitivity: 'base' });
+    function togglePack(k) { openPackKey = (openPackKey === k) ? '' : k; renderLessonsList(); }
+    const flaskSvg = n => `<svg viewBox="0 0 64 80" class="w-14 h-16 shrink-0" aria-hidden="true"><defs><clipPath id="fc${n}"><path d="M24 4h16v22l16 38a8 8 0 0 1-7 12H15a8 8 0 0 1-7-12l16-38z"/></clipPath></defs><g clip-path="url(#fc${n})"><rect y="46" width="64" height="40" fill="#e11d48" opacity=".8"/><path class="fl-wave" d="M-64 46q16-8 32 0t32 0t32 0t32 0V90h-128z" fill="#fb7185" opacity=".85"/><circle class="fl-bub" cx="26" cy="68" r="3" fill="#fff"/><circle class="fl-bub" style="animation-delay:.8s" cx="38" cy="70" r="2.2" fill="#fff"/><circle class="fl-bub" style="animation-delay:1.5s" cx="32" cy="66" r="1.8" fill="#fff"/></g><path d="M24 4h16v22l16 38a8 8 0 0 1-7 12H15a8 8 0 0 1-7-12l16-38z" fill="none" stroke="#fda4af" stroke-width="2.5" stroke-linejoin="round"/><path d="M21 4h22" stroke="#fda4af" stroke-width="3" stroke-linecap="round"/></svg>`;
+
     function renderLessonsList() {
       const container = document.getElementById('lessonsContainer');
       const bFilter = document.getElementById('modalBatchFilter').value;
       const mFilter = document.getElementById('modalMonthFilter').value;
 
-      const filtered = cachedLessonsData.filter(item => {
-        const batchMatch = (bFilter === 'ALL' || item.batch === bFilter);
-        const monthMatch = (mFilter === 'ALL' || item.month === mFilter);
-        return batchMatch && monthMatch;
-      });
+      const filtered = cachedLessonsData.filter(item =>
+        (bFilter === 'ALL' || item.batch === bFilter) && (mFilter === 'ALL' || item.month === mFilter));
 
-      container.innerHTML = "";
       if (filtered.length === 0) {
         container.innerHTML = `<p class="text-xs text-rose-200 text-center py-6">තෝරාගත් ෆිල්ටරයට අදාළ රෙකෝඩින් හෝ Tute හමුවූයේ නැත.</p>`;
         return;
       }
 
-      filtered.forEach(lesson => {
-        const tuteBtn = lesson.tuteUrl ? `
-          <a href="${lesson.tuteUrl}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center">
-            <i class="fa-solid fa-file-pdf"></i> Download / View Tute
-          </a>
-        ` : '';
+      const packs = {};
+      filtered.forEach(l => { const k = l.batch + '|' + l.month; (packs[k] = packs[k] || []).push(l); });
+      const keys = Object.keys(packs).sort((a, b) => b.split('|')[1].localeCompare(a.split('|')[1])); // newest month first
+      if (openPackKey === null || (openPackKey && !keys.includes(openPackKey))) openPackKey = keys[0];
 
-        const videoBtn = lesson.videoUrl ? `
-          <a href="${lesson.videoUrl}" target="_blank" class="bg-rose-600 hover:bg-rose-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center">
-            <i class="fa-brands fa-youtube text-base"></i> Watch Recording
-          </a>
-        ` : '';
-
-        container.innerHTML += `
-          <div class="bg-slate-800/95 p-4 rounded-xl border border-rose-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-emerald-500/60 transition">
-            <div>
-              <div class="flex gap-2 mb-1">
-                <span class="bg-rose-500/20 text-rose-300 text-[10px] font-bold px-2 py-0.5 rounded border border-rose-500/30 uppercase">${lesson.batch}</span>
-                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 uppercase">${mLabel(lesson.month)}</span>
-              </div>
-              <h4 class="text-sm font-bold text-white mt-1">${lesson.title}</h4>
-            </div>
+      container.innerHTML = keys.map((k, i) => {
+        const items = packs[k].slice().sort(natTitle), [batch, month] = k.split('|');
+        const nv = items.filter(x => x.videoUrl).length, nt = items.filter(x => x.tuteUrl).length, open = openPackKey === k;
+        const rows = items.map(l => `
+          <div class="bg-slate-800/95 p-3 rounded-xl border border-rose-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h4 class="text-sm font-bold text-white">${esc(l.title)}</h4>
             <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              ${tuteBtn}
-              ${videoBtn}
+              ${l.tuteUrl ? `<a href="${esc(l.tuteUrl)}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center"><i class="fa-solid fa-file-pdf"></i> Download / View Tute</a>` : ''}
+              ${l.videoUrl ? `<a href="${esc(l.videoUrl)}" target="_blank" rel="noopener noreferrer" class="bg-rose-600 hover:bg-rose-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center"><i class="fa-brands fa-youtube text-base"></i> Watch Recording</a>` : ''}
             </div>
-          </div>
-        `;
-      });
+          </div>`).join('');
+        return `<div class="rounded-2xl border ${open ? 'border-rose-400/60' : 'border-slate-700'} bg-slate-900/70 overflow-hidden">
+          <button data-k="${esc(k)}" onclick="togglePack(this.dataset.k)" class="w-full flex items-center gap-4 p-4 text-left hover:bg-slate-800/60 transition">
+            ${flaskSvg(i)}
+            <div class="flex-1 min-w-0">
+              <div class="text-[10px] font-bold text-rose-300 uppercase">${esc(batch)}</div>
+              <div class="text-base font-extrabold text-white">${esc(mLabel(month))} Pack</div>
+              <div class="text-[11px] text-rose-200 mt-0.5">Recordings ${nv} • Tutes ${nt}</div>
+            </div>
+            <i class="fa-solid fa-chevron-down text-rose-300 transition ${open ? 'rotate-180' : ''}"></i>
+          </button>
+          ${open ? `<div class="p-3 pt-0 space-y-2">${rows}</div>` : ''}
+        </div>`;
+      }).join('');
     }
 
     function closeLessonsModal() {
@@ -974,7 +977,7 @@
       if (!box) return;
       const b = document.getElementById('manageBatch').value, m = document.getElementById('manageMonth').value;
       const legacyName = isMonthKey(m) ? MONTHS[+m.slice(5) - 1] : null;
-      const list = adminLessons.filter(l => (b === 'ALL' || l.batch === b) && (m === 'ALL' || l.month === m || (legacyName && l.month === legacyName)));
+      const list = adminLessons.filter(l => (b === 'ALL' || l.batch === b) && (m === 'ALL' || l.month === m || (legacyName && l.month === legacyName))).sort(natTitle);
       const legacyN = adminLessons.filter(l => !isMonthKey(l.month)).length;
       const banner = legacyN ? `<div class="bg-amber-500/10 border border-amber-500/40 rounded-xl p-3 text-[11px] text-amber-200 space-y-2"><p>පරණ ක්‍රමයේ (මාසයේ නම පමණක් ඇති) පාඩම් ${legacyN}ක් තිබේ. මේවා ළමයින්ට තවම නොපෙනේ.</p><button onclick="migrateMonths()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-semibold">අවුරුද්දට මාරු කරන්න</button></div>` : '';
       if (!list.length) {
@@ -990,7 +993,7 @@
             ${del && val ? `<button onclick="${del}('${id}')" title="මකන්න" class="bg-rose-700 hover:bg-rose-600 text-white text-[11px] px-3 rounded-lg font-semibold transition"><i class="fa-solid fa-trash"></i></button>` : ''}
           </div>
         </div>`;
-      box.innerHTML = banner + `<p class="text-[11px] text-rose-300">පාඩම් ${list.length}ක් (අලුත්ම මුලින්)</p>` + list.map(l => `
+      box.innerHTML = banner + `<p class="text-[11px] text-rose-300">පාඩම් ${list.length}ක් (නම අනුපිළිවෙලින්)</p>` + list.map(l => `
         <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3 space-y-2">
           <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase">
             <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">${esc(l.batch)}</span>
