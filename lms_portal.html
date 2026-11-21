@@ -332,8 +332,9 @@
             <input type="text" id="adminLessonTitle" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="පාඩමේ / ටියුට් එකේ නම (උදා: 01 වන කොටස)">
             <input type="url" id="adminBatchVideo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="YouTube URL (Tute එක පමණක් නම් හිස්ව තබන්න)">
             <input type="url" id="adminTuteUrl" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="Tute Drive/PDF Link (නැත්නම් හිස්ව තබන්න)">
+            <input type="url" id="adminZoomUrl" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-rose-100" placeholder="Zoom link (live පන්තිය සඳහා; නැත්නම් හිස්ව තබන්න)">
             <button onclick="saveBatchLesson()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2 rounded-lg font-medium transition w-full">
-              Save Recording & Tute
+              Save Recording, Tute & Zoom
             </button>
             <p class="text-[11px] text-rose-200/80 leading-relaxed">YouTube link එක හෝ Tute link එක පමණක් වුවත් දාන්න පුළුවන්. අලුතෙන් එකතු කරන හැම එකක්ම වෙනම පාඩමක් විදිහට එකතු වෙනවා, කලින් ඒවා මැකෙන්නේ නෑ. ළමයාට පෙනෙන්නේ ඒ සියල්ලම.</p>
           </div>
@@ -852,12 +853,13 @@
       if (openPackKey === null || (openPackKey && !keys.includes(openPackKey))) openPackKey = keys[0];
 
       container.innerHTML = keys.map((k, i) => {
-        const items = packs[k].slice().sort(natTitle), [batch, month] = k.split('|');
-        const nv = items.filter(x => x.videoUrl).length, nt = items.filter(x => x.tuteUrl).length, open = openPackKey === k;
+        const items = packs[k].slice().sort((a, b) => (!!b.zoomUrl - !!a.zoomUrl) || natTitle(a, b)), [batch, month] = k.split('|');
+        const nv = items.filter(x => x.videoUrl).length, nt = items.filter(x => x.tuteUrl).length, nz = items.filter(x => x.zoomUrl).length, open = openPackKey === k;
         const rows = items.map(l => `
           <div class="bg-slate-800/95 p-3 rounded-xl border border-rose-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <h4 class="text-sm font-bold text-white">${esc(l.title)}</h4>
             <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              ${l.zoomUrl ? `<a href="${esc(l.zoomUrl)}" target="_blank" rel="noopener noreferrer" class="bg-sky-600 hover:bg-sky-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center"><i class="fa-solid fa-video"></i> Join Zoom Class</a>` : ''}
               ${l.tuteUrl ? `<a href="${esc(l.tuteUrl)}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center"><i class="fa-solid fa-file-pdf"></i> Download / View Tute</a>` : ''}
               ${l.videoUrl ? `<a href="${esc(l.videoUrl)}" target="_blank" rel="noopener noreferrer" class="bg-rose-600 hover:bg-rose-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition justify-center"><i class="fa-brands fa-youtube text-base"></i> Watch Recording</a>` : ''}
             </div>
@@ -868,7 +870,7 @@
             <div class="flex-1 min-w-0">
               <div class="text-[10px] font-bold text-rose-300 uppercase">${esc(batch)}</div>
               <div class="text-base font-extrabold text-white">${esc(mLabel(month))} Pack</div>
-              <div class="text-[11px] text-rose-200 mt-0.5">Recordings ${nv} • Tutes ${nt}</div>
+              <div class="text-[11px] text-rose-200 mt-0.5">Recordings ${nv} • Tutes ${nt}${nz ? ' • Zoom ' + nz : ''}</div>
             </div>
             <i class="fa-solid fa-chevron-down text-rose-300 transition ${open ? 'rotate-180' : ''}"></i>
           </button>
@@ -926,29 +928,33 @@
       }
       const batch = document.getElementById('linkTargetBatch').value;
       const month = document.getElementById('linkTargetMonth').value;
-      const title = document.getElementById('adminLessonTitle').value.trim();
       const videoUrl = document.getElementById('adminBatchVideo').value.trim();
       const tuteUrl = document.getElementById('adminTuteUrl').value.trim();
+      const zoomUrl = document.getElementById('adminZoomUrl').value.trim();
+      let title = document.getElementById('adminLessonTitle').value.trim();
 
+      if (!title && zoomUrl && !videoUrl && !tuteUrl) title = 'Zoom Class';
       if (!title) { alert('පාඩමේ / Tute එකේ නම ඇතුළත් කරන්න!'); return; }
-      if (!videoUrl && !tuteUrl) { alert('YouTube link එක හෝ Tute link එක (හෝ දෙකම) ඇතුළත් කරන්න!'); return; }
-      if ((videoUrl && !isUrl(videoUrl)) || (tuteUrl && !isUrl(tuteUrl))) { alert('Link එක https:// සමඟ ආරම්භ විය යුතුයි!'); return; }
+      if (!videoUrl && !tuteUrl && !zoomUrl) { alert('YouTube, Tute හෝ Zoom link එකක් (හෝ කීපයක්) ඇතුළත් කරන්න!'); return; }
+      if ((videoUrl && !isUrl(videoUrl)) || (tuteUrl && !isUrl(tuteUrl)) || (zoomUrl && !isUrl(zoomUrl))) { alert('Link එක https:// සමඟ ආරම්භ විය යුතුයි!'); return; }
 
       try {
-        // Every save creates a NEW item, so earlier recordings / tutes are never replaced.
+        // Every save creates a NEW item, so earlier recordings / tutes / zoom links are never replaced.
         await db.collection('batch_lessons').add({
           batch: batch,
           month: month,
           title: title,
           videoUrl: videoUrl,
           tuteUrl: tuteUrl,
+          zoomUrl: zoomUrl,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       } catch (e) { alert('Error: ' + e.message); return; }
-      alert(`${batch} (${mLabel(month)}) සඳහා එකතු විය! කලින් ඇති ඒවා ඒ විදිහටම තිබේ.`);
+      alert(`${batch} (${mLabel(month)}) සඳහා එකතු විය! ගෙවා ඇති ළමයින්ට පමණක් පෙනේ.`);
       document.getElementById('adminLessonTitle').value = "";
       document.getElementById('adminBatchVideo').value = "";
       document.getElementById('adminTuteUrl').value = "";
+      document.getElementById('adminZoomUrl').value = "";
       document.getElementById('manageBatch').value = batch;
       document.getElementById('manageMonth').value = month;
       renderAdminLessons();
@@ -998,11 +1004,12 @@
           <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase">
             <span class="bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded border border-rose-500/30">${esc(l.batch)}</span>
             <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">${esc(mLabel(l.month))}</span>
-            ${l.videoUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Recording</span>' : ''}${l.tuteUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Tute</span>' : ''}${isMonthKey(l.month) ? '' : '<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">පරණ</span>'}
+            ${l.videoUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Recording</span>' : ''}${l.tuteUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Tute</span>' : ''}${l.zoomUrl ? '<span class="bg-slate-700 text-slate-200 px-2 py-0.5 rounded">Zoom</span>' : ''}${isMonthKey(l.month) ? '' : '<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">පරණ</span>'}
           </div>
           ${fld(l.id, 't', 'පාඩමේ / Tute එකේ නම', l.title, 'නම', 'renameLesson', '')}
           ${fld(l.id, 'v', 'YouTube Recording link (නැත්නම් හිස්)', l.videoUrl, 'https://www.youtube.com/watch?v=...', 'saveLessonVideo', 'deleteLessonVideo')}
           ${fld(l.id, 'u', 'Tute link (Drive / PDF) (නැත්නම් හිස්)', l.tuteUrl, 'Tute link එක මෙහි දාන්න', 'saveLessonTute', 'deleteLessonTute')}
+          ${fld(l.id, 'z', 'Zoom link (නැත්නම් හිස්)', l.zoomUrl, 'https://zoom.us/j/...', 'saveLessonZoom', 'deleteLessonZoom')}
           <div class="flex justify-end"><button onclick="deleteWholeLesson('${l.id}')" class="text-[11px] text-red-300 underline"><i class="fa-solid fa-trash"></i> මුළු පාඩම මකන්න</button></div>
         </div>`).join('');
     }
@@ -1042,6 +1049,23 @@
       updateLesson(id, { tuteUrl: v }, 'Tute link එක පාඩමට එකතු විය!');
     }
 
+    function saveLessonZoom(id) {
+      const v = document.getElementById('z-' + id).value.trim();
+      if (!isUrl(v)) { alert('වලංගු Zoom link එකක් ඇතුළත් කරන්න! (https:// සමඟ)'); return; }
+      updateLesson(id, { zoomUrl: v }, 'Zoom link එක සුරැකිණි!');
+    }
+
+    async function deleteLessonZoom(id) {
+      if (!isAdmin) { alert("අවසර නැත!"); return; }
+      const l = adminLessons.find(x => x.id === id);
+      if (!l) return;
+      if (l.videoUrl || l.tuteUrl) {
+        if (confirm('Zoom link එක පමණක් මකනවා. (අනිත් ඒවා පාඩමේ තබා ගැනේ.) ඉදිරියට යන්නද?')) updateLesson(id, { zoomUrl: '' }, 'Zoom link එක මකා දමන ලදී!');
+      } else if (confirm('මෙම පාඩමේ වෙන link නැත, ඒ නිසා පාඩම සම්පූර්ණයෙන්ම මැකේ. ඉදිරියට යන්නද?')) {
+        removeLesson(id);
+      }
+    }
+
     async function removeLesson(id) {
       try {
         await db.collection('batch_lessons').doc(id).delete();
@@ -1055,7 +1079,7 @@
       if (!isAdmin) { alert("අවසර නැත!"); return; }
       const l = adminLessons.find(x => x.id === id);
       if (!l) return;
-      if (l.tuteUrl) {
+      if (l.tuteUrl || l.zoomUrl) {
         if (confirm('Recording එක පමණක් මකනවා. (Tute එක පාඩමේ තබා ගැනේ.) ඉදිරියට යන්නද?')) updateLesson(id, { videoUrl: '' }, 'Recording එක මකා දමන ලදී!');
       } else if (confirm('මෙම පාඩමේ Tute එකක් නැත, ඒ නිසා පාඩම සම්පූර්ණයෙන්ම මැකේ. ඉදිරියට යන්නද?')) {
         removeLesson(id);
@@ -1066,7 +1090,7 @@
       if (!isAdmin) { alert("අවසර නැත!"); return; }
       const l = adminLessons.find(x => x.id === id);
       if (!l) return;
-      if (l.videoUrl) {
+      if (l.videoUrl || l.zoomUrl) {
         if (confirm('Tute link එක මකනවා. (Recording එක පාඩමේ තබා ගැනේ.) ඉදිරියට යන්නද?')) updateLesson(id, { tuteUrl: '' }, 'Tute එක මකා දමන ලදී!');
       } else if (confirm('මෙම පාඩමේ Recording එකක් නැත, ඒ නිසා පාඩම සම්පූර්ණයෙන්ම මැකේ. ඉදිරියට යන්නද?')) {
         removeLesson(id);
