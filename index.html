@@ -9,110 +9,196 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#fdfcf9">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Fraunces:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-/* One accent colour per background. JS swaps these tokens. */
-:root{--rgb:34,211,238;--a:#22d3ee;--fd:'Sora',sans-serif;--wd:700;--td:-.03em;--r:18px}
+:root{--paper:#fdfcf9;--cream:#f5f2ea;--ink:#0f2740;--body:#41566d;--muted:#6f7f90;--line:#e7e2d6;--gold:#b8893a;--goldS:#f2e8cf;--deep:#0a1b2e;--a:#b8893a;--rgb:184,137,58;--fd:'Fraunces',serif;--wd:600;--td:-.02em}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#04070d;color:#f1f5f9;overflow-x:hidden;font:400 16px/1.7 'Plus Jakarta Sans',sans-serif;font-synthesis:none}
-.disp{font-family:var(--fd);font-weight:var(--wd);letter-spacing:var(--td);line-height:1.08;text-wrap:balance}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--body);font:400 16px/1.7 'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
+.wrap{width:min(1180px,92%);margin:auto}
+.disp{font-family:var(--fd);font-weight:var(--wd);letter-spacing:var(--td);line-height:1.1;color:var(--ink);text-wrap:balance}
 .acc{color:var(--a)}
-.bg{position:fixed;inset:0;background-size:cover;background-position:center;filter:brightness(.84) saturate(1.1);opacity:0;transition:opacity 1.4s ease;z-index:-3}
-.bg.on{opacity:1}
-.veil{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(110% 80% at 15% 5%,rgba(var(--rgb),.14),transparent 55%),linear-gradient(180deg,rgba(4,7,13,.28),rgba(4,7,13,.62));transition:background 1s}
-.glass{background:rgba(10,16,30,.64);backdrop-filter:blur(6px) saturate(130%);-webkit-backdrop-filter:blur(6px) saturate(130%);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);border-radius:var(--r);transition:border-color .8s,border-radius .6s}
-.edge{border-top-color:rgba(var(--rgb),.6)}
-.chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(5px);border-radius:999px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.65rem;padding:.95rem 1.9rem;border-radius:14px;font-weight:700;color:#06121a;background:var(--a);box-shadow:0 12px 36px rgba(var(--rgb),.35);transition:transform .25s,box-shadow .25s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 18px 48px rgba(var(--rgb),.5)}
-.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);box-shadow:none}
-.btn.ghost:hover{border-color:var(--a);color:var(--a)}
-.card{padding:1.4rem;border-radius:var(--r);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:transform .3s,border-color .3s,background .3s}
-.card:hover{transform:translateY(-4px);border-color:rgba(var(--rgb),.6);background:rgba(var(--rgb),.08)}
-.ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(var(--rgb),.16);color:var(--a);font-size:18px;margin-bottom:.9rem}
-.frame{padding:8px;border-radius:1.75rem;background:rgba(var(--rgb),.35);box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 60px rgba(var(--rgb),.2)}
-#top{position:relative;text-shadow:0 2px 14px rgba(0,0,0,.6)}
-#top::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(75% 95% at 28% 52%,rgba(3,6,12,.66),transparent)}
-#top .btn{text-shadow:none}
-.lock{width:fit-content;max-width:100%;text-align:left}
-.mc{display:block;width:max-content;margin:0;color:#fff;font-size:clamp(3rem,12vw,7rem);line-height:.86;text-shadow:0 6px 40px rgba(0,0,0,.5)}
-.tl{display:block;width:0;min-width:100%;white-space:nowrap;text-align:left;text-transform:uppercase;font:800 16px/1.15 'Plus Jakarta Sans',sans-serif;color:var(--a);margin-top:.3rem;text-shadow:0 0 3px rgba(0,0,0,.85),0 2px 16px rgba(0,0,0,.85)}
-.mc+.tl{margin-top:.55rem}
-.cta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.9rem 1.5rem;margin-top:2.25rem}
-@media(max-width:639px){.cta .btn{padding:.85rem 1.1rem;font-size:.9rem}.cb{text-transform:capitalize}}
-.logo{width:46px;height:46px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.25)}
+.h2{font-size:clamp(2rem,4.6vw,3.3rem)}
+.muted{color:var(--muted)}
+.topline{background:var(--deep);color:#cfd8e3;font-size:12px;padding:8px 0}
+.topline .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header{position:sticky;top:0;z-index:40;background:rgba(253,252,249,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid var(--line)}
+a.nl{font-size:13px;font-weight:600;color:var(--body);transition:color .2s}
+a.nl:hover{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.9rem 1.6rem;border-radius:12px;font-weight:700;font-size:.95rem;color:#fff;background:var(--ink);box-shadow:0 10px 26px rgba(15,39,64,.2);transition:transform .25s,box-shadow .25s,background .25s;cursor:pointer;border:0}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(15,39,64,.28)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid #cfc8b6;box-shadow:none}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn.gold{background:linear-gradient(135deg,#e3c487,#b8893a);color:var(--deep);box-shadow:0 10px 26px rgba(184,137,58,.3)}
+.soc{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:17px;background:#fff;border:1px solid var(--line);animation:socIn .8s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:var(--d);transition:background .3s,color .3s,transform .3s}
+.soc:hover{background:var(--ink);color:#fff;transform:translateY(-3px)}
+@keyframes socIn{from{opacity:0;transform:translateY(-14px) scale(.5)}}
+.glass{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(15,39,64,.18)}
+.eyebrow{display:flex;align-items:center;gap:.8rem;font:700 .72rem/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.eyebrow span{font-family:var(--fd);font-size:.95rem;letter-spacing:.05em}
+.eyebrow i{display:block;width:44px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.eyebrow.c{justify-content:center}.eyebrow.c i:first-of-type{background:linear-gradient(270deg,var(--gold),transparent)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#f6f2e7 0%,#fdfcf9 52%,#eef1f4 100%)}
+.hero::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;border:1px solid rgba(184,137,58,.3);right:-150px;top:-220px;box-shadow:0 0 0 38px rgba(184,137,58,.05),0 0 0 80px rgba(184,137,58,.04)}
+.hexbg{position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill='%23b8893a' fill-opacity='.16' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/svg%3E");-webkit-mask-image:radial-gradient(55% 75% at 88% 35%,#000,transparent);mask-image:radial-gradient(55% 75% at 88% 35%,#000,transparent)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;padding:72px 0 120px;position:relative;z-index:1}
+.tag{display:inline-flex;align-items:center;gap:.6rem;background:var(--goldS);color:#7a5a1c;padding:.5rem 1rem;border-radius:999px;font-size:.8rem;font-weight:700}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.mc{display:block;margin:1.2rem 0 0;font:700 clamp(3.8rem,11vw,7.6rem)/.95 var(--fd);letter-spacing:-.03em;color:var(--ink)}
+.mc em{font-style:normal;color:var(--gold)}
+.sub{margin:1rem 0 0;font:italic 500 clamp(1.15rem,2.4vw,1.6rem)/1.35 var(--fd);color:var(--gold);max-width:30rem}
+.cta-row{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:2rem}
+.visual{height:470px;position:relative;display:grid;place-items:center}
+.arch{width:min(400px,86%);height:450px;border-radius:200px 200px 24px 24px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#1d4470 0%,#0f2740 55%,#08172a 100%);box-shadow:0 30px 70px rgba(15,39,64,.3),0 0 0 8px #fff,0 0 0 9px var(--line)}
+.arch::after{content:"";position:absolute;inset:14px;border-radius:186px 186px 14px 14px;border:1px solid rgba(227,196,135,.35);pointer-events:none}
+.arch canvas{position:absolute;inset:0;width:100%;height:100%}
+.archlabel{position:absolute;bottom:26px;left:0;right:0;text-align:center;color:#e3c487;font:italic 500 .95rem var(--fd);z-index:2}
+.bubble{position:absolute;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 16px;box-shadow:0 14px 34px rgba(15,39,64,.12);font-size:12px;line-height:1.35;color:var(--muted);animation:float 6s ease-in-out infinite}
+.bubble b{display:block;color:var(--ink);font:600 17px var(--fd);margin-bottom:2px}
+.b1{top:28px;right:0}.b2{bottom:42px;left:-4px;animation-delay:-2s}.b3{top:190px;left:-14px;animation-delay:-4s}
+@keyframes float{50%{transform:translateY(-9px)}}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:-56px;position:relative;z-index:3;box-shadow:0 20px 44px rgba(15,39,64,.08)}
+.stat{background:#fff;padding:22px 12px;text-align:center}
+.stat b{display:block;font:600 clamp(1.7rem,3vw,2.4rem)/1.1 var(--fd);color:var(--ink)}
+.stat span.l{font-size:12px;color:var(--muted)}
+.ticker{overflow:hidden;margin-top:56px;border-block:1px solid var(--line);padding:1rem 0}
+.ticker .track{display:flex;width:max-content;animation:tick 50s linear infinite}
+.ticker span{font:italic 500 1.25rem var(--fd);color:rgba(15,39,64,.5);padding:0 1.6rem;white-space:nowrap}
+.ticker span::after{content:"\25C6";margin-left:3.2rem;color:var(--gold);font-style:normal;font-size:.7rem;vertical-align:middle}
+@keyframes tick{to{transform:translateX(-50%)}}
+section.s{padding:88px 0}
+.soft{background:var(--cream)}
+.sectionhead{text-align:center;max-width:700px;margin:0 auto 2.6rem}
+.sectionhead p{margin:.8rem auto 0;max-width:34rem;color:var(--muted)}
+.feature{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;transition:border-color .3s,box-shadow .3s}
+.feature:hover{border-color:#dcc9a0;box-shadow:0 18px 40px rgba(15,39,64,.09)}
+.ico{width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f6ebd0,#ecd9ab);color:#8a6420;font-size:18px;margin-bottom:1rem;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.frame{padding:10px;background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 30px 60px rgba(15,39,64,.14),14px 14px 0 -2px var(--goldS)}
+.chip{background:var(--cream);border:1px solid var(--line);border-radius:999px;color:var(--ink)}
+button.chip:hover{border-color:var(--gold);color:var(--gold)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 56px rgba(15,39,64,.08);position:relative}
+.brk::before,.brk::after{content:"";position:absolute;width:28px;height:28px;pointer-events:none;border:1px solid var(--a);opacity:.8}
+.brk::before{top:14px;left:14px;border-right:0;border-bottom:0;border-top-left-radius:6px}
+.brk::after{bottom:14px;right:14px;border-left:0;border-top:0;border-bottom-right-radius:6px}
+.darkpanel{background:linear-gradient(160deg,#10304f,#0a1b2e);color:#e8eef5;--a:#e3c487;--rgb:227,196,135;box-shadow:0 30px 60px rgba(10,27,46,.28);border:0}
+.darkpanel .disp{color:#fff}
+.darkpanel .btn{background:linear-gradient(135deg,#e3c487,#b8893a);color:var(--deep);box-shadow:none}
+.darkpanel .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
+.darkpanel .btn.ghost:hover{border-color:var(--a);color:var(--a)}
 .gnode{min-width:130px;padding:.75rem 1rem;border-radius:14px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);transition:all .4s}
 .gnode.tgt{border-color:rgba(var(--rgb),.7)}.gnode.q{opacity:.5;border-style:dashed}
 .garrow{display:flex;flex-direction:column;align-items:center;max-width:150px;text-align:center;font-size:.75rem;color:#cbd5e1;line-height:1.3}
-.gpill{padding:.45rem 1rem;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:#fff;cursor:pointer}
-.gon{background:var(--a)!important;color:#06121a!important;border-color:var(--a)!important}
+.gpill{padding:.45rem 1rem;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;cursor:pointer}
+.gon{background:var(--a)!important;color:#0a1b2e!important;border-color:var(--a)!important}
 .gopt{display:block;width:100%;text-align:left;padding:.9rem 1.1rem;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:all .25s}
 .gopt:hover:not(:disabled){border-color:var(--a);background:rgba(var(--rgb),.1)}
-.gopt.ok{border-color:#34d399;background:rgba(52,211,153,.16)}.gopt.no{border-color:#f87171;background:rgba(248,113,113,.12);opacity:.6}
-.soc{position:relative;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);animation:socIn .8s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:var(--d);transition:background .3s,color .3s,transform .3s,box-shadow .3s}
-.soc::after{content:"";position:absolute;inset:-1px;border-radius:inherit;border:2px solid var(--a);opacity:0;animation:socRing 3.4s ease-out infinite;animation-delay:calc(var(--d) + 1.4s)}
-.soc:hover{background:var(--a);color:#06121a;transform:translateY(-4px) scale(1.12) rotate(-6deg);box-shadow:0 10px 28px rgba(var(--rgb),.55)}
-@keyframes socIn{from{opacity:0;transform:translateY(-18px) scale(.4) rotate(-30deg)}}
-@keyframes socRing{0%{opacity:.7;transform:scale(1)}70%,100%{opacity:0;transform:scale(1.7)}}
-.field{width:100%;background:rgba(2,6,14,.7);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:.8rem 1.1rem;color:#fff;font-family:ui-monospace,monospace}
-.field:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(var(--rgb),.25)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--a);outline-offset:3px}
-a.nl{transition:color .2s}a.nl:hover{color:var(--a)}
-.swap main,.swap nav,.swap footer{opacity:0;filter:blur(8px);transform:translateY(6px)}
-main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
-#dots{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:999px}
-#dots button{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:transparent;cursor:pointer;transition:all .3s}
-#dots button.on{background:var(--a);border-color:var(--a);width:28px;border-radius:99px}
-#tname{font-size:11px;color:#cbd5e1;min-width:84px}
-::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#04070d}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--a)}
-@media(max-width:640px){#tname{display:none}.pic{object-position:center 16%!important}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
-
-/* ===== 3D layer ===== */
-#gl{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.92}
-#top .mc{text-shadow:1px 1px 0 rgba(var(--rgb),.9),2px 2px 0 rgba(var(--rgb),.8),3px 3px 0 rgba(var(--rgb),.7),4px 4px 0 rgba(var(--rgb),.6),5px 5px 0 rgba(var(--rgb),.5),6px 6px 0 rgba(var(--rgb),.4),8px 16px 34px rgba(0,0,0,.65)}
-#lock{transform-origin:20% 50%;transition:transform .25s ease-out;will-change:transform}
-.card,.frame{will-change:transform}
-/* ===== Welcome intro ===== */
-#intro{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;cursor:pointer;background:radial-gradient(75% 65% at 50% 45%,#0c1d33,#02050a 75%);clip-path:circle(150% at 50% 50%);transition:clip-path 1s cubic-bezier(.7,0,.2,1)}
+.gopt.ok{border-color:#8fd1a8;background:rgba(143,209,168,.14)}.gopt.no{border-color:#e59a9a;background:rgba(229,154,154,.1);opacity:.6}
+.field{width:100%;background:#fff;border:1px solid #d9d3c4;border-radius:12px;padding:.8rem 1.1rem;color:var(--ink);font-family:ui-monospace,monospace}
+.field:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--rgb),.2)}
+.result{background:#fbf6ea;border:1px solid #ead9b0;border-radius:16px;padding:1.4rem}
+.cta{background:linear-gradient(135deg,#10304f,#0a1b2e);border-radius:26px;padding:2.6rem;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;border:1px solid rgba(227,196,135,.3);right:-90px;top:-150px;box-shadow:0 0 0 30px rgba(227,196,135,.05)}
+.cta h2{color:#fff;margin:0;position:relative}.cta p{color:#b9c6d4;margin:.4rem 0 0;position:relative}
+footer{background:var(--deep);color:#b9c6d4;padding:56px 0 22px;font-size:.9rem}
+footer .disp{color:#fff}footer h4{color:#fff;font-weight:600;margin-bottom:.8rem}
+footer a.nl{color:#b9c6d4;font-size:.9rem}footer a.nl:hover{color:#e3c487}
+.soc2{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;border:1px solid rgba(255,255,255,.2);transition:all .3s}
+.soc2:hover{background:#e3c487;color:var(--deep);border-color:#e3c487}
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--paper)}::-webkit-scrollbar-thumb{background:#d6cdb6;border-radius:4px}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;padding:48px 0 110px}.visual{height:420px}.arch{height:400px}.quick{grid-template-columns:repeat(2,1fr)}.b3{display:none}.cta{padding:2rem}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}.rv{opacity:1;transform:none}}
+#intro{--a:#e3c487;--rgb:227,196,135}
+/* ===== v3: photo hero, brand icons, standing lecturer ===== */
+.topline .wrap{justify-content:flex-end}
+@media(max-width:640px){.topline .wrap{justify-content:center}}
+.hero{background:#0a1b2e}
+.hero::before{border-color:rgba(227,196,135,.28);box-shadow:0 0 0 38px rgba(227,196,135,.04),0 0 0 80px rgba(227,196,135,.03);z-index:1;pointer-events:none}
+.hero-photo{position:absolute;inset:-4%;background:#0a1b2e center/cover no-repeat;opacity:0;transition:opacity 1.6s ease;animation:kb 30s ease-in-out infinite alternate;will-change:transform}
+.hero-photo.on{opacity:1}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.14) translate3d(-1.5%,-1%,0)}}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,20,36,.9) 0%,rgba(8,20,36,.74) 48%,rgba(8,20,36,.5) 100%),linear-gradient(0deg,rgba(8,20,36,.6),transparent 38%)}
+.hero .tag{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);line-height:1.4;max-width:100%}
+.hero .tag i{background:#e3c487;flex:none}
+.mc{white-space:nowrap;color:#fff;font-size:clamp(2.8rem,15vw,7rem);text-shadow:0 6px 36px rgba(0,0,0,.4)}
+.mc em{color:#e3c487}
+.hero .sub{color:#e3c487}
+.hero .btn.ghost{color:#fff;border-color:rgba(255,255,255,.4)}
+.hero .btn.ghost:hover{border-color:#e3c487;color:#e3c487}
+.visual .mol{position:absolute;inset:0}
+.visual .mol canvas{width:100%;height:100%;display:block}
+@media(max-width:640px){.hero .tag{border-radius:16px;padding:.55rem .9rem;font-size:.75rem}}
+/* brand-coloured social icons */
+.soc.yt,.soc2.yt{--c:#ff0000;--cr:255,0,0}
+.soc.wa,.soc2.wa{--c:#25d366;--cr:37,211,102;--d2:.4s}
+.soc.fb,.soc2.fb{--c:#1877f2;--cr:24,119,242;--d2:.8s}
+.soc2.yt{--d2:0s}
+.soc,.soc2{position:relative;color:var(--c)}
+.soc2{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}
+.soc::after,.soc2::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;animation:ripple 3.4s ease-out infinite;animation-delay:calc(var(--d,var(--d2,0s)) + 1.2s)}
+@keyframes ripple{0%{box-shadow:0 0 0 0 rgba(var(--cr),.45)}70%,100%{box-shadow:0 0 0 14px rgba(var(--cr),0)}}
+.soc i,.soc2 i{display:block;transition:transform .35s;animation:nudge 5s ease-in-out infinite;animation-delay:calc(var(--d,var(--d2,0s)) + 2s)}
+@keyframes nudge{0%,86%,100%{transform:scale(1)}93%{transform:scale(1.25) rotate(-8deg)}}
+.soc:hover,.soc2:hover{background:var(--c);color:#fff;border-color:var(--c);transform:translateY(-4px) rotate(-6deg) scale(1.1);box-shadow:0 12px 26px rgba(var(--cr),.45)}
+.soc:hover i,.soc2:hover i{animation:none;transform:scale(1.15)}
+.btn.wa{background:#25d366;color:#052e16;box-shadow:0 10px 26px rgba(37,211,102,.3)}
+.btn.wa i{animation:nudge 3.2s ease-in-out infinite}
+/* standing lecturer (no card) */
+.stand{perspective:1100px;max-width:420px;margin:0 auto;padding:0 10px}
+.st-tilt{transform-style:preserve-3d}
+.st3d{position:relative;width:100%;aspect-ratio:4/5;transform-style:preserve-3d;animation:sway 9s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotateY(-6deg) rotateX(1deg)}50%{transform:rotateY(6deg) rotateX(-1deg)}}
+.st-disc{position:absolute;left:10%;width:80%;top:10%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 32%,#fff8e6,#f1dfb2 55%,#e3c487);box-shadow:inset 0 0 0 10px rgba(255,255,255,.55),0 30px 60px rgba(184,137,58,.25);transform:translateZ(-70px)}
+.st-ring{position:absolute;left:10%;width:80%;top:10%;aspect-ratio:1;border-radius:50%}
+.st-ring.r1{border:1px solid rgba(184,137,58,.45);transform:translateZ(-110px) scale(1.14)}
+.st-ring.r2{border:1px dashed rgba(184,137,58,.55);animation:spinz 32s linear infinite}
+.st-ring.r2::after{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--gold);box-shadow:0 0 14px 3px rgba(184,137,58,.6)}
+@keyframes spinz{from{transform:translateZ(-150px) scale(1.3) rotate(0)}to{transform:translateZ(-150px) scale(1.3) rotate(360deg)}}
+.st-floor{position:absolute;left:8%;right:8%;bottom:0;height:12%;border-radius:50%;background:radial-gradient(ellipse,rgba(15,39,64,.38),transparent 70%);filter:blur(5px)}
+.st-floor::after{content:"";position:absolute;inset:22% 6%;border-radius:50%;border:1px solid rgba(184,137,58,.6);animation:pulse 3s ease-in-out infinite}
+.st-img{position:absolute;left:50%;bottom:2%;height:96%;width:auto;max-width:100%;object-fit:contain;object-position:bottom;transform:translateX(-50%) translateZ(50px);filter:drop-shadow(0 26px 22px rgba(10,27,46,.38))}
+.st-img.cut{-webkit-mask-image:linear-gradient(#000 90%,transparent);mask-image:linear-gradient(#000 90%,transparent)}
+.st-img.photo{-webkit-mask-image:radial-gradient(ellipse 70% 72% at 50% 46%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 70% 72% at 50% 46%,#000 60%,transparent 100%)}
+.st-chip{position:absolute;display:flex;align-items:center;gap:.5rem;background:#fff;border:1px solid var(--line);border-radius:999px;padding:.45rem .85rem;font:600 .78rem 'Plus Jakarta Sans',sans-serif;color:var(--ink);box-shadow:0 14px 30px rgba(15,39,64,.16);transform:translateZ(110px);animation:fz 6s ease-in-out infinite}
+.st-chip i{color:var(--gold)}
+.st-chip.c1{top:20%;left:-2%}.st-chip.c2{bottom:26%;right:-2%;animation-delay:-3s}
+@keyframes fz{50%{transform:translateZ(110px) translateY(-10px)}}
+.st-name{text-align:center;margin-top:1.2rem}
+.st-name b{display:block;font:600 1.6rem var(--fd);color:var(--ink);letter-spacing:-.02em}
+.st-name span{font-size:.9rem;color:var(--muted)}
+/* ===== Welcome intro: atoms bond into a ring ===== */
+#intro{--a:#e3c487;--rgb:227,196,135;position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;cursor:pointer;background:radial-gradient(75% 65% at 50% 45%,#12304f,#060f1b 75%);clip-path:circle(150% at 50% 50%);transition:clip-path 1s cubic-bezier(.7,0,.2,1)}
 #intro.go{clip-path:circle(0% at 50% 50%)}
-#intro .stage{position:relative;text-align:center;perspective:900px;padding:0 1rem}
-.atom3d{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;animation:ay 9s linear infinite}
-.ring{position:absolute;width:var(--s);height:var(--s);left:calc(var(--s)/-2);top:calc(var(--s)/-2);border:1.5px solid rgba(var(--rgb),.6);border-radius:50%;box-shadow:0 0 22px rgba(var(--rgb),.35),inset 0 0 22px rgba(var(--rgb),.2)}
-.ring::after{content:"";position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--a);box-shadow:0 0 18px 4px rgba(var(--rgb),.8)}
-.r1{--s:min(78vw,380px);animation:o1 2.6s linear infinite}
-.r2{--s:min(64vw,310px);animation:o2 3.4s linear infinite}
-.r3{--s:min(90vw,450px);animation:o3 4.4s linear infinite}
-.nuc{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;background:var(--a);box-shadow:0 0 50px 14px rgba(var(--rgb),.7)}
-@keyframes ay{to{transform:rotateY(360deg)}}
-@keyframes o1{from{transform:rotateX(72deg) rotateZ(0)}to{transform:rotateX(72deg) rotateZ(360deg)}}
-@keyframes o2{from{transform:rotateY(72deg) rotateZ(0)}to{transform:rotateY(72deg) rotateZ(360deg)}}
-@keyframes o3{from{transform:rotateX(40deg) rotateY(50deg) rotateZ(0)}to{transform:rotateX(40deg) rotateY(50deg) rotateZ(360deg)}}
-.wt{position:relative;z-index:2;font:600 clamp(1.1rem,4vw,1.8rem)/1 'Plus Jakarta Sans',sans-serif;color:var(--a);opacity:0;animation:wf 1s .3s ease forwards;text-shadow:0 0 24px rgba(var(--rgb),.8)}
+#intro .stage{text-align:center;padding:0 1rem;display:flex;flex-direction:column;align-items:center}
+#ic{width:min(320px,78vw);height:min(300px,34vh);display:block}
+.wt{font:600 clamp(1.05rem,4vw,1.7rem)/1 'Plus Jakarta Sans',sans-serif;color:var(--a);opacity:0;animation:wf 1s 1.7s ease forwards;text-shadow:0 0 24px rgba(var(--rgb),.6)}
 @keyframes wf{from{opacity:0;filter:blur(12px);letter-spacing:.6em}to{opacity:1;filter:blur(0);letter-spacing:.12em}}
-.wm{position:relative;z-index:2;margin:.5rem 0 0;font:800 clamp(3.8rem,17vw,9.5rem)/1 var(--fd);letter-spacing:-.02em;color:#fff;transform-style:preserve-3d;white-space:nowrap}
-.w{display:inline-block;opacity:0;transform-origin:50% 100%;transform:rotateX(-110deg) translateY(50px) translateZ(-260px);animation:wi .95s cubic-bezier(.2,.9,.2,1.15) forwards;animation-delay:calc(.75s + var(--i)*.12s);text-shadow:1px 1px 0 rgba(var(--rgb),.9),2px 2px 0 rgba(var(--rgb),.75),3px 3px 0 rgba(var(--rgb),.6),4px 4px 0 rgba(var(--rgb),.45),0 0 60px rgba(var(--rgb),.55)}
+.wm{margin:.4rem 0 0;font:800 clamp(3rem,15vw,7.5rem)/1 var(--fd);letter-spacing:-.02em;color:#fff;white-space:nowrap;perspective:900px}
+.w{display:inline-block;opacity:0;transform-origin:50% 100%;transform:rotateX(-110deg) translateY(50px);animation:wi .95s cubic-bezier(.2,.9,.2,1.15) forwards;animation-delay:calc(2.1s + var(--i)*.11s);text-shadow:0 0 50px rgba(var(--rgb),.35)}
 @keyframes wi{to{opacity:1;transform:none}}
-.ws{position:relative;z-index:2;margin-top:1.1rem;font:500 clamp(.8rem,2.6vw,1.05rem)/1.4 'Plus Jakarta Sans',sans-serif;color:#cbd5e1;opacity:0;animation:wf2 1s 2s ease forwards}
+.ws{margin-top:1rem;font:500 clamp(.8rem,2.6vw,1rem)/1.4 'Plus Jakarta Sans',sans-serif;color:#cbd5e1;opacity:0;animation:wf2 1s 3.3s ease forwards}
 @keyframes wf2{to{opacity:1}}
-.wbar{position:relative;z-index:2;width:min(260px,60vw);height:3px;margin:1.4rem auto 0;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
-.wbar i{display:block;height:100%;background:var(--a);box-shadow:0 0 14px var(--a);transform-origin:left;transform:scaleX(0);animation:wb 3s .2s cubic-bezier(.5,0,.2,1) forwards}
+.wbar{width:min(260px,60vw);height:3px;margin:1.3rem auto 0;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.wbar i{display:block;height:100%;background:var(--a);box-shadow:0 0 14px var(--a);transform-origin:left;transform:scaleX(0);animation:wb 4.2s .2s cubic-bezier(.5,0,.2,1) forwards}
 @keyframes wb{to{transform:scaleX(1)}}
-.skip{position:absolute;right:20px;bottom:20px;z-index:3;font-size:.8rem;color:#94a3b8;padding:.4rem .9rem;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:transparent;cursor:pointer}
+.skip{position:absolute;right:20px;bottom:20px;font-size:.8rem;color:#94a3b8;padding:.4rem .9rem;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:transparent;cursor:pointer}
 .skip:hover{color:var(--a);border-color:var(--a)}
 </style>
 </head>
 <body>
-<div class="bg" id="bgA"></div><div class="bg" id="bgB"></div><div class="veil"></div>
-<canvas id="gl" aria-hidden="true"></canvas>
 <div id="intro" role="presentation">
   <div class="stage">
-    <div class="atom3d"><div class="nuc"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div></div>
+    <canvas id="ic" aria-hidden="true"></canvas>
     <div class="wt">Welcome to</div>
     <h2 class="wm" aria-label="M-CHEM"><span class="w" style="--i:0">M</span><span class="w" style="--i:1">-</span><span class="w" style="--i:2">C</span><span class="w" style="--i:3">H</span><span class="w" style="--i:4">E</span><span class="w" style="--i:5">M</span></h2>
     <div class="ws">A/L Chemistry with Madhawa Ranathunga</div>
@@ -121,224 +207,129 @@ main,nav,footer{transition:opacity .45s,filter .45s,transform .45s}
   <button class="skip" type="button">Skip</button>
 </div>
 <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
-
-<nav class="fixed top-0 left-0 w-full z-40 px-4 lg:px-8 py-4">
-  <div class="max-w-7xl mx-auto glass px-5 py-3 flex items-center justify-between">
-    <a href="#" class="flex items-center gap-3">
+<div class="topline"><div class="wrap"><span><i class="fa-brands fa-whatsapp" style="color:#25d366"></i> +94 76 651 4623</span></div></div>
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="flex items-center gap-3">
       <img class="logo" src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428441/WhatsApp_Image_2026-10-26_at_14.13.54.jpg" alt="Chemistry Master logo" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fa-solid fa-atom text-3xl acc'}))">
-      <span>
-        <span class="disp text-xl block">Chemistry <span class="acc">Master</span></span>
-        <span class="block text-[11px] tracking-[.18em] text-slate-300 font-semibold">MADHAWA RANATHUNGA</span>
-      </span>
+      <span><span class="disp text-xl block">Chemistry <span class="acc">Master</span></span><span class="block text-[11px] tracking-[.18em] font-semibold muted">MADHAWA RANATHUNGA</span></span>
     </a>
-    <div class="hidden lg:flex gap-8 text-sm font-medium text-slate-200">
-      <a href="#why" class="nl">Why Us</a><a href="#about" class="nl">About</a><a href="#game" class="nl">Game</a><a href="#tools" class="nl">Calculator</a>
-    </div>
-    <div class="hidden sm:flex items-center gap-2.5"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc" style="--d:0.15s"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc" style="--d:0.3s"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc" style="--d:0.45s"><i class="fa-brands fa-facebook-f"></i></a></div>
+    <div class="hidden lg:flex gap-8"><a href="#why" class="nl">Why Us</a><a href="#about" class="nl">About</a><a href="#game" class="nl">Game</a><a href="#tools" class="nl">Calculator</a></div>
+    <div class="hidden sm:flex items-center gap-2.5"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc yt" style="--d:0.15s"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc wa" style="--d:0.3s"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc fb" style="--d:0.45s"><i class="fa-brands fa-facebook-f"></i></a></div>
     <a href="lms_portal.html" target="_blank" class="hidden lg:inline-flex btn !py-2.5 !px-5 text-sm"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
-    <button id="mobileMenuBtn" class="lg:hidden text-2xl text-slate-200" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    <button id="mobileMenuBtn" class="lg:hidden text-2xl" style="color:var(--ink)" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
   </div>
-  <div id="mobileMenu" class="hidden max-w-7xl mx-auto mt-2 glass p-6 flex-col gap-3">
-    <a href="#why" class="mobile-link block py-2 border-b border-white/10">Why Us</a>
-    <a href="#about" class="mobile-link block py-2 border-b border-white/10">About</a>
-    <a href="#game" class="mobile-link block py-2 border-b border-white/10">Game</a>
-    <a href="#tools" class="mobile-link block py-2 border-b border-white/10">Calculator</a>
-    <div class="flex sm:hidden justify-center gap-3 pt-3"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc" style="--d:0.15s"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc" style="--d:0.3s"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc" style="--d:0.45s"><i class="fa-brands fa-facebook-f"></i></a></div>
+  <div id="mobileMenu" class="hidden wrap flex-col gap-1 pb-4">
+    <a href="#why" class="mobile-link block py-2 border-b" style="border-color:var(--line)">Why Us</a><a href="#about" class="mobile-link block py-2 border-b" style="border-color:var(--line)">About</a><a href="#game" class="mobile-link block py-2 border-b" style="border-color:var(--line)">Game</a><a href="#tools" class="mobile-link block py-2 border-b" style="border-color:var(--line)">Calculator</a>
+    <div class="flex sm:hidden justify-center gap-3 pt-3"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc yt" style="--d:0.1s"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc wa" style="--d:0.2s"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc fb" style="--d:0.3s"><i class="fa-brands fa-facebook-f"></i></a></div>
     <a href="lms_portal.html" target="_blank" class="btn w-full mt-2"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a>
   </div>
-</nav>
-
+</header>
 <main>
-<section id="top" class="pt-40 pb-24 px-4 lg:px-8">
-  <div class="max-w-7xl mx-auto">
-    <div id="lock" class="lock">
-      <div class="chip inline-flex items-center gap-2 px-4 py-2 text-sm font-medium mb-4 max-w-full">
-        <span class="w-2.5 h-2.5 rounded-full animate-pulse shrink-0" style="background:var(--a)"></span> Sri Lanka's premier English Medium A/L Chemistry academy
+<section id="top" class="hero">
+  <div class="hero-photo" id="heroPhoto"></div><div class="hero-shade"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="tag"><i></i> Sri Lanka’s premier English Medium A/L Chemistry academy</span>
+      <h1><span class="mc">M-CHEM<em>.</em></span></h1>
+      <p class="sub">Outstanding results of a qualitative transformation</p>
+      <div class="cta-row">
+        <a href="lms_portal.html" target="_blank" class="btn gold"><i class="fa-solid fa-graduation-cap"></i> Enter Student Portal</a>
+        <a href="#tools" class="btn ghost"><i class="fa-solid fa-calculator"></i> Try the calculator</a>
       </div>
-      <h1><span id="mc" class="mc disp">M-CHEM</span><span class="tl">Outstanding results</span><span class="tl">of a qualitative transformation</span></h1>
-      <div class="cta">
-        <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap text-lg"></i> <span class="hidden sm:inline">Enter&nbsp;</span>Student Portal</a>
-        <a href="#tools" class="btn ghost"><i class="fa-solid fa-calculator"></i> <span class="hidden sm:inline">Try the&nbsp;</span><span class="cb">calculator</span></a>
-      </div>
-      <div class="mt-10 pt-6 grid grid-cols-3 gap-4 border-t border-white/15">
-        <div><div class="disp text-3xl lg:text-5xl"><span data-counter="10">0</span>+</div><div class="text-sm text-slate-300 mt-1">Years of experience</div></div>
-        <div><div class="disp text-3xl lg:text-5xl acc"><span data-counter="1000">0</span>+</div><div class="text-sm text-slate-300 mt-1">Students taught</div></div>
-        <div><div class="disp text-3xl lg:text-5xl"><span data-counter="95">0</span>%+</div><div class="text-sm text-slate-300 mt-1">A / B pass rate</div></div>
-      </div>
+    </div>
+    <div class="visual">
+      <div class="mol"><canvas id="gl" aria-hidden="true"></canvas></div>
     </div>
   </div>
 </section>
+<div class="wrap"><div class="quick">
+  <div class="stat"><b><span data-counter="10">0</span>+</b><span class="l">Years of experience</span></div>
+  <div class="stat"><b><span data-counter="1000">0</span>+</b><span class="l">Students taught</span></div>
+  <div class="stat"><b><span data-counter="95">0</span>%+</b><span class="l">A / B pass rate</span></div>
+  <div class="stat"><b><span data-counter="200">0</span>+</b><span class="l">Model papers</span></div>
+</div></div>
+<div class="ticker" aria-hidden="true"><div class="track"><span>H<sub>2</sub>SO<sub>4</sub></span><span>KMnO<sub>4</sub></span><span>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></span><span>CaCO<sub>3</sub></span><span>NaOH</span><span>CH<sub>3</sub>COOH</span><span>Al(OH)<sub>3</sub></span><span>K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub></span><span>H<sub>2</sub>SO<sub>4</sub></span><span>KMnO<sub>4</sub></span><span>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></span><span>CaCO<sub>3</sub></span><span>NaOH</span><span>CH<sub>3</sub>COOH</span><span>Al(OH)<sub>3</sub></span><span>K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub></span></div></div>
 
-<section id="why" class="py-20 px-4 lg:px-8">
-  <div class="max-w-7xl mx-auto space-y-10">
-    <h2 class="disp text-4xl sm:text-6xl text-center">Why students choose us</h2>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <div class="card"><div class="ico"><i class="fa-solid fa-file-pen"></i></div><h3 class="disp text-xl">Past paper mastery</h3><p class="text-slate-300 text-sm mt-2">Ten years of papers, fully explained.</p></div>
-      <div class="card"><div class="ico"><i class="fa-solid fa-user-check"></i></div><h3 class="disp text-xl">Personal attention</h3><p class="text-slate-300 text-sm mt-2">Weak spots found and fixed, student by student.</p></div>
-      <div class="card"><div class="ico"><i class="fa-solid fa-video"></i></div><h3 class="disp text-xl">Online and in class</h3><p class="text-slate-300 text-sm mt-2">Join in person or on Zoom, with recordings.</p></div>
-      <div class="card"><div class="ico"><i class="fa-solid fa-layer-group"></i></div><h3 class="disp text-xl">200+ model papers</h3><p class="text-slate-300 text-sm mt-2">Exam-standard practice before the real thing.</p></div>
-    </div>
+<section id="why" class="s"><div class="wrap">
+  <div class="sectionhead"><div class="eyebrow c"><i></i><span>01</span>Why us<i></i></div><h2 class="disp h2">Why students choose us</h2></div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="feature card"><div class="ico"><i class="fa-solid fa-file-pen"></i></div><h3 class="disp text-xl">Past paper mastery</h3><p class="muted text-sm mt-2">Ten years of papers, fully explained.</p></div>
+    <div class="feature card"><div class="ico"><i class="fa-solid fa-user-check"></i></div><h3 class="disp text-xl">Personal attention</h3><p class="muted text-sm mt-2">Weak spots found and fixed, student by student.</p></div>
+    <div class="feature card"><div class="ico"><i class="fa-solid fa-video"></i></div><h3 class="disp text-xl">Online and in class</h3><p class="muted text-sm mt-2">Join in person or on Zoom, with recordings.</p></div>
+    <div class="feature card"><div class="ico"><i class="fa-solid fa-layer-group"></i></div><h3 class="disp text-xl">200+ model papers</h3><p class="muted text-sm mt-2">Exam-standard practice before the real thing.</p></div>
   </div>
-</section>
+</div></section>
 
-<section id="about" class="py-20 px-4 lg:px-8">
-  <div class="max-w-6xl mx-auto glass edge p-8 lg:p-14">
-    <div class="grid lg:grid-cols-12 gap-12 items-center">
-      <div class="lg:col-span-5">
-        <div class="frame mx-auto max-w-sm">
-          <div class="rounded-[1.25rem] overflow-hidden bg-slate-950">
-            <img src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428663/lms_portal_1.png" alt="Madhawa Ranathunga" class="block w-full h-auto" loading="lazy">
-            <div class="p-5">
-              <h3 class="disp text-2xl">Madhawa Ranathunga</h3>
-              <p class="text-sm text-slate-300">A/L Chemistry Lecturer</p>
-              <div class="chip mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold"><i class="fa-solid fa-award acc"></i> 10+ years of experience</div>
-            </div>
-          </div>
+<section id="about" class="s soft"><div class="wrap">
+  <div class="grid lg:grid-cols-12 gap-14 items-center">
+    <div class="lg:col-span-5">
+      <div class="stand" id="stand"><div class="st-tilt">
+        <div class="st3d">
+          <div class="st-ring r1"></div><div class="st-ring r2"></div><div class="st-disc"></div><div class="st-floor"></div>
+          <img class="st-img" src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428663/lms_portal_1.png" alt="Madhawa Ranathunga, A/L Chemistry lecturer" loading="lazy">
+          <div class="st-chip c1"><i class="fa-solid fa-award"></i> 10+ years</div>
+          <div class="st-chip c2"><i class="fa-solid fa-flask"></i> A/L Chemistry</div>
         </div>
-      </div>
-      <div class="lg:col-span-7 space-y-5">
-        <h2 class="disp text-4xl sm:text-5xl">Chemistry you <span class="acc">understand</span>, not memorise.</h2>
-        <p class="text-slate-300 text-lg max-w-lg">Every theory is built from the ground up, simply and logically, so it stays with you on exam day.</p>
-        <a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap"></i> Join the classes</a>
-      </div>
+        <div class="st-name"><b>Madhawa Ranathunga</b><span>A/L Chemistry Lecturer</span></div>
+      </div></div>
+    </div>
+    <div class="lg:col-span-7 space-y-5">
+      <div class="eyebrow"><span>02</span><i></i>About</div>
+      <h2 class="disp h2">Chemistry you <span class="acc">understand</span>, not memorise.</h2>
+      <p class="text-lg max-w-lg">Every theory is built from the ground up, simply and logically, so it stays with you on exam day.</p>
+      <div class="flex flex-wrap gap-3 pt-2"><a href="lms_portal.html" target="_blank" class="btn"><i class="fa-solid fa-graduation-cap"></i> Join the classes</a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" class="btn wa"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a></div>
     </div>
   </div>
-</section>
+</div></section>
 
-<section id="game" class="py-20 px-4 lg:px-8">
-  <div class="max-w-4xl mx-auto space-y-10">
-    <div class="text-center space-y-3">
-      <h2 class="disp text-4xl sm:text-6xl">Reaction path <span class="acc">challenge</span></h2>
-      <p class="text-slate-300 max-w-lg mx-auto">Choose the right reagent and conditions at every step to take the starting compound to the target.</p>
-    </div>
-    <div class="glass edge p-6 sm:p-10"><div id="gameBox"></div></div>
-  </div>
-</section>
+<section id="game" class="s"><div class="wrap" style="max-width:56rem">
+  <div class="sectionhead"><div class="eyebrow c"><i></i><span>03</span>Challenge<i></i></div><h2 class="disp h2">Reaction path <span class="acc">challenge</span></h2><p>Choose the right reagent and conditions at every step to take the starting compound to the target.</p></div>
+  <div class="panel darkpanel brk p-6 sm:p-10"><div id="gameBox"></div></div>
+</div></section>
 
-<section id="tools" class="py-20 px-4 lg:px-8 pb-40">
-  <div class="max-w-7xl mx-auto space-y-10">
-    <div class="text-center space-y-3">
-      <h2 class="disp text-4xl sm:text-6xl">Molar mass <span class="acc">calculator</span></h2>
-      <p class="text-slate-300 max-w-md mx-auto">Type any formula. Brackets work too, like Ca(OH)2.</p>
+<section id="tools" class="s soft"><div class="wrap">
+  <div class="sectionhead"><div class="eyebrow c"><i></i><span>04</span>Tools<i></i></div><h2 class="disp h2">Molar mass <span class="acc">calculator</span></h2><p>Type any formula. Brackets work too, like Ca(OH)2.</p></div>
+  <div class="panel brk max-w-2xl mx-auto p-8 space-y-6">
+    <div>
+      <label for="formulaInput" class="block text-sm font-semibold mb-2" style="color:var(--ink)">Chemical formula</label>
+      <div class="flex gap-3">
+        <input id="formulaInput" class="field" placeholder="e.g. H2SO4, KMnO4, Ca(OH)2" onkeydown="if(event.key==='Enter')calculateMolarMass()">
+        <button onclick="calculateMolarMass()" class="btn !py-3 !px-6 shrink-0 text-sm">Calculate</button>
+      </div>
     </div>
-    <div class="max-w-2xl mx-auto glass edge p-8 space-y-6">
-      <div>
-        <label for="formulaInput" class="block text-sm font-semibold text-slate-200 mb-2">Chemical formula</label>
-        <div class="flex gap-3">
-          <input id="formulaInput" class="field" placeholder="e.g. H2SO4, KMnO4, Ca(OH)2" onkeydown="if(event.key==='Enter')calculateMolarMass()">
-          <button onclick="calculateMolarMass()" class="btn !py-3 !px-6 shrink-0 text-sm">Calculate</button>
-        </div>
-      </div>
-      <div class="flex flex-wrap gap-2 items-center text-sm text-slate-300">
-        <span>Try:</span>
-        <button onclick="setFormula('H2SO4')" class="chip px-3 py-1 hover:text-white">H2SO4</button>
-        <button onclick="setFormula('KMnO4')" class="chip px-3 py-1 hover:text-white">KMnO4</button>
-        <button onclick="setFormula('C6H12O6')" class="chip px-3 py-1 hover:text-white">C6H12O6</button>
-        <button onclick="setFormula('CaCO3')" class="chip px-3 py-1 hover:text-white">CaCO3</button>
-        <button onclick="setFormula('Ca(OH)2')" class="chip px-3 py-1 hover:text-white">Ca(OH)2</button>
-      </div>
-      <div id="molarResultBox" class="hidden p-6 rounded-2xl space-y-2" style="background:rgba(2,6,14,.75);border:1px solid rgba(var(--rgb),.45)">
-        <span class="text-sm text-slate-400 block">Molar mass</span>
-        <div class="disp text-4xl acc" id="molarMassValue">0 g/mol</div>
-        <p class="text-sm text-slate-300" id="molarMassBreakdown"></p>
-      </div>
+    <div class="flex flex-wrap gap-2 items-center text-sm muted">
+      <span>Try:</span>
+      <button onclick="setFormula('H2SO4')" class="chip px-3 py-1">H2SO4</button><button onclick="setFormula('KMnO4')" class="chip px-3 py-1">KMnO4</button><button onclick="setFormula('C6H12O6')" class="chip px-3 py-1">C6H12O6</button><button onclick="setFormula('CaCO3')" class="chip px-3 py-1">CaCO3</button><button onclick="setFormula('Ca(OH)2')" class="chip px-3 py-1">Ca(OH)2</button>
+    </div>
+    <div id="molarResultBox" class="hidden result space-y-2">
+      <span class="text-sm muted block">Molar mass</span>
+      <div class="disp text-4xl acc" id="molarMassValue">0 g/mol</div>
+      <p class="text-sm" id="molarMassBreakdown"></p>
     </div>
   </div>
-</section>
+</div></section>
+
+<section class="s" style="padding-top:72px"><div class="wrap">
+  <div class="cta">
+    <div><h2 class="disp text-3xl sm:text-4xl">Begin your A/L Chemistry journey today.</h2><p>Join in person or online, with recordings of every class.</p></div>
+    <div class="flex flex-wrap gap-3" style="position:relative"><a href="lms_portal.html" target="_blank" class="btn gold"><i class="fa-solid fa-graduation-cap"></i> Student Portal</a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" class="btn wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></div>
+  </div>
+</div></section>
 </main>
 
-<footer class="border-t border-white/10 py-12 px-4 lg:px-8 text-slate-400 text-sm" style="background:rgba(2,5,10,.85);backdrop-filter:blur(5px)">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 mb-8">
+<footer>
+  <div class="wrap grid md:grid-cols-3 gap-8 mb-8">
     <div class="space-y-3">
-      <div class="flex items-center gap-3">
-        <img class="logo" src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428441/WhatsApp_Image_2026-10-26_at_14.13.54.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'">
-        <span class="disp text-xl text-white">Chemistry <span class="acc">Master</span></span>
-      </div>
+      <div class="flex items-center gap-3"><img class="logo" src="https://res.cloudinary.com/idbvadf9/image/upload/v1793428441/WhatsApp_Image_2026-10-26_at_14.13.54.jpg" alt="Chemistry Master logo" onerror="this.style.display='none'"><span class="disp text-xl">Chemistry <span style="color:#e3c487">Master</span></span></div>
       <p class="max-w-xs">Logical, exam-focused A/L Chemistry for Sri Lankan students.</p>
     </div>
-    <div>
-      <h4 class="text-white font-semibold mb-3">Quick links</h4>
-      <ul class="space-y-2">
-        <li><a href="#why" class="nl">Why Us</a></li><li><a href="#about" class="nl">About</a></li><li><a href="#game" class="nl">Reaction Game</a></li><li><a href="#tools" class="nl">Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4 class="text-white font-semibold mb-3">Connect</h4>
-      <div class="flex gap-4 text-lg">
-        <a href="#" aria-label="Facebook" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-facebook"></i></a>
-        <a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-youtube"></i></a>
-        <a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="w-10 h-10 glass !rounded-xl flex items-center justify-center nl"><i class="fa-brands fa-whatsapp"></i></a>
-      </div>
-      <p class="mt-3">WhatsApp: +94 76 651 4623</p>
-    </div>
+    <div><h4>Quick links</h4><ul class="space-y-2"><li><a href="#why" class="nl">Why Us</a></li><li><a href="#about" class="nl">About</a></li><li><a href="#game" class="nl">Reaction Game</a></li><li><a href="#tools" class="nl">Calculator</a></li><li><a href="lms_portal.html" target="_blank" class="nl">Student Portal</a></li></ul></div>
+    <div><h4>Connect</h4><div class="flex gap-3 text-lg"><a href="https://youtube.com/@chem-a2718?si=04_ibQOu75yMWgos" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="soc2 yt"><i class="fa-brands fa-youtube"></i></a><a href="https://wa.me/94766514623?text=%E0%B6%B8%E0%B6%A7%20%E0%B6%B4%E0%B6%82%E0%B6%AD%E0%B7%92%E0%B6%BA%20%E0%B7%83%E0%B6%B3%E0%B7%84%E0%B7%8F%20%E0%B7%83%E0%B7%84%E0%B6%B7%E0%B7%8F%E0%B6%9C%E0%B7%93%20%E0%B7%80%E0%B7%93%E0%B6%B8%E0%B6%A7%20%E0%B6%85%E0%B7%80%E0%B7%81%E0%B7%8A%E2%80%8D%E0%B6%BA%E0%B6%BA%E0%B7%92" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="soc2 wa"><i class="fa-brands fa-whatsapp"></i></a><a href="#" aria-label="Facebook" class="soc2 fb"><i class="fa-brands fa-facebook-f"></i></a></div><p class="mt-3">WhatsApp: +94 76 651 4623</p></div>
   </div>
-  <div class="max-w-7xl mx-auto pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-    <span>© 2026 Chemistry Master Academy. All rights reserved.</span>
-    <span>Created by <strong class="acc font-bold tracking-wide">T-WEB</strong></span>
-  </div>
+  <div class="wrap pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs" style="border-top:1px solid rgba(255,255,255,.12);color:#8499ae"><span>© 2026 Chemistry Master Academy. All rights reserved.</span><span>Created by <strong style="color:#e3c487">T-WEB</strong></span></div>
 </footer>
-
-<div id="dots" class="glass" role="group" aria-label="Theme"><span id="tname"></span></div>
-
 <script>
-// Each background gets ONE accent colour and its own type style.
-const themes = [
-  {name:'Precision',   url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428452/janne-aspegren-lgEMAUqBx3o-unsplash.jpg", rgb:'34,211,238',  a:'#22d3ee', fd:"'Sora',sans-serif",              wd:700, td:'-.03em',  r:'18px'},
-  {name:'Botanical',   url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428451/jonathan-gallegos-5FGqfV6UjzI-unsplash.jpg", rgb:'52,211,153',  a:'#34d399', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'28px'},
-  {name:'Golden Hour', url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428460/lucas-calloch-P-yzuyWFEIk-unsplash.jpg",       rgb:'251,191,36',  a:'#fbbf24', fd:"'DM Serif Display',serif",       wd:400, td:'0em',     r:'6px'},
-  {name:'Neon Orbit',  url:"https://res.cloudinary.com/idbvadf9/image/upload/v1793428566/su-san-lee-E_eWwM29wfU-unsplash.jpg",        rgb:'192,132,252', a:'#c084fc', fd:"'Fraunces',serif",               wd:700, td:'-.015em', r:'22px'}
-];
-const root = document.documentElement, layers = [bgA, bgB];
-let cur = -1, front = 0, timer;
-
-function applyTheme(i, instant){
-  if(i === cur) return;
-  const t = themes[i];
-  const paint = () => {
-    const s = root.style;
-    s.setProperty('--rgb', t.rgb); s.setProperty('--a', t.a); s.setProperty('--fd', t.fd);
-    s.setProperty('--wd', t.wd); s.setProperty('--td', t.td); s.setProperty('--r', t.r);
-    tname.textContent = t.name; requestAnimationFrame(fitLock);
-    document.querySelectorAll('#dots button').forEach((d, k) => d.classList.toggle('on', k === i));
-  };
-  const next = layers[1 - front], prev = layers[front];
-  next.style.backgroundImage = `url('${t.url}')`;
-  next.classList.add('on'); prev.classList.remove('on'); front = 1 - front;
-  if(instant || cur < 0) paint();
-  else { document.body.classList.add('swap'); setTimeout(() => { paint(); document.body.classList.remove('swap'); }, 450); }
-  cur = i;
-}
-function fitLock(){
-  const wrap = document.getElementById('lock'), L = [...document.querySelectorAll('.tl')];
-  const avail = wrap.parentElement.clientWidth;
-  mc.style.fontSize = '100px';
-  const nat = mc.getBoundingClientRect().width; if(!nat) return;
-  mc.style.fontSize = Math.min(176, 100 * avail / nat) + 'px';
-  const w = mc.getBoundingClientRect().width;
-  wrap.style.width = w + 'px';
-  const tw = l => { const r = document.createRange(); r.selectNodeContents(l); return r.getBoundingClientRect().width; };
-  L.forEach(l => { l.style.fontSize = '20px'; l.style.letterSpacing = '.06em'; });
-  const fs = Math.min(34, 20 * w / Math.max(...L.map(tw)));
-  L.forEach(l => {
-    const n = l.textContent.length, ls = fs * .06;
-    l.style.fontSize = fs + 'px'; l.style.letterSpacing = ls + 'px';
-    l.style.letterSpacing = (ls + (w - tw(l) + ls) / (n - 1)) + 'px';
-  });
-}
-addEventListener('resize', fitLock);
-document.fonts.addEventListener('loadingdone', fitLock);
-document.fonts.ready.then(fitLock);
-addEventListener('load', fitLock);
-
-themes.forEach((t, i) => {
-  const b = document.createElement('button');
-  b.setAttribute('aria-label', t.name); b.title = t.name;
-  b.onclick = () => applyTheme(i);
-  dots.insertBefore(b, tname);
-});
-// One background per day (local midnight), cycling through all four
-applyTheme(Math.floor((Date.now() - new Date().getTimezoneOffset() * 6e4) / 864e5) % themes.length, true);
-
 /* ===== Reaction path game ===== */
 const LV = {
  Organic:[
@@ -384,7 +375,7 @@ function gDraw(){
   const L = LV[G.top][G.lv], m = L.s.length, vis = Math.min(m + 1, G.step + 1 + (G.state === 'ok' ? 1 : 0));
   let h = '<div class="flex flex-wrap gap-2 justify-center mb-4">' + Object.keys(LV).map(t => `<button class="gpill ${t === G.top ? 'gon' : ''}" onclick="gGo('${t}',0)">${t}</button>`).join('') + '</div>';
   h += '<div class="flex flex-wrap gap-2 justify-center mb-6">' + LV[G.top].map((l, i) => `<button class="gpill ${i === G.lv ? 'gon' : ''}" onclick="gGo('${G.top}',${i})">${G.done[G.top + i] ? '<i class="fa-solid fa-check"></i> ' : ''}Level ${i + 1}</button>`).join('') + '</div>';
-  h += `<div class="flex items-center justify-between text-sm mb-6"><span>${'<i class="fa-solid fa-heart" style="color:#f87171"></i> '.repeat(G.hearts)}${'<i class="fa-regular fa-heart opacity-40"></i> '.repeat(3 - G.hearts)}</span><span>Streak <b class="acc">${G.streak}</b> &nbsp; Score <b class="acc">${G.score}</b></span></div>`;
+  h += `<div class="flex items-center justify-between text-sm mb-6"><span>${'<i class="fa-solid fa-heart" style="color:var(--a)"></i> '.repeat(G.hearts)}${'<i class="fa-regular fa-heart opacity-40"></i> '.repeat(3 - G.hearts)}</span><span>Streak <b class="acc">${G.streak}</b> &nbsp; Score <b class="acc">${G.score}</b></span></div>`;
   h += '<div class="flex flex-wrap items-center justify-center gap-3 mb-8">' + L.n.map((n, i) => {
     const on = i < vis, solved = i < G.step || (i === G.step && G.state === 'ok');
     return `<div class="gnode ${i === m ? 'tgt' : ''} ${on ? '' : 'q'}"><div class="disp text-lg">${on ? n[0] : '?'}</div><div class="text-sm text-slate-300">${on ? fm(n[1]) : '&nbsp;'}</div></div>` +
@@ -395,7 +386,7 @@ function gDraw(){
   } else {
     h += `<p class="mb-4 text-slate-200">Step ${G.step + 1} of ${m}: choose the reagent and conditions to convert <b>${L.n[G.step][0]}</b> into <b>${L.n[G.step + 1][0]}</b>.</p><div class="grid gap-3">` +
       G.opts.map((o, i) => `<button class="gopt ${G.state === 'ok' && o === L.s[G.step].o[0] ? 'ok' : ''} ${G.bad.includes(i) ? 'no' : ''}" ${G.state !== 'play' ? 'disabled' : ''} onclick="gPick(${i})">${fm(o)}</button>`).join('') + '</div>';
-    if(G.fb) h += `<p class="mt-4 text-sm" style="color:${G.state === 'ok' ? '#34d399' : '#fca5a5'}">${fm(G.fb)}</p>`;
+    if(G.fb) h += `<p class="mt-4 text-sm" style="color:${G.state === 'ok' ? '#8fd1a8' : '#e8a9a9'}">${fm(G.fb)}</p>`;
     if(G.state === 'ok') h += '<div class="mt-5"><button class="btn" onclick="gNext()">Continue</button></div>';
     if(G.state === 'lose') h += '<div class="mt-5 space-y-3"><div class="disp text-2xl">Out of lives</div><button class="btn" onclick="gGo(G.top,G.lv)">Try again</button></div>';
   }
@@ -429,7 +420,7 @@ function calculateMolarMass(){
   } else showToast('Enter a valid chemical formula, e.g. H2SO4.', 'error');
 }
 function showToast(msg, type){
-  const col = type === 'success' ? '#34d399' : '#f87171';
+  const col = type === 'success' ? '#2f7d5b' : '#b4493f';
   const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
   const t = document.createElement('div');
   t.className = 'glass p-4 flex items-center gap-3 text-sm pointer-events-auto transition-all duration-300 translate-x-10 opacity-0';
@@ -447,7 +438,6 @@ document.querySelectorAll('[data-counter]').forEach(el => {
   setTimeout(function tick(){ n += step; if(n < target){ el.innerText = n; setTimeout(tick, 30); } else el.innerText = target; }, 500);
 });
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
@@ -455,39 +445,122 @@ const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 const I = document.getElementById('intro');
 let revealed = false;
 document.body.style.overflow = 'hidden';
-function reveal(){
-  if(revealed) return; revealed = true;
-  I.classList.add('go'); document.body.style.overflow = '';
-  setTimeout(() => I.remove(), 1100);
-}
+function reveal(){ if(revealed) return; revealed = true; I.classList.add('go'); document.body.style.overflow = ''; setTimeout(() => I.remove(), 1100); }
 I.addEventListener('click', reveal);
-if(reduce) reveal(); else setTimeout(reveal, 3600);
+function introAtoms(){
+  const cv = document.getElementById('ic'); if(!cv) return;
+  const ctx = cv.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2);
+  const W = cv.clientWidth, H = cv.clientHeight;
+  cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+  const sc = Math.min(W / 320, H / 300), cx = W / 2, cy = H / 2, R = 62 * sc, RH = 108 * sc, DUR = 1.25;
+  const atoms = [];
+  for(let i = 0; i < 12; i++){
+    const c = i < 6, k = c ? i : i - 6, a = -Math.PI / 2 + k * Math.PI / 3, rr = c ? R : RH, sa = Math.random() * 6.283, sd = 420 * sc;
+    const at = {c, x: cx + rr * Math.cos(a), y: cy + rr * Math.sin(a), r: (c ? 13 : 8) * sc, sx: cx + Math.cos(sa) * sd, sy: cy + Math.sin(sa) * sd, d: c ? k * .09 : .55 + k * .07, sw: (Math.random() < .5 ? -1 : 1) * 50 * sc};
+    at.t = at.d + DUR; atoms.push(at);
+  }
+  const bonds = [];
+  for(let i = 0; i < 6; i++) bonds.push({a: i, b: (i + 1) % 6, dbl: i % 2 === 0});
+  for(let i = 0; i < 6; i++) bonds.push({a: i, b: 6 + i, dbl: false});
+  bonds.forEach(b => { b.t = Math.max(atoms[b.a].t, atoms[b.b].t); });
+  const done = Math.max(...bonds.map(b => b.t)) + .35, t0 = performance.now();
+  const ease = p => 1 - Math.pow(1 - p, 3);
+  function pos(a, t){
+    const p = Math.min(1, Math.max(0, (t - a.d) / DUR)), e = ease(p), s = Math.sin(p * Math.PI) * a.sw;
+    const dx = a.x - a.sx, dy = a.y - a.sy, L = Math.hypot(dx, dy) || 1;
+    return {p, x: a.x + (a.sx - a.x) * (1 - e) + (-dy / L) * s * (1 - e), y: a.y + (a.sy - a.y) * (1 - e) + (dx / L) * s * (1 - e)};
+  }
+  (function frame(){
+    if(!cv.isConnected) return;
+    const t = (performance.now() - t0) / 1000;
+    ctx.clearRect(0, 0, W, H); ctx.lineCap = 'round';
+    if(t > done){
+      const u = t - done;
+      for(let k = 0; k < 2; k++){ const w = u - k * .5; if(w > 0){ const q = (w % 1.6) / 1.6; ctx.strokeStyle = 'rgba(227,196,135,' + (.5 * (1 - q)) + ')'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, R + q * 90 * sc, 0, 6.283); ctx.stroke(); } }
+    }
+    bonds.forEach(b => {
+      const q = Math.min(1, Math.max(0, (t - b.t) / .35)); if(!q) return;
+      const A = atoms[b.a], B = atoms[b.b];
+      ctx.strokeStyle = 'rgba(226,232,240,.8)'; ctx.lineWidth = 2.4 * sc;
+      ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(A.x + (B.x - A.x) * q, A.y + (B.y - A.y) * q); ctx.stroke();
+      if(b.dbl){
+        const nx = cx - (A.x + B.x) / 2, ny = cy - (A.y + B.y) / 2, nl = Math.hypot(nx, ny) || 1, ox = nx / nl * 6 * sc, oy = ny / nl * 6 * sc;
+        const sx = A.x + (B.x - A.x) * .15 + ox, sy = A.y + (B.y - A.y) * .15 + oy;
+        ctx.strokeStyle = 'rgba(227,196,135,.9)'; ctx.lineWidth = 2 * sc;
+        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + (B.x - A.x) * .7 * q, sy + (B.y - A.y) * .7 * q); ctx.stroke();
+      }
+    });
+    atoms.forEach(a => {
+      const s = pos(a, t); if(s.p <= 0) return;
+      const q = (t - a.t) / .4;
+      if(q > 0 && q < 1){ ctx.strokeStyle = 'rgba(227,196,135,' + (.7 * (1 - q)) + ')'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(a.x, a.y, a.r * (1 + q * 2.2), 0, 6.283); ctx.stroke(); }
+      const g = ctx.createRadialGradient(s.x - a.r * .35, s.y - a.r * .35, a.r * .1, s.x, s.y, a.r);
+      if(a.c){ g.addColorStop(0, '#fff3d0'); g.addColorStop(.5, '#e3c487'); g.addColorStop(1, '#9c7424'); }
+      else { g.addColorStop(0, '#ffffff'); g.addColorStop(.6, '#cfd8e3'); g.addColorStop(1, '#7b8ba0'); }
+      ctx.globalAlpha = Math.min(1, s.p * 4); ctx.fillStyle = g; ctx.shadowColor = 'rgba(227,196,135,.55)'; ctx.shadowBlur = (t > done ? 18 : 8) * sc;
+      ctx.beginPath(); ctx.arc(s.x, s.y, a.r, 0, 6.283); ctx.fill(); ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+    });
+    if(t > done){
+      const u = t - done;
+      ctx.save(); ctx.globalAlpha = Math.min(1, u / .5); ctx.strokeStyle = 'rgba(227,196,135,.7)'; ctx.lineWidth = 1.6 * sc; ctx.setLineDash([5 * sc, 6 * sc]); ctx.lineDashOffset = -u * 20;
+      ctx.beginPath(); ctx.arc(cx, cy, R * .5, 0, 6.283); ctx.stroke(); ctx.restore();
+      const ea = u * 3; ctx.fillStyle = '#fff'; ctx.shadowColor = '#e3c487'; ctx.shadowBlur = 12;
+      ctx.beginPath(); ctx.arc(cx + Math.cos(ea) * R * .5, cy + Math.sin(ea) * R * .5, 3 * sc, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(frame);
+  })();
+}
+if(reduce) reveal(); else { introAtoms(); setTimeout(reveal, 4600); }
 
-/* ---------- 3D tilt on cards and the lecturer frame ---------- */
-document.querySelectorAll('.card,.frame').forEach(el => {
+document.querySelectorAll('.feature').forEach(el => {
   el.addEventListener('pointermove', e => {
     const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
     el.style.transition = 'transform .1s';
-    el.style.transform = `perspective(800px) rotateY(${x * 16}deg) rotateX(${-y * 16}deg) translateZ(16px)`;
+    el.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateZ(8px)`;
   });
   el.addEventListener('pointerleave', () => { el.style.transition = 'transform .5s'; el.style.transform = ''; });
 });
+const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold: .1});
+document.querySelectorAll('.sectionhead,.feature,.stand,.panel,.cta,.quick').forEach(el => { el.classList.add('rv'); io.observe(el); });
 
-/* ---------- Three.js molecule world ---------- */
+/* hero background photo: one per day, cycling through the three */
+const PH = ['https://res.cloudinary.com/idbvadf9/image/upload/v1793428460/lucas-calloch-P-yzuyWFEIk-unsplash.jpg','https://res.cloudinary.com/idbvadf9/image/upload/v1793428452/janne-aspegren-lgEMAUqBx3o-unsplash.jpg','https://res.cloudinary.com/idbvadf9/image/upload/v1793428566/su-san-lee-E_eWwM29wfU-unsplash.jpg'];
+const day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 6e4) / 864e5), purl = PH[day % PH.length], hp = document.getElementById('heroPhoto');
+if(hp){ const im = new Image(); im.onload = () => { hp.style.backgroundImage = 'url("' + purl + '")'; hp.classList.add('on'); }; im.src = purl; }
+
+/* standing lecturer: pointer tilt and cut-out detection */
+const stand = document.querySelector('.stand');
+if(stand){
+  const tl = stand.querySelector('.st-tilt'), si = stand.querySelector('.st-img');
+  stand.addEventListener('pointermove', e => {
+    const r = stand.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    tl.style.transition = 'transform .1s'; tl.style.transform = `rotateY(${x * 18}deg) rotateX(${-y * 12}deg)`;
+  });
+  stand.addEventListener('pointerleave', () => { tl.style.transition = 'transform .6s'; tl.style.transform = ''; });
+  const pi = new Image(); pi.crossOrigin = 'anonymous';
+  pi.onload = () => {
+    try {
+      const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d'); x.drawImage(pi, 0, 0, 32, 32);
+      const a1 = x.getImageData(0, 0, 1, 1).data[3], a2 = x.getImageData(31, 0, 1, 1).data[3];
+      si.classList.add(a1 < 20 && a2 < 20 ? 'cut' : 'photo');
+    } catch(e){ si.classList.add('photo'); }
+  };
+  pi.onerror = () => si.classList.add('photo');
+  pi.src = si.src;
+}
+
 if(!window.THREE) return;
-const cv = document.getElementById('gl');
+const cv = document.getElementById('gl'), host = cv.parentElement;
 const R = new THREE.WebGLRenderer({canvas: cv, alpha: true, antialias: true});
 R.setPixelRatio(Math.min(devicePixelRatio, 2));
-const S = new THREE.Scene(), C = new THREE.PerspectiveCamera(55, 1, .1,200);
-S.add(new THREE.AmbientLight(0xffffff, .6));
-const L1 = new THREE.PointLight(0xffffff, 1.3, 0); L1.position.set(8, 8, 12); S.add(L1);
-const L2 = new THREE.PointLight(0xffffff, .6, 0); L2.position.set(-10, -6, 6); S.add(L2);
-
-const acc = new THREE.Color('#22d3ee'), target = new THREE.Color('#22d3ee');
-const mAcc = new THREE.MeshStandardMaterial({color: acc, emissive: acc, emissiveIntensity: .45, metalness: .3, roughness: .25});
-const mH = new THREE.MeshStandardMaterial({color: 0xe2e8f0, roughness: .35, metalness: .2});
-const mB = new THREE.MeshStandardMaterial({color: 0x94a3b8, metalness: .6, roughness: .3});
-
+const S = new THREE.Scene(), C = new THREE.PerspectiveCamera(42, 1, .1, 100);
+S.add(new THREE.AmbientLight(0xffffff, .65));
+const L1 = new THREE.PointLight(0xffffff, 1.3, 0); L1.position.set(8, 8, 14); S.add(L1);
+const L2 = new THREE.PointLight(0xe3c487, .8, 0); L2.position.set(-9, -6, 8); S.add(L2);
+const gold = new THREE.Color('#e3c487');
+const mG = new THREE.MeshStandardMaterial({color: gold, emissive: gold, emissiveIntensity: .3, metalness: .45, roughness: .28});
+const mH = new THREE.MeshStandardMaterial({color: 0xf4f1e8, roughness: .35, metalness: .15});
+const mB = new THREE.MeshStandardMaterial({color: 0xaab8c8, metalness: .6, roughness: .3});
 const M = new THREE.Group(); S.add(M);
 const sph = (p, r, m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 28, 28), m); s.position.copy(p); M.add(s); };
 const bond = (a, b) => {
@@ -496,73 +569,46 @@ const bond = (a, b) => {
   c.position.copy(a).add(b).multiplyScalar(.5);
   c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); M.add(c);
 };
-// benzene ring with hydrogens and an OH group (phenol)
 const Cs = [];
 for(let i = 0; i < 6; i++){
   const a = i * Math.PI / 3, c = new THREE.Vector3(2 * Math.cos(a), 2 * Math.sin(a), 0);
-  Cs.push(c); sph(c, .5, mAcc);
-  if(i === 0){ const o = new THREE.Vector3(3.5, 0, 0); sph(o, .42, mAcc); bond(c, o); const h = new THREE.Vector3(4.3, .6, .3); sph(h, .26, mH); bond(o, h); }
+  Cs.push(c); sph(c, .5, mG);
+  if(i === 0){ const o = new THREE.Vector3(3.5, 0, 0); sph(o, .42, mG); bond(c, o); const h = new THREE.Vector3(4.3, .6, .3); sph(h, .26, mH); bond(o, h); }
   else { const h = new THREE.Vector3(3.2 * Math.cos(a), 3.2 * Math.sin(a), 0); sph(h, .27, mH); bond(c, h); }
 }
 for(let i = 0; i < 6; i++) bond(Cs[i], Cs[(i + 1) % 6]);
-
-// electron orbits
 const orbits = [], els = [];
 [[5.6, 1.1, 0], [6.4, 0, 1.2], [7.2, .6, .6]].forEach(([r, rx, ry], i) => {
   const g = new THREE.Group(); g.rotation.set(rx, ry, i);
-  g.add(new THREE.Mesh(new THREE.TorusGeometry(r, .02, 8, 140), new THREE.MeshBasicMaterial({color: acc, transparent: true, opacity: .55})));
-  const e = new THREE.Mesh(new THREE.SphereGeometry(.2, 16, 16), mAcc); g.add(e);
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(r, .02, 8, 140), new THREE.MeshBasicMaterial({color: gold, transparent: true, opacity: .5})));
+  const e = new THREE.Mesh(new THREE.SphereGeometry(.2, 16, 16), mG); g.add(e);
   orbits.push(g); els.push({e, r, a: i * 2}); M.add(g);
 });
-
-// atom dust
-const N = 520, pos = new Float32Array(N * 3);
-for(let i = 0; i < N * 3; i++) pos[i] = (Math.random() - .5) * 70;
+M.scale.setScalar(.82);
+const N = 160, pos = new Float32Array(N * 3);
+for(let i = 0; i < N; i++){ const r = 7 + Math.random() * 9, a = Math.random() * 6.283, b = Math.acos(2 * Math.random() - 1); pos[i*3] = r * Math.sin(b) * Math.cos(a); pos[i*3+1] = r * Math.sin(b) * Math.sin(a); pos[i*3+2] = r * Math.cos(b) - 4; }
 const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-const pm = new THREE.PointsMaterial({color: acc, size: .14, transparent: true, opacity: .8, sizeAttenuation: true});
-const P = new THREE.Points(pg, pm); S.add(P);
+const P = new THREE.Points(pg, new THREE.PointsMaterial({color: gold, size: .09, transparent: true, opacity: .55})); S.add(P);
 
-// drifting mini atoms
-const floats = [];
-for(let i = 0; i < 14; i++){
-  const m = new THREE.Mesh(new THREE.SphereGeometry(.25 + Math.random() * .45, 20, 20), i % 3 ? mH : mAcc);
-  m.position.set((Math.random() - .5) * 34, (Math.random() - .5) * 20, -12 + Math.random() * 14);
-  floats.push({m, s: Math.random() * 6, k: .3 + Math.random() * .7}); S.add(m);
-}
-
-let tx = 0, ty = 0, mx = 0, my = 0, sp = 0, fly = 0, f = 0;
+let tx = 0, ty = 0, mx = 0, my = 0, fly = 0, vis = true;
 addEventListener('pointermove', e => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; });
-const lk = document.getElementById('lock');
-addEventListener('pointermove', e => {
-  if(innerWidth < 900) { lk.style.transform = ''; return; }
-  lk.style.transform = `perspective(1300px) rotateY(${tx * 7}deg) rotateX(${-ty * 5}deg)`;
-});
-function size(){ const w = innerWidth, h = innerHeight; R.setSize(w, h, false); C.aspect = w / h; C.updateProjectionMatrix(); }
-addEventListener('resize', size); size();
-
+new ResizeObserver(() => { const w = host.clientWidth, h = host.clientHeight; if(!w || !h) return; R.setSize(w, h, false); C.aspect = w / h; C.updateProjectionMatrix(); }).observe(host);
+new IntersectionObserver(es => { vis = es[0].isIntersecting; }).observe(host);
 const clock = new THREE.Clock();
 (function loop(){
   requestAnimationFrame(loop);
-  const t = clock.getElapsedTime(), narrow = innerWidth < 900;
+  if(!vis) return;
+  const t = clock.getElapsedTime();
   mx += (tx - mx) * .05; my += (ty - my) * .05;
-  const maxY = Math.max(1, document.documentElement.scrollHeight - innerHeight);
-  sp += (scrollY / maxY - sp) * .06;
-  if(revealed && fly < 1) fly = Math.min(1, fly + (reduce ? 1 : .011));
+  if(revealed && fly < 1) fly = Math.min(1, fly + (reduce ? 1 : .012));
   if(!revealed && !reduce) fly = 0;
   const e = 1 - Math.pow(1 - fly, 3);
-  C.position.set(mx * 1.4, -my * .9, 46 - 31 * e); C.lookAt(0, 0, 0);
-  M.position.x = narrow ? 0 : 5.4 * Math.cos(sp * Math.PI * 3);
-  M.position.y = narrow ? 4 - sp * 6 : Math.sin(sp * Math.PI * 2) * 1.6;
-  M.scale.setScalar(narrow ? .5 : .95);
-  M.rotation.y = t * .3 + mx * .8 + sp * 9;
-  M.rotation.x = my * .5 + Math.sin(t * .35) * .25 + sp * 3;
+  C.position.set(0, 0, 40 - 19 * e); C.lookAt(0, 0, 0);
+  M.rotation.y = t * .35 + mx * .9;
+  M.rotation.x = .3 + my * .4 + Math.sin(t * .4) * .15;
   orbits.forEach((g, i) => { g.rotation.z += .004 * (i + 1); });
   els.forEach((o, i) => { o.a += .02 * (i + 1); o.e.position.set(Math.cos(o.a) * o.r, Math.sin(o.a) * o.r, 0); });
-  P.rotation.y = t * .02 + sp * 1.5; P.rotation.x = sp * .7;
-  floats.forEach(o => { o.m.position.y += Math.sin(t * o.k + o.s) * .004; o.m.position.x += Math.cos(t * o.k * .7 + o.s) * .003; });
-  if(++f % 10 === 0){ const v = getComputedStyle(document.documentElement).getPropertyValue('--a').trim(); if(v) target.set(v); }
-  acc.lerp(target, .08); mAcc.emissive.copy(acc); pm.color.copy(acc);
-  orbits.forEach(g => g.children[0].material.color.copy(acc));
+  P.rotation.y = t * .03; P.rotation.x = t * .01;
   R.render(S, C);
 })();
 })();
